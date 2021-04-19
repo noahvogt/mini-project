@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Mini Projekt</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Max Mustermann</string>
+    <string name="nav_header_subtitle">max@mustermann.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="drawer_inbox">Inbox</string>
+    <string name="drawer_sent">Sent</string>
+    <string name="drawer_drafts">Drafts</string>
+
+</resources>
