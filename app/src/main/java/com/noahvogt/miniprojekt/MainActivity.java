@@ -3,11 +3,16 @@ package com.noahvogt.miniprojekt;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
+import android.webkit.WebHistoryItem;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -19,6 +24,14 @@ import androidx.appcompat.widget.Toolbar;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
+    private EditText newemail_name, newemail_email, newemail_password;
+    private Button newemail_save_button, newemail_cancel_button;
+
+    public MainActivity() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,5 +72,48 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public void onClick(View view) {
+        // change inbox text (WARNING: throws error whenever drafts oder sent is active instead of inbox)
+        //TextView text = (TextView) findViewById(R.id.text_home);
+        //text.setText("Mail has been SuCceSsFuLlY aDdEd");
+
+        // display snackbar message
+        Snackbar.make(view, "Mail has been SuCceSsFuLlY aDdEd", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+        createNewEmailDialog();
+    }
+
+
+    public void createNewEmailDialog(){
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View emailPopupView = getLayoutInflater().inflate(R.layout.popup, null);
+        newemail_name = (EditText) emailPopupView.findViewById(R.id.newemailpopup_name);
+        newemail_email = (EditText) emailPopupView.findViewById(R.id.newemailpopup_email);
+        newemail_password = (EditText) emailPopupView.findViewById(R.id.newemailpopup_password);
+
+        newemail_save_button = (Button) emailPopupView.findViewById(R.id.saveButton);
+        newemail_cancel_button = (Button) emailPopupView.findViewById(R.id.cancelButton);
+
+        dialogBuilder.setView(emailPopupView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        newemail_save_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // define save button here
+            }
+        });
+
+        newemail_cancel_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // define save button here
+                dialog.dismiss();
+            }
+        });
+
     }
 }

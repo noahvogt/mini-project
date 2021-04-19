@@ -27,12 +27,13 @@
         <Button
             android:id="@+id/button"
             android:layout_width="wrap_content"
-            android:layout_gravity="bottom|right"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:layout_gravity="bottom|right"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp"
+            android:onClick="onClick"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:text="Add Email" />
     </com.google.android.material.navigation.NavigationView>
 </androidx.drawerlayout.widget.DrawerLayout>
