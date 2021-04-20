@@ -17,23 +17,26 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.253" />
+        app:layout_constraintVertical_bias="0.068" />
 
     <EditText
         android:id="@+id/newemailpopup_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginRight="25dp"
 
-        android:layout_marginTop="20dp"
+        android:hint="@string/your_full_name_filler"
+        android:textSize="20sp"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newlisticon"
-
-        android:textSize="24sp"
-        android:hint="Your Full Name"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/newlisticon" />
 
     <EditText
         android:id="@+id/newemailpopup_email"
@@ -41,9 +44,14 @@
         android:layout_height="wrap_content"
 
 
-        android:layout_marginTop="20dp"
-        android:textSize="24sp"
-        android:hint="Your Email Adress"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+
+        android:textSize="20sp"
+        android:hint="@string/your_email_address_filler"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -57,14 +65,18 @@
         android:layout_height="wrap_content"
 
 
-        android:layout_marginTop="20dp"
-        android:textSize="24sp"
-        android:hint="Your Password"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
 
+        android:hint="@string/your_password_filler"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
+
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-
         app:layout_constraintTop_toBottomOf="@+id/newemailpopup_email" />
 
     <Button
@@ -72,25 +84,38 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
+        android:layout_marginStart="16dp"
+
+        android:layout_marginLeft="16dp"
+
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp"
         android:text="Save"
-
-        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.133"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/newemailpopup_password"
-
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="61dp" />
+        app:layout_constraintVertical_bias="0.105"
+        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/cancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="32dp"
         android:text="Cancel"
-
-        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.831"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/newemailpopup_password"
-
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="249dp" />
+        app:layout_constraintVertical_bias="0.105"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

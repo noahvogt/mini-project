@@ -104,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // define save button here
+                Snackbar.make(emailPopupView, "save button clicked",Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
 
