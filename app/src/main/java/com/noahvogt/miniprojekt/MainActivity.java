@@ -8,6 +8,7 @@ import android.view.Menu;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -16,10 +17,17 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+
+    //imported by simon 2.may from RecyclerView Programm
+    protected String[] data;
+    private static final int DATASET_COUNT = 60; //declares how far recyclerview count
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +54,13 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        //imported by simon 2.mai
+        //idk realy but it kinda uses the adapter
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        CustomAdapter adapter = new CustomAdapter(data);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
@@ -60,5 +75,16 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+    /**
+     * Generates Strings for RecyclerView's adapter. This data would usually come
+     * from a local content provider or remote server.
+     * implemented from simon 2.may
+     */
+    private void initDataset() {
+        data = new String[DATASET_COUNT];
+        for (int i = 0; i < DATASET_COUNT; i++) {
+            data[i] = "This is element #" + i;
+        }
     }
 }
