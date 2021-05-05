@@ -1,8 +1,10 @@
 package com.noahvogt.miniprojekt;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
+import android.view.ViewGroup;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -26,11 +28,14 @@ public class MainActivity extends AppCompatActivity {
 
     //imported by simon 2.may from RecyclerView Programm
     protected String[] data;
+    protected CustomAdapter adapter;
+    protected RecyclerView recyclerView;
+
     private static final int DATASET_COUNT = 60; //declares how far recyclerview count
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -56,12 +61,18 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         //imported by simon 2.mai
-        //idk realy but it kinda uses the adapter
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        CustomAdapter adapter = new CustomAdapter(data);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        initDataset(); //initialise the data in data
+        recyclerView = findViewById(R.id.recyclerView); //maybe defines view of recyclerView from xml file
+        adapter = new CustomAdapter(data); //inserts Array data in Asapter
+        recyclerView.setAdapter(adapter); //defines CustomAdapter as Adapter for recyclerView
+        recyclerView.setLayoutManager(new LinearLayoutManager(this)); //maybe sets LayoutManager for recyclerView
     }
+
+    /*@Override
+    public View onCreatView(LayoutInflater inflater, ViewGroup container,
+                            Bundle savedInstanceState){
+        View rootView = inflater.inflate(R.layout.recycler_view_frag)
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -84,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     private void initDataset() {
         data = new String[DATASET_COUNT];
         for (int i = 0; i < DATASET_COUNT; i++) {
-            data[i] = "This is element #" + i;
+             data[i] = "This is element #" + i;
         }
     }
 }
