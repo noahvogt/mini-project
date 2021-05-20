@@ -5,19 +5,11 @@
     android:layout_height="match_parent"
     android:id="@+id/sample_main_layout">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <!--android:layout_marginLeft="@dimen/margin_medium"
-        android:layout_marginRight="@dimen/margin_medium"
-        android:gravity="center_vertical"-->
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager" />
-        <!--android:text="@string/element_text"-->
-    </FrameLayout><!--RelativeLayout from https://www.c-sharpcorner.com/article/recyclerview-in-andriod-with-java/
-                        and FrameLayout was befor from https://developer.android.com/guide/topics/ui/layout/recyclerview#java-->
 </LinearLayout><!-- -->
