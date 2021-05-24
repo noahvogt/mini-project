@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">#3498db</item>
+    </style>
+    <style name="error_appearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/error_red</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="betterError" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox" >
+        <item name="errorTextColor">@color/error_red</item>
+        <item name="color">@color/error_red</item>
+    </style>
+</resources>

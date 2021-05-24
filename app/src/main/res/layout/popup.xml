@@ -12,6 +12,8 @@
         android:layout_height="150dp"
         android:background="@drawable/ic_baseline_face_24"
 
+        android:contentDescription="face icon"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -27,7 +29,6 @@
         android:layout_height="wrap_content"
 
         android:layout_marginStart="16dp"
-
         android:layout_marginLeft="16dp"
 
         android:layout_marginTop="16dp"
@@ -75,6 +76,9 @@
         android:hint="Your Name"
         app:startIconDrawable="@drawable/ic_person"
         app:endIconMode="clear_text"
+        app:counterEnabled="true"
+        app:counterMaxLength="50"
+        app:errorEnabled="true"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -82,6 +86,9 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@id/popup_material_name_asking_text"
+
+            android:inputType="textPersonName"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -130,7 +137,6 @@
         android:hint="Your Password"
         app:startIconDrawable="@drawable/ic_lock"
         app:endIconMode="password_toggle"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/popup_material_email_asking_layout">
