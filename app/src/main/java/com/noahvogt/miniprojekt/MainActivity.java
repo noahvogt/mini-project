@@ -7,6 +7,7 @@ import android.webkit.WebHistoryItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -27,8 +28,10 @@ public class MainActivity extends AppCompatActivity {
 
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
-    private EditText newemail_name, newemail_email, newemail_password;
-    private Button newemail_save_button, newemail_cancel_button;
+
+    private EditText newemail_name, newemail_email, newemail_password; // may not be private
+    private Button newemail_save_button, newemail_cancel_button; // may not be private
+
 
     public MainActivity() {
     }
@@ -75,12 +78,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClick(View view) {
-        // change inbox text (WARNING: throws error whenever drafts oder sent is active instead of inbox)
-        //TextView text = (TextView) findViewById(R.id.text_home);
-        //text.setText("Mail has been SuCceSsFuLlY aDdEd");
 
         // display snackbar message
-        Snackbar.make(view, "Mail has been SuCceSsFuLlY aDdEd", Snackbar.LENGTH_LONG)
+        Snackbar.make(view, "Mail has been SuCceSsFuLlY aSkEd FoR", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
         createNewEmailDialog();
     }
@@ -103,9 +103,16 @@ public class MainActivity extends AppCompatActivity {
         newemail_save_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // define save button here
-                Snackbar.make(emailPopupView, "save button clicked",Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                String name = newemail_name.getText().toString();
+                String email = newemail_email.getText().toString();
+                String password = newemail_password.getText().toString();
+
+                // show all strings the user gave, this will later be stored to a secure database and checked for validation
+                showToast(name);
+                showToast(email);
+                showToast(password);
+
+                showSnackbar(emailPopupView,"save button clicked");
             }
         });
 
@@ -117,5 +124,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    // show debug output in  specific view
+    private void showSnackbar(View View, String text) {
+        Snackbar.make(View, text, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+    }
+
+    // like showSnackbar(), but global and uglier
+    private void showToast(String text) {
+        Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
     }
 }
