@@ -19,65 +19,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.068" />
 
-    <EditText
-        android:id="@+id/newemailpopup_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
 
-        android:layout_marginStart="25dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="25dp"
-        android:layout_marginRight="25dp"
-
-        android:hint="@string/your_full_name_filler"
-        android:textSize="20sp"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newlisticon" />
-
-    <EditText
-        android:id="@+id/newemailpopup_email"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-
-
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginLeft="25dp"
-
-        android:textSize="20sp"
-        android:hint="@string/your_email_address_filler"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-
-        app:layout_constraintTop_toBottomOf="@+id/newemailpopup_name" />
-
-    <EditText
-        android:id="@+id/newemailpopup_password"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-
-
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginLeft="25dp"
-
-        android:hint="@string/your_password_filler"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newemailpopup_email" />
 
     <Button
         android:id="@+id/saveButton"
@@ -95,7 +37,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.133"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newemailpopup_password"
+        app:layout_constraintTop_toBottomOf="@+id/popup_material_password_asking_layout"
         app:layout_constraintVertical_bias="0.105"
         tools:ignore="MissingConstraints" />
 
@@ -114,8 +56,92 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.831"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newemailpopup_password"
+        app:layout_constraintTop_toBottomOf="@+id/popup_material_password_asking_layout"
         app:layout_constraintVertical_bias="0.105"
         tools:ignore="MissingConstraints" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/popup_material_name_asking_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="3dp"
+
+        android:hint="Your Name"
+        app:startIconDrawable="@drawable/ic_person"
+        app:endIconMode="clear_text"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newlisticon">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@id/popup_material_name_asking_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/popup_material_email_asking_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="3dp"
+
+        android:hint="Your Email Address"
+        app:startIconDrawable="@drawable/ic_mail_outline"
+        app:endIconMode="clear_text"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/popup_material_name_asking_layout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@id/popup_material_email_asking_text"
+
+            android:inputType="textEmailAddress"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/popup_material_password_asking_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="3dp"
+
+        android:hint="Your Password"
+        app:startIconDrawable="@drawable/ic_lock"
+        app:endIconMode="password_toggle"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/popup_material_email_asking_layout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@id/popup_material_password_asking_text"
+
+            android:inputType="textPassword"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

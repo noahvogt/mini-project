@@ -89,9 +89,9 @@ public class MainActivity extends AppCompatActivity {
     public void createNewEmailDialog(){
         dialogBuilder = new AlertDialog.Builder(this);
         final View emailPopupView = getLayoutInflater().inflate(R.layout.popup, null);
-        newemail_name = (EditText) emailPopupView.findViewById(R.id.newemailpopup_name);
-        newemail_email = (EditText) emailPopupView.findViewById(R.id.newemailpopup_email);
-        newemail_password = (EditText) emailPopupView.findViewById(R.id.newemailpopup_password);
+        newemail_name = (EditText) emailPopupView.findViewById(R.id.popup_material_name_asking_text);
+        newemail_email = (EditText) emailPopupView.findViewById(R.id.popup_material_email_asking_text);
+        newemail_password = (EditText) emailPopupView.findViewById(R.id.popup_material_password_asking_text);
 
         newemail_save_button = (Button) emailPopupView.findViewById(R.id.saveButton);
         newemail_cancel_button = (Button) emailPopupView.findViewById(R.id.cancelButton);

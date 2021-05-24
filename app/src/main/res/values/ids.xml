@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="popup_material_name_asking_text" type="id" />
+    <item name="popup_material_email_asking_text" type="id" />
+    <item name="popup_material_password_asking_text" type="id" />
+</resources>
