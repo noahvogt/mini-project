@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.noahvogt.miniprojekt.R;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
@@ -25,14 +27,14 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textView;
-        private Button messageButton;
+        private TextView Betreff;
 
         public ViewHolder(View view) {
             super(view);
             // Define click listener for the ViewHolder's View
 
             textView = (TextView) view.findViewById(R.id.textView);
-            messageButton = (Button) itemView.findViewById(R.id.message_button);
+            Betreff = (TextView) view.findViewById(R.id.Betreff);
         }
 
         //public TextView getTextView() {
@@ -81,9 +83,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         // Set item views based on your views and data model
         TextView textView = viewHolder.textView;
         textView.setText(contact.getName());
-        Button button = viewHolder.messageButton;
-        button.setText(contact.isOnline() ? "Message" : "Offline");
-        button.setEnabled(contact.isOnline());
+        TextView betreffView = viewHolder.Betreff;
+        betreffView.setText(contact.getDate());
 
     }
 
