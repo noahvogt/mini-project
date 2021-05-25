@@ -9,6 +9,7 @@ public class Data {
     public Data(String name, boolean online) {
         mName = name;
         mOnline = online;
+
     }
 
     public String getName() {

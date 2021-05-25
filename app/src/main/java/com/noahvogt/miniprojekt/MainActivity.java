@@ -70,11 +70,7 @@ public class MainActivity extends AppCompatActivity {
         CustomAdapter adapter = new CustomAdapter(data);
         // Attach the adapter to the recyclerview to populate items
         recyclerView.setAdapter(adapter);
-        // First param is number of columns and second param is orientation i.e Vertical or Horizontal
-        StaggeredGridLayoutManager gridLayoutManager =
-                new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-        // Attach the layout manager to the recycler view
-        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     //@Override
