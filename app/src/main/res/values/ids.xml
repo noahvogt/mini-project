@@ -3,4 +3,5 @@
     <item name="popup_material_name_asking_text" type="id" />
     <item name="popup_material_email_asking_text" type="id" />
     <item name="popup_material_password_asking_text" type="id" />
+    <item name="custom_mail_server_protocol_text" type="id" />
 </resources>

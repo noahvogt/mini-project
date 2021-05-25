@@ -87,6 +87,17 @@ public class MainActivity extends AppCompatActivity {
         createNewEmailDialog();
     }
 
+    public void changeMailServerSettingsDialog() {
+        // define View window
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View changeMailServerSettingsView = getLayoutInflater().inflate(R.layout.provider_database_checker, null);
+
+        // open View window
+        dialogBuilder.setView(changeMailServerSettingsView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+    }
+
 
     public void createNewEmailDialog(){
         // define View window
@@ -124,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 showToast(name);
                 showToast(email);
                 showToast(password);
-
+                changeMailServerSettingsDialog();
 
                 showSnackbar(emailPopupView,"save button clicked");
             }
