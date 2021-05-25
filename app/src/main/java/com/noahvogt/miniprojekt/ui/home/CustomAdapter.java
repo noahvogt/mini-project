@@ -26,15 +26,19 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
      * (custom ViewHolder).
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView textView;
-        private TextView Betreff;
+        private TextView name;
+        private TextView betreff;
+        private TextView date;
+        private TextView begin;
 
         public ViewHolder(View view) {
             super(view);
             // Define click listener for the ViewHolder's View
 
-            textView = (TextView) view.findViewById(R.id.textView);
-            Betreff = (TextView) view.findViewById(R.id.Betreff);
+            name = (TextView) view.findViewById(R.id.textView);
+            betreff = (TextView) view.findViewById(R.id.betreff);
+            date = (TextView) view.findViewById(R.id.date);
+            begin = (TextView) view.findViewById(R.id.begin);
         }
 
         //public TextView getTextView() {
@@ -81,10 +85,16 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         Data contact = localDataSet.get(position);
 
         // Set item views based on your views and data model
-        TextView textView = viewHolder.textView;
-        textView.setText(contact.getName());
-        TextView betreffView = viewHolder.Betreff;
-        betreffView.setText(contact.getDate());
+        TextView nameView = viewHolder.name;
+        TextView betreffView = viewHolder.betreff;
+        TextView dateView = viewHolder.date;
+        TextView beginView = viewHolder.begin;
+
+        nameView.setText(contact.getName());
+        betreffView.setText(contact.getBetreff());
+        dateView.setText(contact.getDate());
+        beginView.setText(contact.getBegin());
+
 
     }
 
