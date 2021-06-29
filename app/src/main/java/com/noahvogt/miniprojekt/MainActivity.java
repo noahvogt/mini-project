@@ -27,7 +27,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Patterns;
 import java.util.regex.Pattern;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText newemail_name, newemail_email, newemail_password; // may not be private
     private Button newemail_save_button, newemail_cancel_button; // may not be private
+    private Button add_email_button;
 
 
     public MainActivity() {
@@ -45,6 +46,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // define button listeners
+        add_email_button = (Button) findViewById(R.id.addEmailButton);
+        add_email_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNewEmailDialog();
+            }
+        });
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         /*FloatingActionButton fab = findViewById(R.id.fab);
@@ -82,10 +93,8 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    public void onClick(View view) {
-        // TODO: remove future button action ambiguity
-        createNewEmailDialog();
-    }
+    // better leave empty to avoid any listener disambiguity
+    public void onClick(View view) {}
 
 
     public void createNewEmailDialog(){
