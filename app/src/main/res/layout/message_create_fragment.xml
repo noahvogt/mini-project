@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/messageFragment"
     android:orientation="vertical"
-    tools:context=".ui.messageCreateFragment">
+    tools:context=".messageCreateFragment">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -30,18 +30,55 @@
             android:src="@mipmap/ic_close_purple" />
 
         <TextView
+            android:id="@+id/create_message_text_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:layout_toRightOf="@id/create_message_close_button"
+            android:layout_marginLeft="8dp"
             android:layout_toEndOf="@+id/create_message_close_button"
+            android:layout_toRightOf="@id/create_message_close_button"
             android:text="Create Message"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
 
-        <TextView
+
+        <ImageButton
+            android:id="@+id/create_message_attach_button"
+            android:layout_width="56dp"
+            android:layout_height="match_parent"
+
+
+            android:layout_marginStart="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_toStartOf="@+id/create_message_send_button"
+            android:layout_toLeftOf="@+id/create_message_send_button"
+            android:layout_toEndOf="@+id/create_message_text_text"
+            android:layout_toRightOf="@+id/create_message_text_text"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:src="@mipmap/ic_attach_purple" />
+
+        <ImageButton
+        android:id="@+id/create_message_dots_button"
+        android:layout_width="56dp"
+        android:layout_height="match_parent"
+
+        android:layout_marginStart="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginEnd="-10dp"
+        android:layout_marginRight="-10dp"
+        android:layout_toStartOf="@+id/create_message_send_button"
+        android:layout_toLeftOf="@+id/create_message_send_button"
+        android:layout_toEndOf="@+id/create_message_text_text"
+        android:layout_toRightOf="@+id/create_message_text_text"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        android:src="@mipmap/ic_more_vert_dots_purple" />
+
+        <ImageButton
             android:id="@+id/create_message_send_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,14 +89,22 @@
             android:layout_marginEnd="8dp"
             android:background="?attr/selectableItemBackground"
             android:padding="8dp"
-            android:text="SEND"
+            android:src="@mipmap/ic_send_purple"
             android:textColor="@android:color/white" />
 
     </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="top">
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -105,5 +150,36 @@
             android:layout_height="wrap_content"
             android:hint="Subject" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/create_message_body_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="12dp"
+
+        app:layout_constraintTop_toBottomOf="@+id/create_message_sending_address_layout"
+        tools:layout_editor_absoluteX="1dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/create_message_body_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="160dp"
+            android:textAlignment="viewStart"
+            android:hint="Message ..."
+            android:inputType="textMultiLine"
+            android:gravity="start" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

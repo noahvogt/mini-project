@@ -23,20 +23,13 @@ import com.google.android.material.snackbar.Snackbar;
 
 import static com.noahvogt.miniprojekt.R.id.drawer_layout;
 
-// regex utils for email string validation
-
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private AppBarConfiguration mAppBarConfiguration;
 
-    private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
 
     private EditText newemail_name, newemail_email, newemail_password; // may not be private
-    private Button newemail_save_button, newemail_cancel_button; // may not be private
-    private Button add_email_button;
-
-    private ImageButton message_create_button;
 
     // empty descriptor
     public MainActivity() {
@@ -48,7 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         // define button listeners
-        add_email_button = (Button) findViewById(R.id.addEmailButton);
+
+        Button add_email_button = (Button) findViewById(R.id.addEmailButton);
         add_email_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,16 +50,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        ImageButton message_create_button = (ImageButton) findViewById(R.id.messageButton);
+        message_create_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment dialog = messageCreateFragment.newInstance();
+                dialog.show(getSupportFragmentManager(), "tag");
+            }
+        });
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        /*FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
+
         DrawerLayout drawer = findViewById(drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -77,22 +73,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
-        message_create_button = (ImageButton) findViewById(R.id.messageButton);
-        message_create_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment dialog = messageCreateFragment.newInstance();
-                dialog.show(getSupportFragmentManager(), "tag");
-            }
-        });
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.create_message_options_menu, menu);
         return true;
     }
 
@@ -109,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void createNewEmailDialog(){
         // define View window
-        dialogBuilder = new AlertDialog.Builder(this);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         final View emailPopupView = getLayoutInflater().inflate(R.layout.popup, null);
 
         // init text field variables
@@ -118,8 +104,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         newemail_password = emailPopupView.findViewById(R.id.popup_material_password_asking_text);
 
         // init button variables
-        newemail_save_button = (Button) emailPopupView.findViewById(R.id.saveButton);
-        newemail_cancel_button = (Button) emailPopupView.findViewById(R.id.cancelButton);
+        Button newemail_save_button = (Button) emailPopupView.findViewById(R.id.saveButton);
+        // may not be private
+        Button newemail_cancel_button = (Button) emailPopupView.findViewById(R.id.cancelButton);
 
         // open View window
         dialogBuilder.setView(emailPopupView);
