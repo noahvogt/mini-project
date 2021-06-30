@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/messageFragment"
+    android:orientation="vertical"
+    tools:context=".ui.messageCreateFragment">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:cardBackgroundColor="#5e35b1">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/create_message_close_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:src="@mipmap/ic_close_purple" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_toRightOf="@id/create_message_close_button"
+            android:layout_toEndOf="@+id/create_message_close_button"
+            android:text="Create Message"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/create_message_send_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackground"
+            android:padding="8dp"
+            android:text="SEND"
+            android:textColor="@android:color/white" />
+
+    </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/create_message_sending_address_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="12dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/create_message_sending_address_text"
+            android:inputType="textEmailAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Sending Mail Address" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/create_message_subject_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="12dp"
+
+        app:layout_constraintTop_toBottomOf="@+id/create_message_sending_address_layout"
+        tools:layout_editor_absoluteX="1dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/create_message_subject_text"
+            android:inputType="textEmailSubject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Subject" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>

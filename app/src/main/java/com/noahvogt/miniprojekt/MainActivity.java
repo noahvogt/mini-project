@@ -1,31 +1,29 @@
 package com.noahvogt.miniprojekt;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Menu;
-import android.webkit.WebHistoryItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.navigation.NavigationView;
-
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+
+import static com.noahvogt.miniprojekt.R.id.drawer_layout;
 
 // regex utils for email string validation
-import android.util.Patterns;
-import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -38,7 +36,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button newemail_save_button, newemail_cancel_button; // may not be private
     private Button add_email_button;
 
+    private ImageButton message_create_button;
 
+    // empty descriptor
     public MainActivity() {
     }
 
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .setAction("Action", null).show();
             }
         });*/
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -77,6 +77,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        message_create_button = (ImageButton) findViewById(R.id.messageButton);
+        message_create_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment dialog = messageCreateFragment.newInstance();
+                dialog.show(getSupportFragmentManager(), "tag");
+            }
+        });
+
     }
 
     @Override
@@ -125,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String email = newemail_email.getText().toString();
                 String password = newemail_password.getText().toString();
 
-                if (!validateEmail() | !validateName() | !validatePassword()) {
+                if (!mailFunctions.validateEmail(newemail_email) | !mailFunctions.validateName(newemail_name) | !mailFunctions.validatePassword(newemail_password)) {
                     return;
                 }
 
@@ -147,51 +157,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-    }
-
-    // TODO: resolve password endIcon conflict
-    private boolean validateName() {
-        String name = newemail_name.getText().toString().trim();
-
-        if (name.isEmpty()) {
-            newemail_name.setError("Field can't be empty");
-            return false;
-        } else if (name.length() > 50) {
-            newemail_name.setError("Name too long");
-            return false;
-        } else {
-            newemail_name.setError(null);
-            return true;
-        }
-    }
-
-    // TODO: resolve password endIcon conflict
-    private boolean validateEmail() {
-        String email = newemail_email.getText().toString().trim();
-
-        if (email.isEmpty()) {
-            newemail_email.setError("Field can't be empty");
-            return false;
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            newemail_email.setError("Please enter a valid email address");
-            return false;
-        } else {
-            newemail_email.setError(null);
-            return true;
-        }
-    }
-
-    // TODO: resolve password endIcon conflicts
-    private boolean validatePassword() {
-        String password = newemail_password.getText().toString().trim();
-
-        if (password.isEmpty()) {
-            newemail_password.setError("Field can't be empty");
-            return false;
-        } else {
-            newemail_password.setError(null);
-            return true;
-        }
     }
 
     // show debug output in  specific view
