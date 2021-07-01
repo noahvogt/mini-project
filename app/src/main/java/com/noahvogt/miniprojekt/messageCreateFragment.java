@@ -5,20 +5,27 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.snackbar.Snackbar;
 
 public class messageCreateFragment extends DialogFragment implements PopupMenu.OnMenuItemClickListener {
 
     static messageCreateFragment newInstance() {
         return new messageCreateFragment();
     }
+    private AlertDialog dialog;
+
+
 
     // set theming style
     @Override
@@ -27,23 +34,80 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
         setStyle(DialogFragment.STYLE_NORMAL, R.style.messageCreateTheme);
     }
 
-    // set layout
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // set and inflate layout
         View view = inflater.inflate(R.layout.message_create_fragment, container, false);
+
+        // init vars
+
         ImageButton closeButton = view.findViewById(R.id.create_message_close_button);
         ImageButton sendButton = view.findViewById(R.id.create_message_send_button);
         ImageButton dotButton = view.findViewById(R.id.create_message_dots_button);
         ImageButton attachButton = view.findViewById(R.id.create_message_attach_button);
 
+        EditText sendingAddressObject = (EditText) view.findViewById(R.id.create_message_sending_address_text);
+        EditText receivingAddressObject = (EditText) view.findViewById(R.id.create_message_receiving_address_text);
+        EditText subjectObject = (EditText) view.findViewById(R.id.create_message_subject_text);
+        EditText messageBodyObject = (EditText) view.findViewById(R.id.create_message_body_text);
+
+        // get string vars, MAYBE NOT HERE
+        String sendingAddress = sendingAddressObject.getText().toString();
+        String receivingAddress = receivingAddressObject.getText().toString();
+        String subject = subjectObject.getText().toString();
+        String messageBody = messageBodyObject.getText().toString();
+
         // TODO: add cc + bcc functionality
+
+        // button listeners
 
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: alert user when pressing this button in case input fields are not empty
-                dismiss();
+                String subject = subjectObject.getText().toString();
+                String messageBody = messageBodyObject.getText().toString();
+                if (subject.isEmpty() && messageBody.isEmpty()) {
+                    dismiss();
+                }
+                else {
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+                    final View cancelAlertPopupView = getLayoutInflater().inflate(R.layout.closing_alert, null);
+
+                    // open View window
+                    dialogBuilder.setView(cancelAlertPopupView);
+                    dialog = dialogBuilder.create();
+                    dialog.show();
+
+                    Button yesButton = (Button) view.findViewById(R.id.closing_alert_yes_button);
+                    Button noButton = (Button) view.findViewById(R.id.closing_alert_no_button);
+
+                    final boolean[] wantsToCancel = new boolean[1]; // do we really need an array here? stupid java
+
+
+/*
+                    yesButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //wantsToCancel[0] = true;
+                            dialog.dismiss();
+                        }
+                    });
+                    noButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //wantsToCancel[0] = false;
+                            dialog.dismiss();
+                        }
+                    });
+
+                    if (wantsToCancel[0]) {
+                        dismiss();
+                    }*/
+                    // TODO: alert user when pressing this button in case input fields are not empty
+                }
+
             }
         });
 
