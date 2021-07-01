@@ -1,6 +1,8 @@
 package com.noahvogt.miniprojekt;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -21,15 +23,15 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
     static messageCreateFragment newInstance() {
         return new messageCreateFragment();
     }
+
     private AlertDialog dialog;
+    SharedPreferences preferences;
 
-
-
-    // set theming style
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.messageCreateTheme);
+        preferences = getActivity().getSharedPreferences("UserPrefrences", Context.MODE_PRIVATE);
     }
 
 
@@ -50,6 +52,10 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
         EditText receivingAddressObject = (EditText) view.findViewById(R.id.create_message_receiving_address_text);
         EditText subjectObject = (EditText) view.findViewById(R.id.create_message_subject_text);
         EditText messageBodyObject = (EditText) view.findViewById(R.id.create_message_body_text);
+
+        // set logged in email address as sending address
+        String loginEmail = preferences.getString("email","");
+        sendingAddressObject.setText(loginEmail);
 
         // get string vars, MAYBE NOT HERE
         String sendingAddress = sendingAddressObject.getText().toString();
@@ -138,7 +144,6 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
                 // TODO: implement actual sending functionality
             }
         });
-
 
         return view;
     }

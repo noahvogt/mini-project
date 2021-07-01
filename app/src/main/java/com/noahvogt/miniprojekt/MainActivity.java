@@ -1,5 +1,7 @@
 package com.noahvogt.miniprojekt;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private EditText newemail_name, newemail_email, newemail_password; // may not be private
 
+    SharedPreferences preferences;
+
     // empty descriptor
     public MainActivity() {
     }
@@ -58,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 dialog.show(getSupportFragmentManager(), "tag");
             }
         });
+
+        // init preferences + simple editor
+         preferences = (SharedPreferences) getSharedPreferences("UserPrefrences", Context.MODE_PRIVATE);
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -113,11 +121,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialog = dialogBuilder.create();
         dialog.show();
 
+
+        SharedPreferences.Editor preferencesEditor = preferences.edit();
+
         // store user input
         newemail_save_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // store user input (only needed for DEBUGGING)
+                // store user input, MAYBE DELETE LATER
                 String name = newemail_name.getText().toString();
                 String email = newemail_email.getText().toString();
                 String password = newemail_password.getText().toString();
@@ -130,7 +141,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 showToast(name);
                 showToast(email);
                 showToast(password);
-
+                preferencesEditor.putString("name", name);
+                preferencesEditor.putString("email", email);
+                preferencesEditor.putString("password", password);
+                preferencesEditor.commit();
 
                 showSnackbar(emailPopupView,"save button clicked");
             }
