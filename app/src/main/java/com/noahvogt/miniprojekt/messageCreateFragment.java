@@ -69,83 +69,36 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
             public void onClick(View v) {
                 String subject = subjectObject.getText().toString();
                 String messageBody = messageBodyObject.getText().toString();
+
+                // give alert dialog box to user in case input fields are not empty
+
                 if (subject.isEmpty() && messageBody.isEmpty()) {
                     dismiss();
                 }
                 else {
-
-                    final boolean[] wantsToCancel = new boolean[1]; // do we really need an array here? stupid java
-                    /*
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-                    final View cancelAlertPopupView = getLayoutInflater().inflate(R.layout.closing_alert, null);
-
-                    // open View window
-                    dialogBuilder.setView(cancelAlertPopupView);
-                    dialog = dialogBuilder.create();
-                    dialog.show();
-
-                    Button yesButton = (Button) view.findViewById(R.id.closing_alert_yes_button);
-                    Button noButton = (Button) view.findViewById(R.id.closing_alert_no_button);
-
-
-
-
-
-                    yesButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //wantsToCancel[0] = true;
-                            dialog.dismiss();
-                        }
-                    });
-                    noButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //wantsToCancel[0] = false;
-                            dialog.dismiss();
-                        }
-                    });
-
-                    if (wantsToCancel[0]) {
-                        dismiss();
-                    }*/
-                    // TODO: alert user when pressing this button in case input fields are not empty
-
+                    // setup dialog
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-
-                    // set title
                     alertDialogBuilder.setTitle("Warning");
-
-                    // set dialog message
                     alertDialogBuilder
                             .setMessage("Do you really want to cancel?")
                             .setCancelable(false)
                             .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    // if this button is clicked, close
-                                    // current activity
-                                    wantsToCancel[0] = true;
+                                    // if this button is clicked, close the whole fragment
                                     dismiss();
                                 }
                             })
                             .setNegativeButton("No",new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,int id) {
-                                    // if this button is clicked, just close
-                                    // the dialog box and do nothing
-                                    wantsToCancel[0] = false;
+                                    // if this button is clicked, just close the dialog box
                                     dialog.cancel();
                                 }
                             });
 
-                    // create alert dialog
+                    // create + show alert dialog
                     AlertDialog alertDialog = alertDialogBuilder.create();
-
-                    // show it
                     alertDialog.show();
                 }
-
-
-
             }
         });
 
