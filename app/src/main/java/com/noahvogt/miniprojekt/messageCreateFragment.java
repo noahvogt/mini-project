@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
@@ -16,8 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
-
-import com.google.android.material.snackbar.Snackbar;
 
 public class messageCreateFragment extends DialogFragment implements PopupMenu.OnMenuItemClickListener {
 
@@ -122,8 +119,23 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: implement sending functionality
-                dismiss();
+                // init vars, MAYBE NEEDED FOR LATER
+                String sendingAddress = sendingAddressObject.getText().toString();
+                String receivingAddress = receivingAddressObject.getText().toString();
+                String subject = subjectObject.getText().toString();
+                String messageBody = messageBodyObject.getText().toString();
+
+                // check for valid input
+                if (mailFunctions.validateMessageBody(messageBodyObject) && mailFunctions.validateSubject(subjectObject) &&
+                mailFunctions.validateEmail(receivingAddressObject) && mailFunctions.validateEmail(sendingAddressObject) &&
+                !mailFunctions.checkForSameEmail(sendingAddressObject, receivingAddressObject)) {
+                    Toast.makeText(getActivity(), "sending ... ", Toast.LENGTH_SHORT).show();
+                    dismiss();
+                } else {
+                    Toast.makeText(getActivity(), "Please check your input", Toast.LENGTH_SHORT).show();
+                }
+
+                // TODO: implement actual sending functionality
             }
         });
 
@@ -131,7 +143,16 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
         return view;
     }
 
-    // TODO: add useful functionality to the menu + consider not using Resource ID's in switch statement
+    /* TODO: add useful functionality to the menu + consider not using Resource ID's in switch statement
+
+        IDEAS:
+        - safe to draft
+        - clear all user input
+        - change / check email signature
+        - some email header hacking / options / customization
+        - mail server probing
+        - sending address spoofer ??
+    */
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
