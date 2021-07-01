@@ -1,5 +1,6 @@
 package com.noahvogt.miniprojekt;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -72,6 +73,9 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
                     dismiss();
                 }
                 else {
+
+                    final boolean[] wantsToCancel = new boolean[1]; // do we really need an array here? stupid java
+                    /*
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
                     final View cancelAlertPopupView = getLayoutInflater().inflate(R.layout.closing_alert, null);
 
@@ -83,10 +87,10 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
                     Button yesButton = (Button) view.findViewById(R.id.closing_alert_yes_button);
                     Button noButton = (Button) view.findViewById(R.id.closing_alert_no_button);
 
-                    final boolean[] wantsToCancel = new boolean[1]; // do we really need an array here? stupid java
 
 
-/*
+
+
                     yesButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -106,7 +110,41 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
                         dismiss();
                     }*/
                     // TODO: alert user when pressing this button in case input fields are not empty
+
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+
+                    // set title
+                    alertDialogBuilder.setTitle("Warning");
+
+                    // set dialog message
+                    alertDialogBuilder
+                            .setMessage("Do you really want to cancel?")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // if this button is clicked, close
+                                    // current activity
+                                    wantsToCancel[0] = true;
+                                    dismiss();
+                                }
+                            })
+                            .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,int id) {
+                                    // if this button is clicked, just close
+                                    // the dialog box and do nothing
+                                    wantsToCancel[0] = false;
+                                    dialog.cancel();
+                                }
+                            });
+
+                    // create alert dialog
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+
+                    // show it
+                    alertDialog.show();
                 }
+
+
 
             }
         });
