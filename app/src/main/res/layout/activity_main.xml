@@ -6,7 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    tools:openDrawer="start"
+    tools:context=".MainActivity">
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="50dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
     <include
         layout="@layout/app_bar_main"
@@ -36,4 +47,7 @@
             android:paddingRight="10dp"
             android:text="Add Email" />
     </com.google.android.material.navigation.NavigationView>
+
+
+
 </androidx.drawerlayout.widget.DrawerLayout>
