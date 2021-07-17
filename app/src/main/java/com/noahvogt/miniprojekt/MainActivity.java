@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 
 import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
 import com.noahvogt.miniprojekt.ui.home.Data;
+import com.noahvogt.miniprojekt.ui.home.SettingsFragment;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -60,14 +61,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //add setting Fragment
+        Button settings_button = (Button) findViewById(R.id.settingsButton);
+        settings_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(android.R.id.content, new SettingsFragment())
+                        .commit();
+            }
+        });
+
 
         // define button listeners
 
