@@ -1,5 +1,6 @@
 package com.noahvogt.miniprojekt;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.view.Menu;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 
 import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
 import com.noahvogt.miniprojekt.ui.home.Data;
+import com.noahvogt.miniprojekt.ui.home.SettingsActivity;
 import com.noahvogt.miniprojekt.ui.home.SettingsFragment;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -66,17 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //add setting Fragment
-        Button settings_button = (Button) findViewById(R.id.settingsButton);
-        settings_button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(android.R.id.content, new SettingsFragment())
-                        .commit();
-            }
-        });
+
 
 
         // define button listeners
@@ -123,6 +115,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Attach the adapter to the recyclerview to populate items
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        //
+        Button settingButton = findViewById(R.id.settingsButton);
+        settingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
 

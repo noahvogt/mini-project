@@ -23,6 +23,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
+
+
 import com.noahvogt.miniprojekt.R;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
