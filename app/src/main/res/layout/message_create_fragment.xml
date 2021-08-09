@@ -37,8 +37,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_toEndOf="@+id/create_message_close_button"
-            android:layout_toRightOf="@id/create_message_close_button"
-            android:text="Create Message"
+            android:layout_toRightOf="@+id/create_message_close_button"
+            android:text="@string/text_create_message"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
 
@@ -124,7 +124,7 @@
             android:inputType="textEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="From (Email)" />
+            android:hint="@string/hint_email_from" />
     </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -145,7 +145,7 @@
                     android:inputType="textEmailAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="To (Email)" />
+                    android:hint="@string/hint_email_to" />
             </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -169,7 +169,7 @@
             android:inputType="textEmailSubject"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Subject" />
+            android:hint="@string/hint_subject" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -194,7 +194,7 @@
             android:layout_height="wrap_content"
             android:minHeight="160dp"
             android:textAlignment="viewStart"
-            android:hint="Message ..."
+            android:hint="@string/hint_message"
             android:inputType="textMultiLine"
             android:gravity="start" />
     </com.google.android.material.textfield.TextInputLayout>

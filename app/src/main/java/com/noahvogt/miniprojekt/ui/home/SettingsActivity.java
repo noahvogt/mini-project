@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.noahvogt.miniprojekt.R;
 
+import java.util.Objects;
+
 public class SettingsActivity extends AppCompatActivity {
 
     @Override
@@ -15,7 +17,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         // below line is to change
         // the title of our action bar.
-        getSupportActionBar().setTitle("Settings");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Settings");
 
         // below line is used to check if
         // frame layout is empty or not.

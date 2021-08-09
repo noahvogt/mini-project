@@ -2,6 +2,10 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <SwitchPreferenceCompat
+        android:key="@string/key_notification"
+        android:title="@string/enable_message_notification"/>
+
 
     <PreferenceCategory android:title="General">
 
@@ -14,7 +18,7 @@
         android:summary="@string/remind_me"
         android:title="@string/remind_me" />
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="@string/remind_me_for_bed_time"
         android:title="@string/remind_for_bed_time" />

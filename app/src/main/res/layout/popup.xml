@@ -12,7 +12,7 @@
         android:layout_height="150dp"
         android:background="@drawable/ic_baseline_face_24"
 
-        android:contentDescription="face icon"
+        android:contentDescription="@string/face_icon"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,7 +32,7 @@
 
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Save"
+        android:text="@string/text_save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.133"
@@ -51,7 +51,7 @@
 
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Cancel"
+        android:text="@string/text_cancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.831"
@@ -72,7 +72,7 @@
         android:layout_marginRight="32dp"
         android:layout_marginBottom="3dp"
 
-        android:hint="Your Name"
+        android:hint="@string/hint_your_name"
         app:startIconDrawable="@drawable/ic_person"
         app:counterEnabled="true"
         app:counterMaxLength="50"
@@ -103,7 +103,7 @@
         android:layout_marginRight="32dp"
         android:layout_marginBottom="3dp"
 
-        android:hint="Your Email Address"
+        android:hint="@string/hint_your_email_address"
         app:startIconDrawable="@drawable/ic_mail_outline"
 
         app:layout_constraintEnd_toEndOf="parent"
@@ -131,7 +131,7 @@
         android:layout_marginRight="32dp"
         android:layout_marginBottom="3dp"
 
-        android:hint="Your Password"
+        android:hint="@string/hint_your_password"
         app:startIconDrawable="@drawable/ic_lock"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
