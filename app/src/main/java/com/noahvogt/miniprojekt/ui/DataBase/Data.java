@@ -1,4 +1,4 @@
-package com.noahvogt.miniprojekt.ui.home;
+package com.noahvogt.miniprojekt.ui.DataBase;
 
 import java.util.ArrayList;
 
@@ -27,12 +27,14 @@ public class Data {
 
 
 
-    private static int lastContactId = 0;
 
-    public static ArrayList<Data> createContactsList(int numContacts) {
+
+    public static ArrayList<Data> createMailList(int numItems) {
         ArrayList<Data> contacts = new ArrayList<Data>();
 
-        for (int i = 1; i <= numContacts; i++) {
+        int lastContactId = 0;
+
+        for (int i = 1; i <= numItems; i++) {
             contacts.add(new Data("Person " + ++lastContactId, "14.04.2021", "This email begins with..",
                     "My Betreff is no that god"));
         }

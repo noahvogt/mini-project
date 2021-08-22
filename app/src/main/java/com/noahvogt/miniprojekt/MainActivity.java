@@ -15,17 +15,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.View;
-import android.view.ViewGroup;
-
+import com.noahvogt.miniprojekt.ui.DataBase.Message;
 import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
-import com.noahvogt.miniprojekt.ui.home.Data;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
 
@@ -39,17 +33,18 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import static com.noahvogt.miniprojekt.R.id.drawer_layout;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+
+
+
     private AppBarConfiguration mAppBarConfiguration;
 
-    //imported by simon 2.may from RecyclerView Programm, changed to 23.may Simon to ArrayList<Data>...
-    protected ArrayList<Data> data;
+    protected ArrayList<Message> data;
 
     private AlertDialog dialog;
 
@@ -58,9 +53,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // empty descriptor
     public MainActivity() {
     }
-
-
-
 
 
 
@@ -104,10 +96,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NavigationUI.setupWithNavController(navigationView, navController);
 
         //initDataset();
-        // Lookup the recyclerview in activity layou
+        // Lookup the recyclerview in activity layout
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         // Initialize contacts
-        data = Data.createContactsList(20);
+        data = CustomAdapter.createEmailList(20);
         // Create adapter passing in the sample user data
         CustomAdapter adapter = new CustomAdapter(data);
         // Attach the adapter to the recyclerview to populate items
@@ -199,6 +191,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void showToast(String text) {
         Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
     }
+
+
 
 
 }
