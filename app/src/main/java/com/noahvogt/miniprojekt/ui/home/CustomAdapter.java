@@ -23,7 +23,9 @@ import java.util.List;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
-    public static Message content = new Message();
+    public static Message message = new Message();
+
+    private static ArrayList<Message> current = new ArrayList<Message>();
 
     private List<Message> localDataSet;
 
@@ -116,11 +118,20 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     //to set the content of the Sentfolder by changing the adapter
     public static void setSent(int numItems){
 
-        for (int i = 1; i <= numItems; i++){
-            content.setBetreff("Hi");
-            content.setFrom("jeffry");
-            content.setDate("Today");
-        }
+            message.setId(1);
+            message.setBetreff("Hi");
+            message.setFrom("jeffry");
+            message.setDate("Today");
+
+            current.add(message.getId(),message);
+
+            message.setId(2);
+            message.setBetreff("test");
+            message.setFrom("Simon");
+            message.setDate("23.8.august");
+
+            current.add(message.getId(), message);
+
 
     }
 
@@ -129,9 +140,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
         for (int i =1 ; i <= numItems; i++){
 
-            content.setFrom("Hello");
-            content.setDate("Tomorrow");
-            content.setBetreff("Bye");
+            message.setFrom("Hello");
+            message.setDate("Tomorrow");
+            message.setBetreff("Bye");
         }
 
 
@@ -142,38 +153,38 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public static void setDraft(int numItems){
 
         for (int i = 1; i <= numItems; i++){
-            content.setFrom("You");
-            content.setDate("noDay");
-            content.setBetreff("i want to die");
+            message.setFrom("You");
+            message.setDate("noDay");
+            message.setBetreff("i want to die");
         }
 
 
     }
 
     public static ArrayList<Message> createEmailList(int numItems){
-        ArrayList<Message> content = new ArrayList<Message>();
+        ArrayList<Message> current = new ArrayList<Message>();
+
+
+            //for (int i = 1; i <= numItems; i++) {
+             //   current.add(CustomAdapter.message);
+           // }
+
+
 
 
             for (int i = 1; i <= numItems; i++) {
-                content.add(CustomAdapter.content);
+                CustomAdapter.current.add(CustomAdapter.message);
             }
 
 
 
 
             for (int i = 1; i <= numItems; i++) {
-                content.add(CustomAdapter.content);
+                CustomAdapter.current.add(CustomAdapter.message);
             }
 
 
-
-
-            for (int i = 1; i <= numItems; i++) {
-                content.add(CustomAdapter.content);
-            }
-
-
-        return content;
+        return CustomAdapter.current;
 
     }
 }
