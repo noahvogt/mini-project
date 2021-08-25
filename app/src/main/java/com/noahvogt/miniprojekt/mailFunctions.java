@@ -5,7 +5,7 @@ import android.widget.EditText;
 
 public class mailFunctions {
 
-    // TODO: resolve endIcon style conflict
+    /* TODO: resolve endIcon style conflict */
 
     public static boolean validateName(EditText emailName) {
         String name = emailName.getText().toString().trim();
@@ -51,13 +51,13 @@ public class mailFunctions {
 
     public static boolean validateSubject(EditText emailSubject) {
         String subject = emailSubject.getText().toString();
-        // TODO: check email protocol specification for what is allowed for subjects
+        /* TODO: check email protocol specification for what is allowed for subjects */
         return true;
     }
 
     public static boolean validateMessageBody(EditText emailMessageBody) {
         String messageBody = emailMessageBody.getText().toString();
-        // TODO: check email protocol specification for what is allowed for message bodies
+        /* TODO: check email protocol specification for what is allowed for message bodies */
         return true;
     }
 
