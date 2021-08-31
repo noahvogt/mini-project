@@ -29,6 +29,7 @@ import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
 import com.noahvogt.miniprojekt.ui.home.Data;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.chaquo.python.android.PyApplication;
 
@@ -178,14 +179,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         "checkConnection", name, email, password, 993).toBoolean();
                 if (canConnectBool == Boolean.TRUE) {
                     showToast("was able to connect");
+                    List l =  pythonMailFunctions.callAttr("listMailboxes", pythonMailFunctions.callAttr("connect", name, email, password, 993)).asList();
+                    for (int i = 0; i < l.size(); i++) {
+                        showToast(l.get(i).toString());
+                    }
+
                 } else {
                     showToast("failed to connect");
+
+                    /* show all strings the user gave, this will later be stored to a secure database and checked for validation */
+                    showToast(name);
+                    showToast(email);
+                    showToast(password);
                 }
 
-                /* show all strings the user gave, this will later be stored to a secure database and checked for validation */
-                showToast(name);
-                showToast(email);
-                showToast(password);
+
             }
         });
 
