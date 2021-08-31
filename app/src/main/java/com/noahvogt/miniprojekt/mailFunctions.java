@@ -6,6 +6,7 @@ import android.widget.EditText;
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class mailFunctions {
@@ -26,6 +27,12 @@ public class mailFunctions {
         Python python = Python.getInstance();
         PyObject pythonMailFunctions = python.getModule("mailFunctions");
         return pythonMailFunctions.callAttr("listMailboxes", IMAPConnection).asList();
+    }
+
+    public static List fetchMailsFromBox(PyObject IMAPConnection, String Folder) {
+        Python python = Python.getInstance();
+        PyObject pythonMailFunctions = python.getModule("mailFunctions");
+        return pythonMailFunctions.callAttr("fetchMails", IMAPConnection, Folder).asList();
     }
 
     public static boolean validateName(EditText emailName) {

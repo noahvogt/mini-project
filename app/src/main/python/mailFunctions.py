@@ -52,33 +52,41 @@ def fetchMails(connection, inbox):
     typ, data = connection.search(None, 'ALL')
     output_list = []
     for num in data[0].split():
+        output_dict = {}
         typ, data = connection.fetch(num, '(RFC822)')
         msg = email.message_from_bytes(data[0][1])
-        #print(type(msg))
+
         #print(msg)
-        raw_subject = email.header.decode_header(msg['Subject'])[0]
+
+        raw_string = email.header.decode_header(msg['Subject'])[0]
+        raw_from = email.header.decode_header(msg['From'])[0]
+        raw_to = email.header.decode_header(msg['To'])[0]
+        raw_date = email.header.decode_header(msg['Date'])[0]
+
+        raw_msg = str(msg)
+
+        primitive_body = raw_msg[raw_msg.find('\n\n'):].strip()
+
         #raw_body = email.header.decode_header(msg['Body'])[0][0]
-        '''
-        if decode[1] == 'utf-8':
-            subject = decode[0].decode('utf-8')
-        else:
-            subject = decode[0]
-        '''
+
+        # set subject to an empty string when not found
+        try:
+            if raw_string[1] == 'utf-8':
+                subject = raw_string[0].raw_string('utf-8')
+            else:
+                subject = raw_string[0]
+        except AttributeError:
+            subject=""
+
         #print("subject: {}".format(subject))
-        #input()
-        #print('Message %s\n%s\n' % (num, data[0][1]))
-        #print('Message %s\n%s\n' % (num, data[0][1].split()))
-        #print('%s\n' % (len(data[0][1].split())))
-        '''
-        j = 0
-        for i in range(len(str(msg))):
-            if str(msg)[i] == "\n":
-                print(str(msg)[j:i])
-                j = int(i)
-        '''
 
+        output_dict['subject'] = subject
+        output_dict['from'] = raw_from[0]
+        output_dict['to'] = raw_to[0]
+        output_dict['date'] = raw_date[0]
+        output_dict['content'] = primitive_body
 
-        output_list.append(str(raw_subject))
+        output_list.append(output_dict)
 
     connection.close()
     connection.logout()
