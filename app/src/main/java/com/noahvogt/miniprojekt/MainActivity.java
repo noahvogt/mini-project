@@ -20,6 +20,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
 import com.google.android.material.navigation.NavigationView;
@@ -144,15 +145,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /* may not be private */
         Button newemail_cancel_button = (Button) emailPopupView.findViewById(R.id.cancelButton);
 
-        if (! Python.isStarted()) {
-            Python.start(new AndroidPlatform(this));
-        }
-
 
         /* open View window */
             dialogBuilder.setView(emailPopupView);
         dialog = dialogBuilder.create();
         dialog.show();
+
+        if (! Python.isStarted()) {
+            Python.start(new AndroidPlatform(this));
+        }
 
         /* store user input */
         newemail_save_button.setOnClickListener(new View.OnClickListener() {
@@ -166,6 +167,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (!mailFunctions.validateEmail(newemail_email) | !mailFunctions.validateName(newemail_name) | !mailFunctions.validatePassword(newemail_password)) {
                     return;
                 }
+
+                Python python = Python.getInstance();
+                PyObject helloWorld = python.getModule("helloworldscript");
+                String stringFromPy = helloWorld.callAttr("hi").toString();
+                showToast(stringFromPy);
 
                 /* show all strings the user gave, this will later be stored to a secure database and checked for validation */
                 showToast(name);

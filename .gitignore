@@ -16,4 +16,4 @@
 .cxx
 local.properties
 app/release/
-*__pycache__/*
+*__pycache__*

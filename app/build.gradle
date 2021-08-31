@@ -21,7 +21,11 @@ android {
             abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
         }
         python {
-            buildPython "/usr/bin/python3"
+            pip {
+                //install "email"
+                //install "imaplib"
+            }
+            buildPython "/usr/bin/python3.8"
         }
     packagingOptions {
         exclude 'META-INF/NOTICE.md'
