@@ -3,9 +3,37 @@ package com.noahvogt.miniprojekt;
 import android.util.Patterns;
 import android.widget.EditText;
 
+import com.chaquo.python.PyObject;
+import com.chaquo.python.Python;
+
+import java.util.HashMap;
+import java.util.List;
+
 public class mailFunctions {
 
-    // TODO: resolve endIcon style conflict
+    public static boolean canConnect(String host, String email, String password) {
+        Python python = Python.getInstance();
+        PyObject pythonMailFunctions = python.getModule("mailFunctions");
+        return pythonMailFunctions.callAttr("checkConnection", host, email, password, 993).toBoolean();
+    }
+
+    public static PyObject getIMAPConnection(String host, String email, String password) {
+        Python python = Python.getInstance();
+        PyObject pythonMailFunctions = python.getModule("mailFunctions");
+        return pythonMailFunctions.callAttr("connect", host, email, password, 993);
+    }
+
+    public static List listMailboxes(PyObject IMAPConnection) {
+        Python python = Python.getInstance();
+        PyObject pythonMailFunctions = python.getModule("mailFunctions");
+        return pythonMailFunctions.callAttr("listMailboxes", IMAPConnection).asList();
+    }
+
+    public static List fetchMailsFromBox(PyObject IMAPConnection, String Folder) {
+        Python python = Python.getInstance();
+        PyObject pythonMailFunctions = python.getModule("mailFunctions");
+        return pythonMailFunctions.callAttr("fetchMails", IMAPConnection, Folder).asList();
+    }
 
     public static boolean validateName(EditText emailName) {
         String name = emailName.getText().toString().trim();
@@ -51,13 +79,13 @@ public class mailFunctions {
 
     public static boolean validateSubject(EditText emailSubject) {
         String subject = emailSubject.getText().toString();
-        // TODO: check email protocol specification for what is allowed for subjects
+        /* TODO: check email protocol specification for what is allowed for subjects */
         return true;
     }
 
     public static boolean validateMessageBody(EditText emailMessageBody) {
         String messageBody = emailMessageBody.getText().toString();
-        // TODO: check email protocol specification for what is allowed for message bodies
+        /* TODO: check email protocol specification for what is allowed for message bodies */
         return true;
     }
 

@@ -25,7 +25,7 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
 
 
 
-    // set theming style
+    /* set theming style */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,10 +36,10 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // set and inflate layout
+        /* set and inflate layout */
         View view = inflater.inflate(R.layout.message_create_fragment, container, false);
 
-        // init vars
+        /* init vars */
 
         ImageButton closeButton = view.findViewById(R.id.create_message_close_button);
         ImageButton sendButton = view.findViewById(R.id.create_message_send_button);
@@ -51,15 +51,15 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
         EditText subjectObject = (EditText) view.findViewById(R.id.create_message_subject_text);
         EditText messageBodyObject = (EditText) view.findViewById(R.id.create_message_body_text);
 
-        // get string vars, MAYBE NOT HERE
+        /* get string vars, MAYBE NOT HERE */
         String sendingAddress = sendingAddressObject.getText().toString();
         String receivingAddress = receivingAddressObject.getText().toString();
         String subject = subjectObject.getText().toString();
         String messageBody = messageBodyObject.getText().toString();
 
-        // TODO: add cc + bcc functionality
+        /* TODO: add cc + bcc functionality */
 
-        // button listeners
+        /* button listeners */
 
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,13 +67,13 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
                 String subject = subjectObject.getText().toString();
                 String messageBody = messageBodyObject.getText().toString();
 
-                // give alert dialog box to user in case input fields are not empty
+                /* give alert dialog box to user in case input fields are not empty */
 
                 if (subject.isEmpty() && messageBody.isEmpty()) {
                     dismiss();
                 }
                 else {
-                    // setup dialog
+                    /* setup dialog */
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                     alertDialogBuilder.setTitle("Warning");
                     alertDialogBuilder
@@ -81,18 +81,18 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
                             .setCancelable(false)
                             .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    // if this button is clicked, close the whole fragment
+                                    /* if this button is clicked, close the whole fragment */
                                     dismiss();
                                 }
                             })
                             .setNegativeButton("No",new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,int id) {
-                                    // if this button is clicked, just close the dialog box
+                                    /* if this button is clicked, just close the dialog box */
                                     dialog.cancel();
                                 }
                             });
 
-                    // create + show alert dialog
+                    /* create + show alert dialog */
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
                 }
@@ -102,7 +102,7 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
         attachButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: add file attachment functionality
+                /* TODO: add file attachment functionality */
             }
         });
 
@@ -119,13 +119,13 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // init vars, MAYBE NEEDED FOR LATER
+                /* init vars, MAYBE NEEDED FOR LATER */
                 String sendingAddress = sendingAddressObject.getText().toString();
                 String receivingAddress = receivingAddressObject.getText().toString();
                 String subject = subjectObject.getText().toString();
                 String messageBody = messageBodyObject.getText().toString();
 
-                // check for valid input
+                /* check for valid input */
                 if (mailFunctions.validateMessageBody(messageBodyObject) && mailFunctions.validateSubject(subjectObject) &&
                 mailFunctions.validateEmail(receivingAddressObject) && mailFunctions.validateEmail(sendingAddressObject) &&
                 !mailFunctions.checkForSameEmail(sendingAddressObject, receivingAddressObject)) {
@@ -135,7 +135,7 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
                     Toast.makeText(getActivity(), "Please check your input", Toast.LENGTH_SHORT).show();
                 }
 
-                // TODO: implement actual sending functionality
+                /* TODO: implement actual sending functionality */
             }
         });
 
@@ -168,7 +168,7 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
             case R.id.create_message_item_4:
                 Toast.makeText(getActivity(), "item 4 clicked", Toast.LENGTH_LONG).show();
                 return true;
-            default: // this case should never occur
+            default: /* this case should never occur */
                 return false;
         }
     }
