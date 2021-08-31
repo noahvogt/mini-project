@@ -33,6 +33,8 @@ import java.util.List;
 
 import com.chaquo.python.android.PyApplication;
 
+import com.noahvogt.miniprojekt.mailFunctions;
+
 import static com.noahvogt.miniprojekt.R.id.drawer_layout;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -169,21 +171,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     return;
                 }
 
-                Python python = Python.getInstance();
-                PyObject helloWorld = python.getModule("helloworldscript");
-                String stringFromPy = helloWorld.callAttr("hi").toString();
-                showToast(stringFromPy);
-
-                PyObject pythonMailFunctions = python.getModule("mailFunctions");
-                Boolean canConnectBool = pythonMailFunctions.callAttr(
-                        "checkConnection", name, email, password, 993).toBoolean();
-                if (canConnectBool == Boolean.TRUE) {
+                /* connect to mail server and print various debugging output */
+                if (mailFunctions.canConnect(name, email, password) == Boolean.TRUE) {
                     showToast("was able to connect");
-                    List l =  pythonMailFunctions.callAttr("listMailboxes", pythonMailFunctions.callAttr("connect", name, email, password, 993)).asList();
+                    List l =  mailFunctions.listMailboxes(mailFunctions.getIMAPConnection(name, email, password));
                     for (int i = 0; i < l.size(); i++) {
                         showToast(l.get(i).toString());
                     }
-
                 } else {
                     showToast("failed to connect");
 

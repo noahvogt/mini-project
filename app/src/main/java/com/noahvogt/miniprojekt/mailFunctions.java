@@ -3,9 +3,30 @@ package com.noahvogt.miniprojekt;
 import android.util.Patterns;
 import android.widget.EditText;
 
+import com.chaquo.python.PyObject;
+import com.chaquo.python.Python;
+
+import java.util.List;
+
 public class mailFunctions {
 
-    /* TODO: resolve endIcon style conflict */
+    public static boolean canConnect(String host, String email, String password) {
+        Python python = Python.getInstance();
+        PyObject pythonMailFunctions = python.getModule("mailFunctions");
+        return pythonMailFunctions.callAttr("checkConnection", host, email, password, 993).toBoolean();
+    }
+
+    public static PyObject getIMAPConnection(String host, String email, String password) {
+        Python python = Python.getInstance();
+        PyObject pythonMailFunctions = python.getModule("mailFunctions");
+        return pythonMailFunctions.callAttr("connect", host, email, password, 993);
+    }
+
+    public static List listMailboxes(PyObject IMAPConnection) {
+        Python python = Python.getInstance();
+        PyObject pythonMailFunctions = python.getModule("mailFunctions");
+        return pythonMailFunctions.callAttr("listMailboxes", IMAPConnection).asList();
+    }
 
     public static boolean validateName(EditText emailName) {
         String name = emailName.getText().toString().trim();
