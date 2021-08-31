@@ -14,26 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
-
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
-import com.noahvogt.miniprojekt.ui.home.Data;
-import com.noahvogt.miniprojekt.ui.home.SettingsActivity;
-import com.noahvogt.miniprojekt.ui.home.SettingsFragment;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-
-import java.util.ArrayList;
-
-
-import com.google.android.material.navigation.NavigationView;
-
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -41,20 +21,16 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
 import com.noahvogt.miniprojekt.ui.home.Data;
+import com.noahvogt.miniprojekt.ui.home.SettingsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.chaquo.python.android.PyApplication;
-
-import com.noahvogt.miniprojekt.mailFunctions;
 
 import static com.noahvogt.miniprojekt.R.id.drawer_layout;
 
@@ -67,23 +43,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AlertDialog dialog;
     private EditText newemail_name, newemail_email, newemail_password; /* may not be private */
 
-    private EditText newemail_name, newemail_email, newemail_password; // may not be private
-
     /* empty descriptor */
-    public MainActivity() {
-        }
+    public MainActivity() {}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*
-        if (! Python.isStarted()) {
-           Python.start(new AndroidPlatform(this));
-        }
-         define button listeners
-        */
+        /* define button listeners */
 
         Button add_email_button = (Button) findViewById(R.id.addEmailButton);
         add_email_button.setOnClickListener(new View.OnClickListener() {
@@ -134,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //
+
         Button settingButton = findViewById(R.id.settingsButton);
         settingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     /* better leave empty to avoid any listener disambiguity */
-    public void onClick(View view) {}
+    public void onClick(View view) { }
 
 
     public void createNewEmailDialog(){
