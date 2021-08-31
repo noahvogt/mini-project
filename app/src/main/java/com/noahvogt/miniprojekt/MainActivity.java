@@ -173,6 +173,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String stringFromPy = helloWorld.callAttr("hi").toString();
                 showToast(stringFromPy);
 
+                PyObject pythonMailFunctions = python.getModule("mailFunctions");
+                Boolean canConnectBool = pythonMailFunctions.callAttr(
+                        "checkConnection", name, email, password, 993).toBoolean();
+                if (canConnectBool == Boolean.TRUE) {
+                    showToast("was able to connect");
+                } else {
+                    showToast("failed to connect");
+                }
+
                 /* show all strings the user gave, this will later be stored to a secure database and checked for validation */
                 showToast(name);
                 showToast(email);
