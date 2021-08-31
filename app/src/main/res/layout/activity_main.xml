@@ -19,13 +19,14 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
+
+
     <include
         layout="@layout/app_bar_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingLeft="20dp"
         android:paddingRight="20dp" />
-
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
@@ -34,6 +35,11 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" >
+
+        <View
+            android:id="@+id/accountView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/nav_header_height"/>
 
         <Button
             android:id="@+id/addEmailButton"
@@ -47,6 +53,8 @@
             android:paddingRight="10dp"
             android:text="Add Email" />
     </com.google.android.material.navigation.NavigationView>
+
+
 
 
 

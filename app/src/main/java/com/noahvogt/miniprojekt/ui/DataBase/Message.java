@@ -1,57 +1,84 @@
 package com.noahvogt.miniprojekt.ui.DataBase;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+/* @Embedded to express entitys together
+ *  https://developer.android.com/training/data-storage/room/relationships
+ * to learn more */
+
+@Entity(tableName = "message_table")
 public class Message {
 
-    private int id = 0;
-    private int account = 0;
-    private String to ;
-    private String cc;
-    private String bcc; //blind carpet copy, not see who sees mails
-    private String from;
-    private String date;
-    private String betreff;
-    private int attachment = 0;
-    private boolean seen = true;
+    @PrimaryKey (autoGenerate = true)
+    public int id;
 
-    public int getId(){return id;}
+    /* name of Columm */
+    @NonNull
+    @ColumnInfo(name = "to")
+    private String mTo ;
 
-    public int getAccount(){return account;}
 
-    public String getTo(){return to;}
+    @ColumnInfo(name = "cc")
+    private String mCc;
 
-    public String getCc(){return cc;}
+    @ColumnInfo(name = "bcc")
+    private String mBcc; //blind carpet copy, not see who sees mails
 
-    public String getBcc(){return bcc;}
+    @NonNull
+    @ColumnInfo(name = "fromEmail")
+    private String mFrom;
 
-    public  String getFrom(){return from;}
+    @NonNull
+    @ColumnInfo(name = "date")
+    private String mDate;
 
-    public String getDate(){return date;}
+    @ColumnInfo(name = "subject")
+    private String mSubject;
 
-    public String getBetreff(){return betreff;}
+    @ColumnInfo(name = "textContent")
+    private String mTextContent;
 
-    public int getAttachment(){return attachment;}
+    @ColumnInfo(name = "seen")
+    private boolean mSeen;
 
-    public boolean getSeen(){return seen;}
+    public String getTo(){return this.mTo;}
 
-    public void setId(int i){id = i;}
+    public String getFrom(){return this.mFrom;}
 
-    public void setAccount(int i){account = i;}
+    public String getCc(){return this.mCc;}
 
-    public void setTo(String s){to = s;}
+    public String getBcc(){return this.mBcc;}
 
-    public void setCc(String s){cc = s;}
+    public String getDate(){return this.mDate;}
 
-    public void setBcc(String s){bcc = s;}
+    public String getSubject(){return this.mSubject;}
 
-    public void setFrom(String s){from = s;}
+    public String getTextContent(){return this.mTextContent;}
 
-    public void setDate(String s){date = s;}
+    public int getId(){return this.id;}
 
-    public void setBetreff(String s){betreff = s;}
+    public boolean isSeen() {return this.mSeen;}
 
-    public void setAttachment(int i){ attachment = i;}
-
-    public void setSeen(boolean b){seen = b;}
-
+    public Message(
+            @NonNull String to,
+            String cc,
+            String bcc,
+            @NonNull String from,
+            @NonNull String date,
+            String subject,
+            String textContent,
+            @NonNull boolean seen) {
+        this.mTo = to;
+        this.mFrom = from;
+        this.mCc = cc;
+        this.mBcc = bcc;
+        this.mDate = date;
+        this.mSubject = subject;
+        this.mTextContent = textContent;
+        this.mSeen = seen;
+    }
 
 }

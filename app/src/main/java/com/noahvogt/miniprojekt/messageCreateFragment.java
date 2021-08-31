@@ -1,7 +1,11 @@
 package com.noahvogt.miniprojekt;
 
+import android.app.Activity;
+
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +21,22 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 public class messageCreateFragment extends DialogFragment implements PopupMenu.OnMenuItemClickListener {
+
+    public static final String EXTRA_TO = "com.example.android.namelistsql.NAME";
+    public static final String EXTRA_FROM = "com.example.android.namelistsql.FROM";
+    public static final String EXTRA_SUBJECT = "com.example.android.namelistsql.SUBJECT";
+    public static final String EXTRA_MESSAGE = "com.example.android.namelistsql.MESSAGE";
+    public static final String EXTRA_DATE = "com.example.android.namelistsql.DATE";
+
+    private EditText sendingAddressObject;
+    private EditText receivingAddressObject;
+    private EditText subjectObject;
+    private EditText messageBodyObject;
+
+    public static final int RESULT_CANCELED = 0;
+    public static final int RESULT_OK = -1;
+
+    Activity activity = new Activity();
 
     static messageCreateFragment newInstance() {
         return new messageCreateFragment();
@@ -42,20 +62,40 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
         // init vars
 
         ImageButton closeButton = view.findViewById(R.id.create_message_close_button);
-        ImageButton sendButton = view.findViewById(R.id.create_message_send_button);
+        final ImageButton sendButton = view.findViewById(R.id.create_message_send_button);
         ImageButton dotButton = view.findViewById(R.id.create_message_dots_button);
         ImageButton attachButton = view.findViewById(R.id.create_message_attach_button);
 
-        EditText sendingAddressObject = (EditText) view.findViewById(R.id.create_message_sending_address_text);
-        EditText receivingAddressObject = (EditText) view.findViewById(R.id.create_message_receiving_address_text);
-        EditText subjectObject = (EditText) view.findViewById(R.id.create_message_subject_text);
-        EditText messageBodyObject = (EditText) view.findViewById(R.id.create_message_body_text);
+         sendingAddressObject = (EditText) view.findViewById(R.id.create_message_sending_address_text);
+         receivingAddressObject = (EditText) view.findViewById(R.id.create_message_receiving_address_text);
+         subjectObject = (EditText) view.findViewById(R.id.create_message_subject_text);
+         messageBodyObject = (EditText) view.findViewById(R.id.create_message_body_text);
 
         // get string vars, MAYBE NOT HERE
         String sendingAddress = sendingAddressObject.getText().toString();
         String receivingAddress = receivingAddressObject.getText().toString();
-        String subject = subjectObject.getText().toString();
+        //String subject = subjectObject.getText().toString();
         String messageBody = messageBodyObject.getText().toString();
+
+
+        /* dosen't wotk cause Activity is not extendet and used as variable */
+        sendButton.setOnClickListener(View -> {
+            Intent replyIntent = new Intent();
+            if (TextUtils.isEmpty(sendingAddressObject.getText())) {
+                activity.setResult(RESULT_CANCELED, replyIntent);
+            } else {
+                String from = sendingAddressObject.getText().toString();
+                String to = receivingAddressObject.getText().toString();
+                String subject = subjectObject.getText().toString();
+                String message = messageBodyObject.getText().toString();
+                replyIntent.putExtra(EXTRA_FROM, from);
+                replyIntent.putExtra(EXTRA_TO, to);
+                replyIntent.putExtra(EXTRA_SUBJECT, subject);
+                replyIntent.putExtra(EXTRA_MESSAGE, message);
+                activity.setResult(RESULT_OK, replyIntent);
+            }
+            activity.finish();
+        });
 
         // TODO: add cc + bcc functionality
 

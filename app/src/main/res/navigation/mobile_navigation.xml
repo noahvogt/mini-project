@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="com.noahvogt.miniprojekt.ui.slideshow.SlideshowFragment"
+        android:name="com.noahvogt.miniprojekt.ui.slideshow.DraftFragment"
         android:label="@string/drawer_drafts"
         tools:layout="@layout/fragment_slideshow" />
 </navigation>

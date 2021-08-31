@@ -13,16 +13,17 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.noahvogt.miniprojekt.MainActivity;
 import com.noahvogt.miniprojekt.R;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
+    private static String Inbox;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-        CustomAdapter.setSent(20);
+        MainActivity.View = -1;
 
         homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);

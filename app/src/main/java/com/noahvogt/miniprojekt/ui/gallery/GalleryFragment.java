@@ -12,19 +12,19 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.noahvogt.miniprojekt.MainActivity;
 import com.noahvogt.miniprojekt.R;
 import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
 
 public class GalleryFragment extends Fragment {
 
     private GalleryViewModel galleryViewModel;
-
-
+    private String Sent;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        CustomAdapter.setInbox(30);
+        MainActivity.View = 1;
 
         galleryViewModel =
                 new ViewModelProvider(this).get(GalleryViewModel.class);

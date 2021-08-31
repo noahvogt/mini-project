@@ -1,12 +1,12 @@
 package com.noahvogt.miniprojekt;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -15,36 +15,37 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.noahvogt.miniprojekt.ui.DataBase.Message;
 import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-
 
 import com.google.android.material.navigation.NavigationView;
-
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-
 import com.google.android.material.snackbar.Snackbar;
+import com.noahvogt.miniprojekt.ui.slideshow.DraftViewModel;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static com.noahvogt.miniprojekt.R.id.drawer_layout;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-
-
-
     private AppBarConfiguration mAppBarConfiguration;
 
-    protected ArrayList<Message> data;
+    public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
+    public static DraftViewModel mEmailViewModel;
+    public static int View;
 
     private AlertDialog dialog;
 
@@ -71,15 +72,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        ImageButton message_create_button = (ImageButton) findViewById(R.id.messageButton);
-        message_create_button.setOnClickListener(new View.OnClickListener() {
+        /*creates accountmanager by clicking on profil */
+        View accountView = findViewById(R.id.accountView);
+        accountView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment dialog = messageCreateFragment.newInstance();
-                dialog.show(getSupportFragmentManager(), "tag");
+                createNewEmailDialog();
             }
         });
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -95,17 +95,66 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        //initDataset();
+
         // Lookup the recyclerview in activity layout
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        // Initialize contacts
-        data = CustomAdapter.createEmailList(20);
-        // Create adapter passing in the sample user data
-        CustomAdapter adapter = new CustomAdapter(data);
-        // Attach the adapter to the recyclerview to populate items
+        final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff());
+        /* Attach the adapter to the recyclerview to populate items */
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        if (View != 1 && View != -1) {
+            mEmailViewModel = new ViewModelProvider(this).get(DraftViewModel.class);
+
+            mEmailViewModel.getDraftMessage().observe(this, messages -> {
+                /* Update the cached copy of the messages in the adapter*/
+                adapter.submitList(messages);
+            });
+        }
+
+        /* Start email Writer*/
+        FloatingActionButton message_create_button = findViewById(R.id.messageButton);
+        message_create_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment dialog = messageCreateFragment.newInstance();
+                dialog.show(getSupportFragmentManager(), "tag");
+
+                Intent intent = new Intent(MainActivity.this, NewDraftMessageActivity.class);
+                startActivityForResult(intent, NEW_WORD_ACTIVITY_REQUEST_CODE);
+            }
+        });
     }
+
+
+        /* gets the data from the Email writer and adds it to the Database i think*/
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+
+            /* Creates class for the Date when Email is written */
+            Date dNow = new Date();
+            SimpleDateFormat ft =
+                    new SimpleDateFormat("dd.MM.yy");
+
+            if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+                Message word = new Message(
+                        data.getStringExtra(NewDraftMessageActivity.EXTRA_TO),
+                        null,
+                        null,
+                        data.getStringExtra(NewDraftMessageActivity.EXTRA_FROM),
+                        ft.format(dNow),
+                        data.getStringExtra(NewDraftMessageActivity.EXTRA_SUBJECT),
+                        data.getStringExtra(NewDraftMessageActivity.EXTRA_MESSAGE), false);
+                mEmailViewModel.insert(word);
+            } else {
+                Toast.makeText(
+                        getApplicationContext(),
+                        R.string.empty_not_saved,
+                        Toast.LENGTH_LONG).show();
+            }
+
+
+        }
 
 
 

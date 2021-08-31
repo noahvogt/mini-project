@@ -13,23 +13,19 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.noahvogt.miniprojekt.R;
-import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
 
-public class SlideshowFragment extends Fragment {
-
-    private SlideshowViewModel slideshowViewModel;
-
+public class DraftFragment extends Fragment {
+/*
+    private DraftViewModel draftViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        CustomAdapter.setDraft(10);
-
-        slideshowViewModel =
-                new ViewModelProvider(this).get(SlideshowViewModel.class);
+        draftViewModel =
+                new ViewModelProvider(this).get(DraftViewModel.class);
         View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
         final TextView textView = root.findViewById(R.id.text_slideshow);
-        slideshowViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        draftViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
@@ -37,4 +33,9 @@ public class SlideshowFragment extends Fragment {
         });
         return root;
     }
+
+
+ */
+
 }
+
