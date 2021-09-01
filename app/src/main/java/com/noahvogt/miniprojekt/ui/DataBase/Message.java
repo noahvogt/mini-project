@@ -41,6 +41,10 @@ public class Message {
     @ColumnInfo(name = "textContent")
     private String mTextContent;
 
+    @NonNull
+    @ColumnInfo(name = "folder")
+    private String mFolder;
+
     @ColumnInfo(name = "seen")
     private boolean mSeen;
 
@@ -58,6 +62,8 @@ public class Message {
 
     public String getTextContent(){return this.mTextContent;}
 
+    public String getFolder(){return this.mFolder;}
+
     public int getId(){return this.id;}
 
     public boolean isSeen() {return this.mSeen;}
@@ -70,6 +76,7 @@ public class Message {
             @NonNull String date,
             String subject,
             String textContent,
+            @NonNull String folder,
             @NonNull boolean seen) {
         this.mTo = to;
         this.mFrom = from;
@@ -78,6 +85,7 @@ public class Message {
         this.mDate = date;
         this.mSubject = subject;
         this.mTextContent = textContent;
+        this.mFolder = folder;
         this.mSeen = seen;
     }
 
