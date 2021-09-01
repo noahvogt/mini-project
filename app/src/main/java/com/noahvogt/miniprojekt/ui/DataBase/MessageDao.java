@@ -37,8 +37,31 @@ public interface MessageDao {
     @Query("SELECT * FROM message_table")
     LiveData<List<Message>> getAllMessages();
 
+    /*gets messages all messages ordered by date
+    * !IMPORTANT I don't know in which direction */
     @Query("SELECT * FROM message_table ORDER BY date ASC")
     LiveData<List<Message>> getDateMessages();
+
+    /* get Draft messages*/
+    @Query("SELECT * FROM message_table WHERE folder LIKE 'Draft' ORDER BY date ASC")
+    LiveData<List<Message>> getDraftMessages();
+
+    /* get Inbox messages*/
+    @Query("SELECT * FROM message_table WHERE folder LIKE 'Inbox' ORDER BY date ASC")
+    LiveData<List<Message>> getInboxMessages();
+
+    /* get Sent messages*/
+    @Query("SELECT * FROM message_table WHERE folder LIKE 'Sent' ORDER BY date ASC")
+    LiveData<List<Message>> getSentMessages();
+
+    /* get Archive messages*/
+    @Query("SELECT * FROM message_table WHERE folder LIKE 'Archive' ORDER BY date ASC")
+    LiveData<List<Message>> getArchiveMessages();
+
+
+
+
+
 
     /* selects just from, subject and date from word_table */
 

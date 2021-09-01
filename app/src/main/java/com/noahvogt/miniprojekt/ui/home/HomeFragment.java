@@ -19,11 +19,9 @@ import com.noahvogt.miniprojekt.R;
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
-    private static String Inbox;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        MainActivity.View = -1;
 
         homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);

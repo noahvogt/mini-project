@@ -32,7 +32,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.noahvogt.miniprojekt.ui.slideshow.DraftViewModel;
+import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AppBarConfiguration mAppBarConfiguration;
 
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
-    public static DraftViewModel mEmailViewModel;
+    public static EmailViewModel mEmailViewModel;
     public static int View;
 
     private AlertDialog dialog;
@@ -103,14 +103,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        if (View != 1 && View != -1) {
-            mEmailViewModel = new ViewModelProvider(this).get(DraftViewModel.class);
+
+            mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
 
             mEmailViewModel.getDraftMessage().observe(this, messages -> {
                 /* Update the cached copy of the messages in the adapter*/
                 adapter.submitList(messages);
             });
-        }
+
 
         /* Start email Writer*/
         FloatingActionButton message_create_button = findViewById(R.id.messageButton);
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         data.getStringExtra(NewDraftMessageActivity.EXTRA_FROM),
                         ft.format(dNow),
                         data.getStringExtra(NewDraftMessageActivity.EXTRA_SUBJECT),
-                        data.getStringExtra(NewDraftMessageActivity.EXTRA_MESSAGE), false);
+                        data.getStringExtra(NewDraftMessageActivity.EXTRA_MESSAGE), "Draft",false);
                 mEmailViewModel.insert(word);
             } else {
                 Toast.makeText(
