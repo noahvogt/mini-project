@@ -24,11 +24,9 @@ public class EmailRepository {
         EmailRoomDatabase db = EmailRoomDatabase.getDatabase(application);
         messageDao = db.messageDao();
         mDraftMessage = messageDao.getDraftMessages();
-        /*mArchiveMessage = messageDao.getArchiveMessages();
-        mInboxMessage = messageDao.getInboxMessages();
-        mSentMessage = messageDao.getSentMessages();
-
-         */
+       // mArchiveMessage = messageDao.getArchiveMessages();
+       // mInboxMessage = messageDao.getInboxMessages();
+      //  mSentMessage = messageDao.getSentMessages();
     }
 
     // Room executes all queries on a separate thread.
@@ -38,7 +36,10 @@ public class EmailRepository {
         return mDraftMessage;
     }
 
-    /*
+    public void deleteNewMessage(){
+        messageDao.deleteNewMessage();
+    }
+
     public LiveData<List<Message>> getInboxMessages() {
         return mInboxMessage;
     }
@@ -51,7 +52,6 @@ public class EmailRepository {
         return mArchiveMessage;
     }
 
-     */
 
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures

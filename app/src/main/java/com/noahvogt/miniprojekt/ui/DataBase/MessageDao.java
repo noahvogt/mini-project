@@ -2,6 +2,7 @@ package com.noahvogt.miniprojekt.ui.DataBase;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -33,6 +34,12 @@ public interface MessageDao {
 
     @Query("DELETE FROM message_table")
     void deleteAll();
+
+    @Query("DELETE FROM message_table WHERE subject='DELETE'")
+    void deleteNewMessage();
+
+    @Delete(entity = Message.class)
+    void delete(Message message);
 
     @Query("SELECT * FROM message_table")
     LiveData<List<Message>> getAllMessages();

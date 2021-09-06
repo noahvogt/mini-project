@@ -1,6 +1,7 @@
 package com.noahvogt.miniprojekt;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.view.Menu;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -17,8 +19,11 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.noahvogt.miniprojekt.ui.DataBase.Message;
+import com.noahvogt.miniprojekt.ui.gallery.GalleryFragment;
 import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,10 +37,13 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.noahvogt.miniprojekt.ui.home.HomeFragment;
+import com.noahvogt.miniprojekt.ui.slideshow.DraftFragment;
 import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import static com.noahvogt.miniprojekt.R.id.drawer_layout;
 
@@ -47,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static EmailViewModel mEmailViewModel;
     public static int View;
 
+    public static final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff());
+
+
     private AlertDialog dialog;
 
     private EditText newemail_name, newemail_email, newemail_password; // may not be private
@@ -55,7 +66,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public MainActivity() {
     }
 
+    public String getVisibleFragment(){
+        FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        if(fragments != null){
+            showToast("not null");
+            for(Fragment fragment : fragments){
+                showToast(fragment.toString());
+                if(fragment.isVisible())
+                    showToast("found visible fragment");
+                    return "is gallery";
+            }
+        } else {
+            showToast("null");}
+            return null;
 
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,17 +125,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Lookup the recyclerview in activity layout
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff());
+
+
         /* Attach the adapter to the recyclerview to populate items */
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
 
+        mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
+        mEmailViewModel.getDraftMessage().observe(this, messages -> {
+            /* Update the cached copy of the messages in the adapter*/
+            adapter.submitList(messages);
+        });
 
-            mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
+           if (GalleryFragment.galleryViewOn) {
+               showToast("gallery True");
+                mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
+                mEmailViewModel.getDraftMessage().observe(this, messages -> {
+                    /* Update the cached copy of the messages in the adapter*/
+                   adapter.submitList(messages);
+                });
+                //mEmailViewModel.deleteNewMessage();
+            }
+           else if (HomeFragment.homeViewOn){
+               showToast("home True");
+               mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
+               mEmailViewModel.getDraftMessage().observe(this, messages -> {
+                           /* Update the cached copy of the messages in the adapter*/
+                           adapter.submitList(messages);
+               });
+           }
+           else if (DraftFragment.DraftViewOn){
+               showToast("draft True");
+               mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
+               mEmailViewModel.getDraftMessage().observe(this, messages -> {
+                   /* Update the cached copy of the messages in the adapter*/
+                   adapter.submitList(messages);
+               });
+           }
+           else {
+               //mEmailViewModel.deleteNewMessage();
+           }
 
-            mEmailViewModel.getDraftMessage().observe(this, messages -> {
-                /* Update the cached copy of the messages in the adapter*/
-                adapter.submitList(messages);
-            });
 
 
         /* Start email Writer*/
@@ -127,7 +184,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-        /* gets the data from the Email writer and adds it to the Database i think*/
+
+
+        /* gets the data from the Email writer and adds it to the Database I think*/
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
             super.onActivityResult(requestCode, resultCode, data);
 
@@ -201,6 +260,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         newemail_save_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 // store user input (only needed for DEBUGGING)
                 String name = newemail_name.getText().toString();
                 String email = newemail_email.getText().toString();

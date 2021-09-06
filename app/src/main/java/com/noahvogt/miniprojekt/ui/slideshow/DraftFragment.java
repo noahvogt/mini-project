@@ -15,11 +15,13 @@ import androidx.lifecycle.ViewModelProvider;
 import com.noahvogt.miniprojekt.R;
 
 public class DraftFragment extends Fragment {
-/*
-    private DraftViewModel draftViewModel;
+
+   private DraftViewModel draftViewModel;
+    public static boolean DraftViewOn;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+    DraftViewOn = true;
 
         draftViewModel =
                 new ViewModelProvider(this).get(DraftViewModel.class);
@@ -35,7 +37,9 @@ public class DraftFragment extends Fragment {
     }
 
 
- */
+
+
+
 
 }
 

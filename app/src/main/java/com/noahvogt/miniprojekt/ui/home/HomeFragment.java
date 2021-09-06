@@ -19,10 +19,12 @@ import com.noahvogt.miniprojekt.R;
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
+    public static boolean homeViewOn;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+        homeViewOn = true;
         homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
@@ -35,6 +37,8 @@ public class HomeFragment extends Fragment {
         });
         return root;
     }
+
+
 
 
 }

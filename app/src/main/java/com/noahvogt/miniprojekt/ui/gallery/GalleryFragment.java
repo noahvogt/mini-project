@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,16 +16,30 @@ import androidx.lifecycle.ViewModelProvider;
 import com.noahvogt.miniprojekt.MainActivity;
 import com.noahvogt.miniprojekt.R;
 import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
+import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
 
 public class GalleryFragment extends Fragment {
 
     private GalleryViewModel galleryViewModel;
-    private String Sent;
+    public static boolean galleryViewOn;
+    public static EmailViewModel mEmailViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         MainActivity.View = 1;
+        galleryViewOn = true;
+
+        mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
+        Toast.makeText(getContext(), mEmailViewModel.toString() , Toast.LENGTH_SHORT).show();
+        mEmailViewModel.getDraftMessage().observe(getViewLifecycleOwner(), messages -> {
+            /* Update the cached copy of the messages in the adapter*/
+            MainActivity.adapter.submitList(messages);
+        });
+       // mEmailViewModel.deleteNewMessage();
+
+        Toast.makeText(getContext(), "clicked sent", Toast.LENGTH_SHORT).show();
+
 
         galleryViewModel =
                 new ViewModelProvider(this).get(GalleryViewModel.class);
@@ -38,4 +53,6 @@ public class GalleryFragment extends Fragment {
         });
         return root;
     }
+
+
 }

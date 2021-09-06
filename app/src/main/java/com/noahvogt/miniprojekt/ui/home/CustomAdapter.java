@@ -29,11 +29,11 @@ public class CustomAdapter extends ListAdapter<Message, EmailViewHolder> {
         return EmailViewHolder.create(parent);
     }
 
+    /* bind data to View*/
     @Override
     public void onBindViewHolder(EmailViewHolder holder, int position) {
         Message current = getItem(position);
         holder.bind(current.getFrom(),current.getSubject(), current.getDate() ,current.getTextContent());
-
     }
 
     public static class EmailDiff extends DiffUtil.ItemCallback<Message> {

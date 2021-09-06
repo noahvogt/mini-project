@@ -23,14 +23,19 @@ public class EmailViewModel extends AndroidViewModel {
     public EmailViewModel(Application application) {
         super(application);
         mEmailRepository = new EmailRepository(application);
-        mDraftMessage = mEmailRepository.getDraftMessages();
+       mDraftMessage = mEmailRepository.getDraftMessages();
     }
 
     public LiveData<List<Message>> getDraftMessage(){
-        //mDraftMessage = mEmailRepository.getDraftMessages();
-        return mDraftMessage;}
+      //  mDraftMessage = mEmailRepository.getDraftMessages();
+        return mDraftMessage;
+    }
 
-    /*public LiveData<List<Message>> getInboxMessage(){
+    public void deleteNewMessage(){
+        mEmailRepository.deleteNewMessage();
+    }
+
+    public LiveData<List<Message>> getInboxMessage(){
         mInboxMessage = mEmailRepository.getInboxMessages();
         return mDraftMessage;}
 
@@ -42,7 +47,7 @@ public class EmailViewModel extends AndroidViewModel {
         mArchiveMassage = mEmailRepository.getArchiveMessages();
         return mDraftMessage;}
 
-     */
+
 
     public void insert(Message message){mEmailRepository.insert(message);}
 

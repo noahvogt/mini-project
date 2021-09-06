@@ -65,25 +65,22 @@ public abstract class EmailRoomDatabase extends RoomDatabase{
                 MessageDao dao = INSTANCE.messageDao();
                 dao.deleteAll();
 
-                Message word = new Message("Simon", null, null,
+               Message word = new Message("Simon", null, null,
                         "YungBoy", "28.8.21", "testing", "I want to try it", "Draft",
                         true);
                 dao.insert(word);
 
                 word = new Message("Noah", null , null,
-                        "Samuel", "31.9.21", "draftTest", "I Try my best", "Draft",
+                        "Samuel", "31.9.21", "draftTest", "I Try my best", "Inbox",
                         true);
-                dao.insert(word);
+                dao.delete(word);
 
-                word = new Message("Noah", null , null,
-                        "Peter", "31.9.21", "draftTest", "I Try my best", "Draft",
-                        true);
-                dao.insert(word);
 
-                word = new Message("Noah", null , null,
-                        "Peter", "31.9.21", "draftTest", "I Try my best", "Inbox",
-                        true);
-                dao.insert(word);
+
+
+
+
+
 
             });
         }
