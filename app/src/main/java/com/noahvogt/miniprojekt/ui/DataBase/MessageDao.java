@@ -50,7 +50,7 @@ public interface MessageDao {
     LiveData<List<Message>> getDateMessages();
 
     /* get Draft messages*/
-    @Query("SELECT * FROM message_table WHERE folder LIKE 'Draft' ORDER BY date ASC")
+    @Query("SELECT * FROM message_table WHERE folder='Draft' ORDER BY date ASC")
     LiveData<List<Message>> getDraftMessages();
 
     /* get Inbox messages*/

@@ -25,8 +25,8 @@ public class EmailRepository {
         messageDao = db.messageDao();
         mDraftMessage = messageDao.getDraftMessages();
        // mArchiveMessage = messageDao.getArchiveMessages();
-       // mInboxMessage = messageDao.getInboxMessages();
-      //  mSentMessage = messageDao.getSentMessages();
+        mInboxMessage = messageDao.getInboxMessages();
+        mSentMessage = messageDao.getSentMessages();
     }
 
     // Room executes all queries on a separate thread.

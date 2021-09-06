@@ -32,7 +32,7 @@ public class NewDraftMessageActivity extends AppCompatActivity {
         subjectObject = findViewById(R.id.create_message_subject_text);
         messageBodyObject = findViewById(R.id.create_message_body_text);
 
-        final ImageButton button = findViewById(R.id.create_message_send_button);
+        final ImageButton button = findViewById(R.id.create_message_close_button);
         button.setOnClickListener(view -> {
             Intent replyIntent = new Intent();
             if (TextUtils.isEmpty(sendingAddressObject.getText())) {

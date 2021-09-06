@@ -10,8 +10,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.noahvogt.miniprojekt.MainActivity;
 import com.noahvogt.miniprojekt.R;
@@ -21,25 +24,30 @@ import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
 public class GalleryFragment extends Fragment {
 
     private GalleryViewModel galleryViewModel;
-    public static boolean galleryViewOn;
-    public static EmailViewModel mEmailViewModel;
+    EmailViewModel mEmailViewModel;
+    RecyclerView recyclerView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        MainActivity.View = 1;
-        galleryViewOn = true;
+
+
+        recyclerView = MainActivity.recyclerView.findViewById(R.id.recyclerView);
+
+        final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff());
+
+        /* Attach the adapter to the recyclerview to populate items */
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        //mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
 
         mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
-        Toast.makeText(getContext(), mEmailViewModel.toString() , Toast.LENGTH_SHORT).show();
-        mEmailViewModel.getDraftMessage().observe(getViewLifecycleOwner(), messages -> {
+        mEmailViewModel.getSentMessage().observe(getViewLifecycleOwner(), messages -> {
             /* Update the cached copy of the messages in the adapter*/
-            MainActivity.adapter.submitList(messages);
+            adapter.submitList(messages);
         });
+
        // mEmailViewModel.deleteNewMessage();
-
-        Toast.makeText(getContext(), "clicked sent", Toast.LENGTH_SHORT).show();
-
 
         galleryViewModel =
                 new ViewModelProvider(this).get(GalleryViewModel.class);
@@ -52,6 +60,10 @@ public class GalleryFragment extends Fragment {
             }
         });
         return root;
+
+
+
+
     }
 
 

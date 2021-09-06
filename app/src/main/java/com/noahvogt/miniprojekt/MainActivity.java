@@ -1,7 +1,6 @@
 package com.noahvogt.miniprojekt;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 
 import android.view.Menu;
@@ -10,7 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -19,11 +17,11 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.noahvogt.miniprojekt.ui.DataBase.Message;
-import com.noahvogt.miniprojekt.ui.gallery.GalleryFragment;
 import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,8 +35,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.noahvogt.miniprojekt.ui.home.HomeFragment;
-import com.noahvogt.miniprojekt.ui.slideshow.DraftFragment;
 import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
 
 import java.text.SimpleDateFormat;
@@ -53,10 +49,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
     public static EmailViewModel mEmailViewModel;
-    public static int View;
+    public static RecyclerView recyclerView;
 
     public static final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff());
-
 
     private AlertDialog dialog;
 
@@ -123,8 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         // Lookup the recyclerview in activity layout
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff());
+        recyclerView = findViewById(R.id.recyclerView);
 
 
         /* Attach the adapter to the recyclerview to populate items */
@@ -132,18 +126,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         //mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
 
+
         mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
-        mEmailViewModel.getDraftMessage().observe(this, messages -> {
+        mEmailViewModel.getInboxMessage().observe(this, messages -> {
             /* Update the cached copy of the messages in the adapter*/
             adapter.submitList(messages);
         });
 
-           if (GalleryFragment.galleryViewOn) {
+
+         /* if (GalleryFragment.galleryViewOn) {
                showToast("gallery True");
                 mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
                 mEmailViewModel.getDraftMessage().observe(this, messages -> {
                     /* Update the cached copy of the messages in the adapter*/
-                   adapter.submitList(messages);
+            /*       adapter.submitList(messages);
                 });
                 //mEmailViewModel.deleteNewMessage();
             }
@@ -152,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
                mEmailViewModel.getDraftMessage().observe(this, messages -> {
                            /* Update the cached copy of the messages in the adapter*/
-                           adapter.submitList(messages);
+            /*               adapter.submitList(messages);
                });
            }
            else if (DraftFragment.DraftViewOn){
@@ -160,12 +156,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
                mEmailViewModel.getDraftMessage().observe(this, messages -> {
                    /* Update the cached copy of the messages in the adapter*/
-                   adapter.submitList(messages);
+             /*      adapter.submitList(messages);
                });
            }
            else {
                //mEmailViewModel.deleteNewMessage();
            }
+
+              */
 
 
 
@@ -182,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
 
 
 
@@ -203,7 +202,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         data.getStringExtra(NewDraftMessageActivity.EXTRA_FROM),
                         ft.format(dNow),
                         data.getStringExtra(NewDraftMessageActivity.EXTRA_SUBJECT),
-                        data.getStringExtra(NewDraftMessageActivity.EXTRA_MESSAGE), "Draft",false);
+                        data.getStringExtra(NewDraftMessageActivity.EXTRA_MESSAGE),
+                        "Draft",false);
                 mEmailViewModel.insert(word);
             } else {
                 Toast.makeText(
