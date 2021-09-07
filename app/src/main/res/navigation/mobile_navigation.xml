@@ -22,4 +22,17 @@
         android:name="com.noahvogt.miniprojekt.ui.slideshow.DraftFragment"
         android:label="@string/drawer_drafts"
         tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_archive"
+        android:name="com.noahvogt.miniprojekt.ui.archive.ArchiveFragment"
+        android:label="@string/drawer_archive"
+        tools:layout="@layout/fragment_archive" />
+
+    <fragment
+        android:id="@+id/nav_spam"
+        android:name="com.noahvogt.miniprojekt.ui.spam.SpamFragment"
+        android:label="@string/drawer_spam"
+        tools:layout="@layout/fragment_spam" />
+
 </navigation>

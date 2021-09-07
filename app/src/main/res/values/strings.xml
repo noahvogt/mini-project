@@ -10,6 +10,8 @@
     <string name="drawer_inbox">Inbox</string>
     <string name="drawer_sent">Sent</string>
     <string name="drawer_drafts">Drafts</string>
+    <string name="drawer_archive">Archive</string>
+    <string name="drawer_spam">Spam</string>
     <string name="your_password_filler">Your Password</string>
     <string name="your_email_address_filler">Your Email Address</string>
     <string name="your_full_name_filler">Your Full Name</string>

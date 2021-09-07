@@ -80,6 +80,38 @@ public abstract class EmailRoomDatabase extends RoomDatabase{
                        true);
                dao.insert(word);
 
+               for (int n = 1; n < 20; n++) {
+                   word = new Message("Simon", null, null,
+                           "stefan", "tomorrow", "sent20", "lets goo","Sent",
+                           true);
+                   dao.insert(word);
+               }
+
+               for (int i = 1; i < 20; i++){
+                   word = new Message("Simon", null, null,
+                           "Hans", "tomorrow", "inbox20", "lets goo","Inbox",
+                           true);
+                   dao.insert(word);
+               }
+
+                for (int i = 1; i < 20; i++){
+                    word = new Message("Simon", null, null,
+                            "Jürgen", "tomorrow", "Draft20", "lets goo","Draft",
+                            true);
+                    dao.insert(word);
+                }
+
+                word = new Message("Simon", null, null,
+                        "Maurice", "yesterday", "ArchiveTest", "lets goo","Archive",
+                        true);
+                dao.insert(word);
+
+                word = new Message("Simon", null, null,
+                        "Lenny", "tomorrow", "SpamTest", "lets goo","Spam",
+                        true);
+                dao.insert(word);
+
+
             });
         }
     };

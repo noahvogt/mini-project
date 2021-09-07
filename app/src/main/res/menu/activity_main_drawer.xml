@@ -16,5 +16,15 @@
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/drafts_icon"
             android:title="@string/drawer_drafts" />
+
+        <item
+            android:id="@+id/nav_archive"
+            android:icon="@drawable/archive_icon"
+            android:title="@string/drawer_archive" />
+
+        <item
+            android:id="@+id/nav_spam"
+            android:icon="@drawable/spam_icon"
+            android:title="@string/drawer_spam" />
     </group>
 </menu>

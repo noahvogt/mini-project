@@ -13,6 +13,7 @@ public class EmailRepository {
     private LiveData<List<Message>> mInboxMessage;
     private LiveData<List<Message>> mSentMessage;
     private LiveData<List<Message>> mArchiveMessage;
+    private LiveData<List<Message>> mSpamMessage;
 
 
     // Note that in order to unit test the WordRepository, you have to remove the Application
@@ -24,9 +25,10 @@ public class EmailRepository {
         EmailRoomDatabase db = EmailRoomDatabase.getDatabase(application);
         messageDao = db.messageDao();
         mDraftMessage = messageDao.getDraftMessages();
-       // mArchiveMessage = messageDao.getArchiveMessages();
+        mArchiveMessage = messageDao.getArchiveMessages();
         mInboxMessage = messageDao.getInboxMessages();
         mSentMessage = messageDao.getSentMessages();
+        mSpamMessage = messageDao.getSpamMessages();
     }
 
     // Room executes all queries on a separate thread.
@@ -36,9 +38,7 @@ public class EmailRepository {
         return mDraftMessage;
     }
 
-    public void deleteNewMessage(){
-        messageDao.deleteNewMessage();
-    }
+    public LiveData<List<Message>> getSpamMessage(){return mSpamMessage;}
 
     public LiveData<List<Message>> getInboxMessages() {
         return mInboxMessage;
@@ -52,7 +52,9 @@ public class EmailRepository {
         return mArchiveMessage;
     }
 
-
+    public void deleteNewMessage(){
+        messageDao.deleteNewMessage();
+    }
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
