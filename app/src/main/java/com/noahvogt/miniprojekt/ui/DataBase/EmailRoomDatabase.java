@@ -1,6 +1,7 @@
 package com.noahvogt.miniprojekt.ui.DataBase;
 
 import android.content.Context;
+import android.icu.util.Measure;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -17,7 +18,7 @@ public abstract class EmailRoomDatabase extends RoomDatabase{
 
     public abstract MessageDao messageDao();
 
-    /* the INSTANCE can be used ba different threads at the same time */
+    /* the INSTANCE can be used by different threads at the same time */
     private static volatile EmailRoomDatabase INSTANCE;
 
     /* tells room the schema is changed from the version tha is istallend in device
@@ -65,12 +66,8 @@ public abstract class EmailRoomDatabase extends RoomDatabase{
                 MessageDao dao = INSTANCE.messageDao();
                 dao.deleteAll();
 
-               Message word = new Message("Simon", null, null,
-                        "YungBoy", "28.8.21", "draftTest", "I want to try it", "Draft",
-                        true);
-               dao.insert(word);
 
-               word = new Message("Noah", null , null,
+                Message word = new Message("Noah", null , null,
                         "Samuel", "31.9.21", "inboxTest", "I Try my best", "Inbox",
                         true);
                dao.insert(word);
@@ -94,12 +91,6 @@ public abstract class EmailRoomDatabase extends RoomDatabase{
                    dao.insert(word);
                }
 
-                for (int i = 1; i < 20; i++){
-                    word = new Message("Simon", null, null,
-                            "Jürgen", "tomorrow", "Draft20", "lets goo","Draft",
-                            true);
-                    dao.insert(word);
-                }
 
                 word = new Message("Simon", null, null,
                         "Maurice", "yesterday", "ArchiveTest", "lets goo","Archive",

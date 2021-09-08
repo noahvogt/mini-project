@@ -30,8 +30,6 @@ public class GalleryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-
-
         recyclerView = MainActivity.recyclerView.findViewById(R.id.recyclerView);
 
         final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff());

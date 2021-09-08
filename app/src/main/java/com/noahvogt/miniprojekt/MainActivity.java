@@ -117,16 +117,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NavigationUI.setupWithNavController(navigationView, navController);
 
 
-        // Lookup the recyclerview in activity layout
+        /* Lookup the recyclerview in activity layout */
         recyclerView = findViewById(R.id.recyclerView);
 
 
         /* Attach the adapter to the recyclerview to populate items */
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
 
-
+        /* get Inbox Messages in Recyclerviewer at begining is overwritten by Fragments but has to stay*/
         mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
         mEmailViewModel.getInboxMessage().observe(this, messages -> {
             /* Update the cached copy of the messages in the adapter*/
@@ -134,83 +133,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
 
-         /* if (GalleryFragment.galleryViewOn) {
-               showToast("gallery True");
-                mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
-                mEmailViewModel.getDraftMessage().observe(this, messages -> {
-                    /* Update the cached copy of the messages in the adapter*/
-            /*       adapter.submitList(messages);
-                });
-                //mEmailViewModel.deleteNewMessage();
-            }
-           else if (HomeFragment.homeViewOn){
-               showToast("home True");
-               mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
-               mEmailViewModel.getDraftMessage().observe(this, messages -> {
-                           /* Update the cached copy of the messages in the adapter*/
-            /*               adapter.submitList(messages);
-               });
-           }
-           else if (DraftFragment.DraftViewOn){
-               showToast("draft True");
-               mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
-               mEmailViewModel.getDraftMessage().observe(this, messages -> {
-                   /* Update the cached copy of the messages in the adapter*/
-             /*      adapter.submitList(messages);
-               });
-           }
-           else {
-               //mEmailViewModel.deleteNewMessage();
-           }
-
-              */
-
-
-
         /* Start email Writer*/
         FloatingActionButton message_create_button = findViewById(R.id.messageButton);
         message_create_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 DialogFragment dialog = messageCreateFragment.newInstance();
                 dialog.show(getSupportFragmentManager(), "tag");
 
-                Intent intent = new Intent(MainActivity.this, NewDraftMessageActivity.class);
-                startActivityForResult(intent, NEW_WORD_ACTIVITY_REQUEST_CODE);
             }
         });
     }
 
 
-
-
-
-        /* gets the data from the Email writer and adds it to the Database I think*/
+        /* gets the data from the Email writer and adds it to the Database */
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(requestCode, resultCode, data);
+            super.onActivityResult(requestCode, resultCode, messageCreateFragment.replyIntent);
 
             /* Creates class for the Date when Email is written */
             Date dNow = new Date();
             SimpleDateFormat ft =
                     new SimpleDateFormat("dd.MM.yy");
 
-            if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+         //   if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
                 Message word = new Message(
-                        data.getStringExtra(NewDraftMessageActivity.EXTRA_TO),
+                        messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_TO),
                         null,
                         null,
-                        data.getStringExtra(NewDraftMessageActivity.EXTRA_FROM),
+                        messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_FROM),
                         ft.format(dNow),
-                        data.getStringExtra(NewDraftMessageActivity.EXTRA_SUBJECT),
-                        data.getStringExtra(NewDraftMessageActivity.EXTRA_MESSAGE),
+                        messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_SUBJECT),
+                        messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_MESSAGE),
                         "Draft",false);
                 mEmailViewModel.insert(word);
-            } else {
+          //  } else {
                 Toast.makeText(
                         getApplicationContext(),
                         R.string.empty_not_saved,
                         Toast.LENGTH_LONG).show();
-            }
+
+            Toast.makeText(
+                    getApplicationContext(),
+                    messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_FROM),
+                    Toast.LENGTH_LONG).show();
+          //  }
 
 
         }
