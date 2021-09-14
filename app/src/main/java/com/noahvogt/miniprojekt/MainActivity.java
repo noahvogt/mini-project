@@ -6,7 +6,6 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -14,22 +13,34 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
+
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.noahvogt.miniprojekt.ui.DataBase.Message;
+import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+
+import com.google.android.material.navigation.NavigationView;
+
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
-import com.noahvogt.miniprojekt.ui.home.Data;
 import com.noahvogt.miniprojekt.ui.home.SettingsActivity;
+import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
 
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import static com.noahvogt.miniprojekt.R.id.drawer_layout;
@@ -38,13 +49,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private AppBarConfiguration mAppBarConfiguration;
 
-    /* declare vars that should always be used / shown by default */
-    protected ArrayList<Data> data;
+    public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
+    public static EmailViewModel mEmailViewModel;
+    public static RecyclerView recyclerView;
+
+    public static final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff());
+
     private AlertDialog dialog;
     private EditText newemail_name, newemail_email, newemail_password; /* may not be private */
 
     /* empty descriptor */
     public MainActivity() {}
+
+
+    public String getVisibleFragment(){
+        FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        if(fragments != null){
+            showToast("not null");
+            for(Fragment fragment : fragments){
+                showToast(fragment.toString());
+                if(fragment.isVisible())
+                    showToast("found visible fragment");
+                    return "is gallery";
+            }
+        } else {
+            showToast("null");}
+            return null;
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +94,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        ImageButton message_create_button = (ImageButton) findViewById(R.id.messageButton);
-        message_create_button.setOnClickListener(new View.OnClickListener() {
+        /*creates accountmanager by clicking on profil */
+        View accountView = findViewById(R.id.accountView);
+        accountView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment dialog = messageCreateFragment.newInstance();
-                dialog.show(getSupportFragmentManager(), "tag");
+                createNewEmailDialog();
             }
         });
 
@@ -82,22 +115,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          menu should be considered as top level destinations.
         */
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_archive, R.id.nav_spam)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        /* invoke recycleViewer */
-
-        //initDataset();
         /* Lookup the recyclerview in activity layout */
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        /* Initialize contacts */
-        data = Data.createContactsList(20);
-        /* Create adapter passing in the sample user data */
-        CustomAdapter adapter = new CustomAdapter(data);
+        recyclerView = findViewById(R.id.recyclerView);
+
+
         /* Attach the adapter to the recyclerview to populate items */
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -111,7 +139,62 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(i);
             }
         });
+        /* get Inbox Messages in Recyclerviewer at begining is overwritten by Fragments but has to stay*/
+        mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
+        mEmailViewModel.getInboxMessage().observe(this, messages -> {
+            /* Update the cached copy of the messages in the adapter*/
+            adapter.submitList(messages);
+        });
+
+
+        /* Start email Writer*/
+        FloatingActionButton message_create_button = findViewById(R.id.messageButton);
+        message_create_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DialogFragment dialog = messageCreateFragment.newInstance();
+                dialog.show(getSupportFragmentManager(), "tag");
+
+            }
+        });
     }
+
+
+        /* gets the data from the Email writer and adds it to the Database */
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, messageCreateFragment.replyIntent);
+
+            /* Creates class for the Date when Email is written */
+            Date dNow = new Date();
+            SimpleDateFormat ft =
+                    new SimpleDateFormat("dd.MM.yy");
+
+         //   if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+                Message word = new Message(
+                        messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_TO),
+                        null,
+                        null,
+                        messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_FROM),
+                        ft.format(dNow),
+                        messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_SUBJECT),
+                        messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_MESSAGE),
+                        "Draft",false);
+                mEmailViewModel.insert(word);
+          //  } else {
+                Toast.makeText(
+                        getApplicationContext(),
+                        R.string.empty_not_saved,
+                        Toast.LENGTH_LONG).show();
+
+            Toast.makeText(
+                    getApplicationContext(),
+                    messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_FROM),
+                    Toast.LENGTH_LONG).show();
+          //  }
+
+
+        }
 
 
 
@@ -132,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /* better leave empty to avoid any listener disambiguity */
     public void onClick(View view) { }
+
 
 
     public void createNewEmailDialog(){
@@ -163,6 +247,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         newemail_save_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 /* store user input (only needed for DEBUGGING) */
                 String name = newemail_name.getText().toString();
                 String email = newemail_email.getText().toString();
@@ -214,3 +299,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 }
+

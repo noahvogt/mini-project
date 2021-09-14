@@ -1,107 +1,54 @@
 package com.noahvogt.miniprojekt.ui.home;
 
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.os.Build;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 
-import com.noahvogt.miniprojekt.R;
+import com.noahvogt.miniprojekt.ui.DataBase.Message;
+import com.noahvogt.miniprojekt.ui.slideshow.EmailViewHolder;
 
-import org.w3c.dom.Text;
 
-import java.util.List;
+import java.util.Objects;
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
+public class CustomAdapter extends ListAdapter<Message, EmailViewHolder> {
 
-    private List<Data> localDataSet;
 
-    /**
-     * Provide a reference to the type of views that you are using
-     * (custom ViewHolder).
-     */
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView name;
-        private TextView betreff;
-        private TextView date;
-        private TextView begin;
 
-        public ViewHolder(View view) {
-            super(view);
-            // Define click listener for the ViewHolder's View
+    public CustomAdapter(@NonNull DiffUtil.ItemCallback<Message> diffCallback) {
+        super(diffCallback);
+    }
 
-            name = (TextView) view.findViewById(R.id.textView);
-            betreff = (TextView) view.findViewById(R.id.betreff);
-            date = (TextView) view.findViewById(R.id.date);
-            begin = (TextView) view.findViewById(R.id.begin);
+    @Override
+    public EmailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return EmailViewHolder.create(parent);
+    }
+
+    /* bind data to View*/
+    @Override
+    public void onBindViewHolder(EmailViewHolder holder, int position) {
+        Message current = getItem(position);
+        holder.bind(current.getFrom(),current.getSubject(), current.getDate() ,current.getTextContent());
+    }
+
+    public static class EmailDiff extends DiffUtil.ItemCallback<Message> {
+
+        @Override
+        public boolean areItemsTheSame(@NonNull Message oldItem, @NonNull Message newItem) {
+            return oldItem == newItem;
         }
 
-        //public TextView getTextView() {
-            //return textView;
-        //}
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        public boolean areContentsTheSame(@NonNull Message oldItem, @NonNull Message newItem) {
+            return Objects.equals(oldItem.getId(), newItem.getId());
+        }
     }
 
-    /**
-     * Initialize the dataset of the Adapter.
-     *
-     * @param dataSet String[] containing the data to populate views to be used
-     * by RecyclerView.
-     */
-    public CustomAdapter(List<Data> dataSet) {
-        localDataSet = dataSet;
-    }
-
-    // Create new views (invoked by the layout manager)
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        // Create a new view, which defines the UI of the list item
-        //View view = LayoutInflater.from(viewGroup.getContext())
-                //.inflate(R.layout.text_row_item, viewGroup, false);
-
-        Context context = viewGroup.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-
-        // Inflate the custom layout
-        View contactView = inflater.inflate(R.layout.fragment_home, viewGroup, false); //fragment_home is just for no errors idk if it is the right file
-
-        // Return a new holder instance
-        ViewHolder view = new ViewHolder(contactView);
-        return view;
-    }
-
-    // Replace the contents of a view (invoked by the layout manager)
-    @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int position) {
-
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
-        //viewHolder.getTextView().setText(localDataSet[position]);
-        // Get the data model based on position
-        Data contact = localDataSet.get(position);
-
-        // Set item views based on your views and data model
-        TextView nameView = viewHolder.name;
-        TextView betreffView = viewHolder.betreff;
-        TextView dateView = viewHolder.date;
-        TextView beginView = viewHolder.begin;
-
-        nameView.setText(contact.getName());
-        betreffView.setText(contact.getBetreff());
-        dateView.setText(contact.getDate());
-        beginView.setText(contact.getBegin());
-
-
-    }
-
-    // Return the size of your dataset (invoked by the layout manager)
-    @Override
-    public int getItemCount() {
-        return localDataSet.size();
-    }
 }
 

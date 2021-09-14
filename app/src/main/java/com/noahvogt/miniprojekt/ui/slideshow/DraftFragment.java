@@ -1,4 +1,4 @@
-package com.noahvogt.miniprojekt.ui.gallery;
+package com.noahvogt.miniprojekt.ui.slideshow;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,31 +17,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.noahvogt.miniprojekt.MainActivity;
 import com.noahvogt.miniprojekt.R;
 import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
-import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
 
-public class GalleryFragment extends Fragment{
+public class DraftFragment extends Fragment {
 
-    private GalleryViewModel galleryViewModel;
-    EmailViewModel mEmailViewModel;
-    RecyclerView recyclerView;
+   private DraftViewModel draftViewModel;
+   EmailViewModel mEmailViewModel;
+   RecyclerView recyclerView;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
 
-
-       // mEmailViewModel.deleteNewMessage();
-
-        galleryViewModel =
-                new ViewModelProvider(this).get(GalleryViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_gallery, container, false);
-        final TextView textView = root.findViewById(R.id.text_gallery);
-        galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
 
         recyclerView = MainActivity.recyclerView.findViewById(R.id.recyclerView);
 
@@ -50,16 +37,31 @@ public class GalleryFragment extends Fragment{
         /* Attach the adapter to the recyclerview to populate items */
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        //mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
 
         mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
-        mEmailViewModel.getSentMessage().observe(getViewLifecycleOwner(), messages -> {
+        mEmailViewModel.getDraftMessage().observe(getViewLifecycleOwner(), messages -> {
             /* Update the cached copy of the messages in the adapter*/
             adapter.submitList(messages);
         });
 
+        draftViewModel =
+                new ViewModelProvider(this).get(DraftViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
+        final TextView textView = root.findViewById(R.id.text_slideshow);
+        draftViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                textView.setText(s);
+            }
+        });
         return root;
-
     }
 
 
+
+
+
+
 }
+
