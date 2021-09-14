@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -35,11 +36,15 @@ public interface MessageDao {
     @Query("DELETE FROM message_table")
     void deleteAll();
 
+    @Delete(entity = Message.class)
+    void delete(Message message);
+
+    @Update(entity = Message.class)
+    void updateMessage(Message message);
+
     @Query("DELETE FROM message_table WHERE subject='DELETE'")
     void deleteNewMessage();
 
-    @Delete(entity = Message.class)
-    void delete(Message message);
 
     @Query("SELECT * FROM message_table")
     LiveData<List<Message>> getAllMessages();

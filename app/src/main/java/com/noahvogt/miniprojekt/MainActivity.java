@@ -35,6 +35,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
 import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
 
 import java.text.SimpleDateFormat;
@@ -50,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
     public static EmailViewModel mEmailViewModel;
     public static RecyclerView recyclerView;
+
+    public static DrawerLayout drawer;
 
     public static final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff());
 
@@ -104,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = findViewById(drawer_layout);
+        drawer = findViewById(drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -144,6 +147,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
+
+       /* if (findViewById(drawer_layout) != null){
+            if (savedInstanceState != null){
+                return;
+            }
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.show_Layout, new MessageShowFragment()).commit();
+        }
+
+        */
     }
 
 
@@ -201,6 +214,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // better leave empty to avoid any listener disambiguity
     public void onClick(View view) {}
+
 
 
     public void createNewEmailDialog(){

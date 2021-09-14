@@ -1,6 +1,7 @@
 package com.noahvogt.miniprojekt.ui.DataBase;
 
 import android.app.Application;
+import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
@@ -52,15 +53,32 @@ public class EmailRepository {
         return mArchiveMessage;
     }
 
-    public void deleteNewMessage(){
-        messageDao.deleteNewMessage();
-    }
-
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
     public void insert(Message message) {
         EmailRoomDatabase.databaseWriteExecutor.execute(() -> {
             messageDao.insert(message);
+        });
+    }
+
+    public void deleteMessage(final Message message){
+       /* new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                db.MessageDao().deleteMessage(message);
+                return null;
+            }
+        }.execute();
+
+        */
+        EmailRoomDatabase.databaseWriteExecutor.execute(() -> {
+            messageDao.delete(message);
+        });
+    }
+
+    public void updateMessage(final Message message){
+        EmailRoomDatabase.databaseWriteExecutor.execute(() -> {
+            messageDao.updateMessage(message);
         });
     }
 }

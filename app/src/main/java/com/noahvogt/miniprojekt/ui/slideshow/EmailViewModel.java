@@ -42,10 +42,9 @@ public class EmailViewModel extends AndroidViewModel {
 
     public LiveData<List<Message>> getArchiveMessage(){ return mArchiveMessage;}
 
-    public void deleteNewMessage(){
-        mEmailRepository.deleteNewMessage();
-    }
-
     public void insert(Message message){mEmailRepository.insert(message);}
 
+    public void deleteMessage(Message message){mEmailRepository.deleteMessage(message);}
+
+    public void updateMessage(Message message){mEmailRepository.updateMessage(message);}
 }

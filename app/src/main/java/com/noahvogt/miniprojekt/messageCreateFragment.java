@@ -215,16 +215,16 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.create_message_item_1:
+            case R.id.create_message_delete:
                 Toast.makeText(getActivity(), "item 1 clicked", Toast.LENGTH_LONG).show();
                 return true;
-            case R.id.create_message_item_2:
+            case R.id.create_message_spam:
                 Toast.makeText(getActivity(), "item 2 clicked", Toast.LENGTH_LONG).show();
                 return true;
-            case R.id.create_message_item_3:
+            case R.id.create_message_move_to:
                 Toast.makeText(getActivity(), "item 3 clicked", Toast.LENGTH_LONG).show();
                 return true;
-            case R.id.create_message_item_4:
+            case R.id.create_message_sent_to:
                 Toast.makeText(getActivity(), "item 4 clicked", Toast.LENGTH_LONG).show();
                 return true;
             default: // this case should never occur

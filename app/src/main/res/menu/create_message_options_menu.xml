@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/create_message_item_1"
-        android:title="Item 1"/>
-    <item android:id="@+id/create_message_item_2"
-        android:title="Item 2"/>
-    <item android:id="@+id/create_message_item_3"
-        android:title="Item 3"/>
-    <item android:id="@+id/create_message_item_4"
-        android:title="Item 4"/>
+    <item android:id="@+id/create_message_delete"
+        android:title="@string/menu_delete"/>
+    <item android:id="@+id/create_message_spam"
+        android:title="@string/menu_spam"/>
+    <item android:id="@+id/create_message_sent_to"
+        android:title="@string/menu_sent_to"/>
+    <item android:id="@+id/create_message_move_to"
+        android:title="@string/menu_move_to"/>
 
 </menu>

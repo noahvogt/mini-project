@@ -19,9 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.noahvogt.miniprojekt.MainActivity;
 import com.noahvogt.miniprojekt.R;
 import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
+import com.noahvogt.miniprojekt.ui.slideshow.EmailViewHolder;
 import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
 
-public class GalleryFragment extends Fragment {
+public class GalleryFragment extends Fragment{
 
     private GalleryViewModel galleryViewModel;
     EmailViewModel mEmailViewModel;
@@ -30,20 +31,7 @@ public class GalleryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        recyclerView = MainActivity.recyclerView.findViewById(R.id.recyclerView);
 
-        final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff());
-
-        /* Attach the adapter to the recyclerview to populate items */
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        //mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
-
-        mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
-        mEmailViewModel.getSentMessage().observe(getViewLifecycleOwner(), messages -> {
-            /* Update the cached copy of the messages in the adapter*/
-            adapter.submitList(messages);
-        });
 
        // mEmailViewModel.deleteNewMessage();
 
@@ -57,10 +45,32 @@ public class GalleryFragment extends Fragment {
                 textView.setText(s);
             }
         });
+
+        recyclerView = MainActivity.recyclerView.findViewById(R.id.recyclerView);
+
+        final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff());
+
+        /* Attach the adapter to the recyclerview to populate items */
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+
+       /* recyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(),"clicked Recyclerviewer", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        */
+
+        mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
+        mEmailViewModel.getSentMessage().observe(getViewLifecycleOwner(), messages -> {
+            /* Update the cached copy of the messages in the adapter*/
+            adapter.submitList(messages);
+        });
+
         return root;
-
-
-
 
     }
 

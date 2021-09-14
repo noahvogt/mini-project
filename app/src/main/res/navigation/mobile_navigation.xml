@@ -35,4 +35,7 @@
         android:label="@string/drawer_spam"
         tools:layout="@layout/fragment_spam" />
 
+    <fragment
+        android:id="@+id/nav_show"
+        android:name="com.noahvogt.miniprojekt.ui.show.MessageShowFragment"/>
 </navigation>

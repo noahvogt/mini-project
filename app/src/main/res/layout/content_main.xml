@@ -18,6 +18,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/mobile_navigation" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="50dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/messageButton"
             app:layout_constraintBottom_toBottomOf="parent"

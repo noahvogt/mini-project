@@ -16,6 +16,16 @@
     <string name="your_email_address_filler">Your Email Address</string>
     <string name="your_full_name_filler">Your Full Name</string>
 
+    <string name="show_from">From</string>
+    <string name="show_To">To </string>
+    <string name="show_subject">Subject</string>
+    <string name="show_message">Message</string>
+
+    <string name="menu_delete">Delete</string>
+    <string name="menu_move_to">Move to</string>
+    <string name="menu_spam">Spam</string>
+    <string name="menu_sent_to">Sent to</string>
+
     <string name="Sender">Absender</string>
     <string name="Betreff">Betreff</string>
     <string name="Beginn">E-mail Beginn</string>
