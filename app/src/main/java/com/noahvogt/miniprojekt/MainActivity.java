@@ -37,6 +37,7 @@ import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
 import com.google.android.material.snackbar.Snackbar;
 import com.noahvogt.miniprojekt.ui.home.SettingsActivity;
+import com.noahvogt.miniprojekt.ui.slideshow.EmailViewHolder;
 import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
 
 import java.text.SimpleDateFormat;
@@ -130,6 +131,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        /* get Inbox Messages in Recyclerviewer at begining is overwritten by Fragments but has to stay*/
+        mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
+        mEmailViewModel.getInboxMessage().observe(this, messages -> {
+            /* Update the cached copy of the messages in the adapter*/
+            adapter.submitList(messages);
+        });
+
 
         Button settingButton = findViewById(R.id.settingsButton);
         settingButton.setOnClickListener(new View.OnClickListener() {
@@ -139,12 +147,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(i);
             }
         });
-        /* get Inbox Messages in Recyclerviewer at begining is overwritten by Fragments but has to stay*/
-        mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
-        mEmailViewModel.getInboxMessage().observe(this, messages -> {
-            /* Update the cached copy of the messages in the adapter*/
-            adapter.submitList(messages);
-        });
+
 
 
         /* Start email Writer*/

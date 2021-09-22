@@ -23,8 +23,8 @@ public class EmailViewModel extends AndroidViewModel {
     public EmailViewModel(Application application) {
         super(application);
         mEmailRepository = new EmailRepository(application);
-        mDraftMessage = mEmailRepository.getDraftMessages();
         mInboxMessage = mEmailRepository.getInboxMessages();
+        mDraftMessage = mEmailRepository.getDraftMessages();
         mSentMessage = mEmailRepository.getSentMessages();
         mArchiveMessage = mEmailRepository.getArchiveMessages();
         mSpamMessage = mEmailRepository.getSpamMessage();

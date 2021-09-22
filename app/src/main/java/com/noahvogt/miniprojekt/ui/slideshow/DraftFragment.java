@@ -18,7 +18,7 @@ import com.noahvogt.miniprojekt.MainActivity;
 import com.noahvogt.miniprojekt.R;
 import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
 
-public class DraftFragment extends Fragment {
+public class  DraftFragment extends Fragment {
 
    private DraftViewModel draftViewModel;
    EmailViewModel mEmailViewModel;

@@ -25,9 +25,9 @@ public class EmailRepository {
     public EmailRepository(Application application) {
         EmailRoomDatabase db = EmailRoomDatabase.getDatabase(application);
         messageDao = db.messageDao();
+        mInboxMessage = messageDao.getInboxMessages();
         mDraftMessage = messageDao.getDraftMessages();
         mArchiveMessage = messageDao.getArchiveMessages();
-        mInboxMessage = messageDao.getInboxMessages();
         mSentMessage = messageDao.getSentMessages();
         mSpamMessage = messageDao.getSpamMessages();
     }

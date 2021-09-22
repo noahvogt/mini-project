@@ -3,21 +3,15 @@ package com.noahvogt.miniprojekt.ui.slideshow;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.noahvogt.miniprojekt.MainActivity;
+import com.noahvogt.miniprojekt.ui.DataBase.Message;
 import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
 import com.noahvogt.miniprojekt.R;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.RecyclerView;
 
 /* adds the content to the View of RecyclerView*/
@@ -25,12 +19,11 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
     private final TextView fromItemView;
     private final TextView subjectItemView;
     private final TextView dateItemView;
-    public final TextView messageItemView;
+    private final TextView messageItemView;
 
-    private AppBarConfiguration mAppBarConfiguration;
+    public static Message curent;
 
-
-    private EmailViewHolder(View itemView, ViewGroup parent) {
+    private EmailViewHolder(View itemView) {
         super(itemView);
         fromItemView = itemView.findViewById(R.id.textView);
         subjectItemView = itemView.findViewById(R.id.subject);
@@ -39,18 +32,17 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), "clicked ViewHolder ", Toast.LENGTH_LONG).show();
-              /*  Fragment fragment = new MessageShowFragment();
-                if (!fragment.isAdded()){
-                    Toast.makeText(v.getContext(), "is not Added ", Toast.LENGTH_LONG).show();
+                Toast.makeText(v.getContext(), curent.getFrom(), Toast.LENGTH_LONG).show();
 
-                    FragmentManager fragmentManager = fragment.getParentFragmentManager();
-                    fragmentManager.beginTransaction()
-                        .add(R.id.nav_show, MessageShowFragment.class, null)
-                        .commit();
-                }
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
 
-               */
+                DialogFragment dialog = MessageShowFragment.newInstance(curent);
+                dialog.show(activity.getSupportFragmentManager(), "tag");
+
+
+
+
+
             }
         });
     }
@@ -63,9 +55,13 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
     }
 
     public static EmailViewHolder create(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext())
+         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_home, parent, false);
-        return new EmailViewHolder(view, parent);
+        return new EmailViewHolder(view );
+    }
+
+    public static void putCurrent(Message current){
+        curent = current;
     }
 
 
