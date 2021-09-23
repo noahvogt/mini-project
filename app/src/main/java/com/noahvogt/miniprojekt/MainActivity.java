@@ -1,6 +1,8 @@
 package com.noahvogt.miniprojekt;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AlertDialog dialog;
     private EditText newemail_name, newemail_email, newemail_password; /* may not be private */
 
+    SharedPreferences preferences;
+
     /* empty descriptor */
     public MainActivity() {}
 
@@ -102,6 +106,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 createNewEmailDialog();
             }
         });
+
+        /* invoke preferences */
+        preferences = (SharedPreferences) getSharedPreferences("UserPrefrences", Context.MODE_PRIVATE);
 
         /* invoke toolbar */
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -239,6 +246,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialog = dialogBuilder.create();
         dialog.show();
 
+        SharedPreferences.Editor preferencesEditor = preferences.edit();
+
         if (! Python.isStarted()) {
             Python.start(new AndroidPlatform(this));
         }
@@ -258,12 +267,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
                 /* connect to mail server and print various debugging output */
+                showToast("Probe Connection ...");
                 if (mailFunctions.canConnect(name, email, password) == Boolean.TRUE) {
                     showToast("was able to connect");
-                    List l =  mailFunctions.listMailboxes(mailFunctions.getIMAPConnection(name, email, password));
-                    for (int i = 0; i < l.size(); i++) {
-                        showToast(l.get(i).toString());
-                    }
+                    //List l =  mailFunctions.listMailboxes(mailFunctions.getIMAPConnection(name, email, password));
+                    //for (int i = 0; i < l.size(); i++) {
+                    //    showToast(l.get(i).toString());
+                    //}
+                    preferencesEditor.putString("name", name);
+                    preferencesEditor.putString("email", email);
+                    preferencesEditor.putString("password", password);
+                    preferencesEditor.apply();
                 } else {
                     showToast("failed to connect");
 

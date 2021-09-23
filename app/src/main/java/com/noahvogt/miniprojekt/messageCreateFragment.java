@@ -1,6 +1,8 @@
 package com.noahvogt.miniprojekt;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -47,6 +49,7 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
         return new messageCreateFragment();
     }
     private AlertDialog dialog;
+    SharedPreferences preferences;
 
     private static final int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseWriteExecutor =
@@ -58,6 +61,7 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.messageCreateTheme);
+        preferences = getActivity().getSharedPreferences("UserPrefrences", Context.MODE_PRIVATE);
     }
 
 
@@ -78,6 +82,10 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
          receivingAddressObject = (EditText) view.findViewById(R.id.create_message_receiving_address_text);
          subjectObject = (EditText) view.findViewById(R.id.create_message_subject_text);
          messageBodyObject = (EditText) view.findViewById(R.id.create_message_body_text);
+
+        /* set logged in email address as sending address */
+        String loginEmail = preferences.getString("email","");
+        sendingAddressObject.setText(loginEmail);
 
         /* get string vars, MAYBE NOT HERE */
         String sendingAddress = sendingAddressObject.getText().toString();
