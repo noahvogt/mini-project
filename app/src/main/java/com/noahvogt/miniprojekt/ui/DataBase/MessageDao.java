@@ -74,10 +74,5 @@ public interface MessageDao {
     @Query("SELECT * FROM message_table WHERE folder LIKE 'Spam' ORDER BY date ASC")
     LiveData<List<Message>> getSpamMessages();
 
-    /* selects just from, subject and date from word_table */
-
-    /* @Query("SELECT fromEmail, date, subject, textContent FROM message_table")
-    LiveData<List<Message>> getRecyclerviewData();
-     */
 
 }

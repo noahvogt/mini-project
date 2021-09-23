@@ -130,7 +130,7 @@
                 tools:layout_editor_absoluteX="1dp">
 
             <TextView
-                    android:id="@+id/show_message_subject_text"
+                    android:id="@+id/show_Subject"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
 
@@ -159,7 +159,7 @@
                 tools:layout_editor_absoluteX="1dp">
 
                 <TextView
-                    android:id="@+id/show_message_body_text"
+                    android:id="@+id/show_Message"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="160dp"

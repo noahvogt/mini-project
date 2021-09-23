@@ -28,14 +28,14 @@ public class MessageShowFragment extends DialogFragment implements PopupMenu.OnM
 
 
     public TextView showTo;
-    public TextView receivingAddressObject;
-    public TextView subjectObject;
-    public TextView messageBodyObject;
+    public TextView showFrom;
+    public TextView showSubject;
+    public TextView showMessage;
 
     private static Message mCurrent;
     private EmailViewModel mEmailViewModel;
     public static MessageShowFragment newInstance(com.noahvogt.miniprojekt.ui.DataBase.Message current) {
-        mCurrent = current;
+       mCurrent = current;
         return new MessageShowFragment();}
 
     /* set theming style */
@@ -71,16 +71,14 @@ public class MessageShowFragment extends DialogFragment implements PopupMenu.OnM
         ImageButton attachButton = view.findViewById(R.id.show_message_attach_button);
 
         showTo = (TextView) view.findViewById(R.id.show_To);
-        receivingAddressObject = (EditText) view.findViewById(R.id.create_message_receiving_address_text);
-        subjectObject = (EditText) view.findViewById(R.id.create_message_subject_text);
-        messageBodyObject = (EditText) view.findViewById(R.id.create_message_body_text);
+        showFrom = (TextView) view.findViewById(R.id.show_From);
+        showSubject = (TextView) view.findViewById(R.id.show_Subject);
+        showMessage = (TextView) view.findViewById(R.id.show_Message);
 
         showTo.setText(mCurrent.getFrom());
-
-
-
-
-
+        showFrom.setText(mCurrent.getFrom());
+        showSubject.setText(mCurrent.getSubject());
+        showMessage.setText(mCurrent.getTextContent());
 
 
         // TODO: add cc + bcc functionality
