@@ -1,4 +1,4 @@
-import imaplib, email, os
+import imaplib, smtplib, ssl, email, os
 
 def errorMsgExit(error_msg):
     print("Error: " + error_msg)
@@ -44,7 +44,7 @@ def fetchMails(connection, inbox):
     print("status-------\n" + status)
     print("messages-------\n" + str(messages))
     # number of top emails to fetch
-    N = 3
+    #N = 3
     # total number of emails
     messages_int = int(messages[0])
     print("message_int------\n" + str(messages_int))
@@ -92,6 +92,16 @@ def fetchMails(connection, inbox):
     connection.logout()
 
     return output_list
+
+def sendStarttls(host, sendingMail, receivingMail, password, message, subject, port):
+    context = ssl.create_default_context()
+    utf8Message = "Subject: " + subject + "\n\n" + message
+    decoded=utf8Message.encode('cp1252').decode('utf-8')
+
+    with smtplib.SMTP(host, port) as serverConnection:
+        serverConnection.starttls(context=context)
+        serverConnection.login(sendingMail, password)
+        serverConnection.sendmail(sendingMail, receivingMail, decoded)
 
 def afetchMails(con):
     con.select("Sent")

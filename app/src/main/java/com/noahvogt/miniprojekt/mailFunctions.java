@@ -17,6 +17,13 @@ public class mailFunctions {
         return pythonMailFunctions.callAttr("checkConnection", host, email, password, 993).toBoolean();
     }
 
+    public static void sendStarttlsMail(String host, String sendingMail, String receivingMail, String password, String message, String subject) {
+        Python python = Python.getInstance();
+        PyObject pythonMailFunctions = python.getModule("mailFunctions");
+        pythonMailFunctions.callAttr("sendStarttls", host, sendingMail, receivingMail, password, message, subject, 587);
+        return;
+    }
+
     public static PyObject getIMAPConnection(String host, String email, String password) {
         Python python = Python.getInstance();
         PyObject pythonMailFunctions = python.getModule("mailFunctions");

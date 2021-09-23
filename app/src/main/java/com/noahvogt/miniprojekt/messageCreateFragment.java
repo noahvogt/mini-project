@@ -194,6 +194,8 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
                 if (mailFunctions.validateMessageBody(messageBodyObject) && mailFunctions.validateSubject(subjectObject) &&
                 mailFunctions.validateEmail(receivingAddressObject) && mailFunctions.validateEmail(sendingAddressObject) &&
                 !mailFunctions.checkForSameEmail(sendingAddressObject, receivingAddressObject)) {
+                    String password = preferences.getString("password","");
+                    mailFunctions.sendStarttlsMail("smtp.edubs.ch", sendingAddress, receivingAddress, password, messageBody, subject);
                     Toast.makeText(getActivity(), "sending ... ", Toast.LENGTH_SHORT).show();
                     dismiss();
                 } else {
