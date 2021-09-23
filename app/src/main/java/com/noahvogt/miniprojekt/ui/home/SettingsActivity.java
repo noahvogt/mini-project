@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.noahvogt.miniprojekt.R;
+import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
 
 import java.util.Objects;
 
@@ -27,6 +28,10 @@ public class SettingsActivity extends AppCompatActivity {
             }
             // below line is to inflate our fragment.
             getSupportFragmentManager().beginTransaction().add(R.id.idFrameLayout, new SettingsFragment()).commit();
+        }
+
+        if (findViewById(R.id.show_Layout) != null){
+            getSupportFragmentManager().beginTransaction().add(R.id.show_Layout, new MessageShowFragment()).commit();
         }
     }
 }

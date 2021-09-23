@@ -1,4 +1,4 @@
-package com.noahvogt.miniprojekt.ui.home;
+ package com.noahvogt.miniprojekt.ui.home;
 
 
 import android.os.Build;
@@ -14,26 +14,37 @@ import com.noahvogt.miniprojekt.ui.DataBase.Message;
 import com.noahvogt.miniprojekt.ui.slideshow.EmailViewHolder;
 
 
+import java.util.List;
 import java.util.Objects;
 
 public class CustomAdapter extends ListAdapter<Message, EmailViewHolder> {
 
+    public SelectedMessage selectedMessage;
+    public List<Message> messageList;
 
-
-    public CustomAdapter(@NonNull DiffUtil.ItemCallback<Message> diffCallback) {
+    public CustomAdapter(@NonNull DiffUtil.ItemCallback<Message> diffCallback, SelectedMessage selectedMessage) {
         super(diffCallback);
+        this.selectedMessage = selectedMessage;
     }
 
     @Override
     public EmailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return EmailViewHolder.create(parent);
+        return EmailViewHolder.create(parent,selectedMessage, messageList);
     }
 
     /* bind data to View*/
     @Override
     public void onBindViewHolder(EmailViewHolder holder, int position) {
         Message current = getItem(position);
-        holder.bind(current.getFrom(),current.getSubject(), current.getDate() ,current.getTextContent());
+        holder.bind(current.getFrom(),current.getSubject(), current.getDate() ,current.getTextContent()); }
+
+    /*get List from adapter which is shown*/
+    public void getList(List<Message> messageList){
+        this.messageList = messageList;
+    }
+
+    public interface SelectedMessage{
+        void selectedMessage(Message messages);
     }
 
     public static class EmailDiff extends DiffUtil.ItemCallback<Message> {

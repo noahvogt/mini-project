@@ -2,12 +2,16 @@ package com.noahvogt.miniprojekt.ui.gallery;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,12 +20,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.noahvogt.miniprojekt.MainActivity;
 import com.noahvogt.miniprojekt.R;
+import com.noahvogt.miniprojekt.ui.DataBase.Message;
 import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
+import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
 import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
 
-public class GalleryFragment extends Fragment{
+import org.jetbrains.annotations.NotNull;
 
-    private GalleryViewModel galleryViewModel;
+public class GalleryFragment extends Fragment implements CustomAdapter.SelectedMessage{
+
     EmailViewModel mEmailViewModel;
     RecyclerView recyclerView;
 
@@ -32,8 +39,7 @@ public class GalleryFragment extends Fragment{
 
        // mEmailViewModel.deleteNewMessage();
 
-        galleryViewModel =
-                new ViewModelProvider(this).get(GalleryViewModel.class);
+        GalleryViewModel galleryViewModel = new ViewModelProvider(this).get(GalleryViewModel.class);
         View root = inflater.inflate(R.layout.fragment_gallery, container, false);
         final TextView textView = root.findViewById(R.id.text_gallery);
         galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -45,7 +51,32 @@ public class GalleryFragment extends Fragment{
 
         recyclerView = MainActivity.recyclerView.findViewById(R.id.recyclerView);
 
-        final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff());
+        recyclerView.setOnClickListener(v -> Toast.makeText(getContext(), "Single Interception Click on position :"+v,
+                Toast.LENGTH_SHORT).show());
+
+        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull @NotNull RecyclerView rv, @NonNull @NotNull MotionEvent e) {
+              //  Toast.makeText(getContext(), "Single Interception Click on position :"+rv,
+             //           Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(@NonNull @NotNull RecyclerView rv, @NonNull @NotNull MotionEvent e) {
+                Toast.makeText(getContext(), "Single Click on position :"+rv,
+                        Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });
+
+
+        final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff(), this);
 
         /* Attach the adapter to the recyclerview to populate items */
         recyclerView.setAdapter(adapter);
@@ -55,11 +86,23 @@ public class GalleryFragment extends Fragment{
         mEmailViewModel.getSentMessage().observe(getViewLifecycleOwner(), messages -> {
             /* Update the cached copy of the messages in the adapter*/
             adapter.submitList(messages);
+            /*get List of Message to show them onClick */
+            adapter.getList(messages);
         });
+
+
 
         return root;
 
     }
 
 
+    @Override
+    public void selectedMessage(Message messages) {
+
+        AppCompatActivity activity = (AppCompatActivity) getContext();
+        DialogFragment dialog = MessageShowFragment.newInstance(messages);
+        dialog.show(activity.getSupportFragmentManager(), "tag");
+
+    }
 }

@@ -39,6 +39,8 @@ import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
 import com.google.android.material.snackbar.Snackbar;
 import com.noahvogt.miniprojekt.ui.home.SettingsActivity;
+import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
+import com.noahvogt.miniprojekt.ui.slideshow.EmailViewHolder;
 import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
 
 import java.text.SimpleDateFormat;
@@ -47,15 +49,13 @@ import java.util.List;
 
 import static com.noahvogt.miniprojekt.R.id.drawer_layout;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, CustomAdapter.SelectedMessage {
 
     private AppBarConfiguration mAppBarConfiguration;
 
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
     public static EmailViewModel mEmailViewModel;
     public static RecyclerView recyclerView;
-
-    public static final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff());
 
     private AlertDialog dialog;
     private EditText newemail_name, newemail_email, newemail_password; /* may not be private */
@@ -132,10 +132,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /* Lookup the recyclerview in activity layout */
         recyclerView = findViewById(R.id.recyclerView);
 
+        final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff(),this);
+
+
 
         /* Attach the adapter to the recyclerview to populate items */
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        /* get Inbox Messages in Recyclerviewer at begining is overwritten by Fragments but has to stay*/
+        mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
+        mEmailViewModel.getInboxMessage().observe(this, messages -> {
+            /* Update the cached copy of the messages in the adapter*/
+            adapter.submitList(messages);
+        });
 
 
         Button settingButton = findViewById(R.id.settingsButton);
@@ -146,12 +156,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(i);
             }
         });
-        /* get Inbox Messages in Recyclerviewer at begining is overwritten by Fragments but has to stay*/
-        mEmailViewModel = new ViewModelProvider(this).get(EmailViewModel.class);
-        mEmailViewModel.getInboxMessage().observe(this, messages -> {
-            /* Update the cached copy of the messages in the adapter*/
-            adapter.submitList(messages);
-        });
+
 
 
         /* Start email Writer*/
@@ -312,5 +317,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    @Override
+    public void selectedMessage(Message emailViewModel) {
+
+        DialogFragment dialog = MessageShowFragment.newInstance(emailViewModel);
+        dialog.show(getSupportFragmentManager(), "tag");
+
+    }
 }
 

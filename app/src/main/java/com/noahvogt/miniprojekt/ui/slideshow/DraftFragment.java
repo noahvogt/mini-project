@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,9 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.noahvogt.miniprojekt.MainActivity;
 import com.noahvogt.miniprojekt.R;
+import com.noahvogt.miniprojekt.ui.DataBase.Message;
 import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
+import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
 
-public class DraftFragment extends Fragment {
+public class  DraftFragment extends Fragment implements CustomAdapter.SelectedMessage{
 
    private DraftViewModel draftViewModel;
    EmailViewModel mEmailViewModel;
@@ -32,7 +36,7 @@ public class DraftFragment extends Fragment {
 
         recyclerView = MainActivity.recyclerView.findViewById(R.id.recyclerView);
 
-        final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff());
+        final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff(), this);
 
         /* Attach the adapter to the recyclerview to populate items */
         recyclerView.setAdapter(adapter);
@@ -43,6 +47,9 @@ public class DraftFragment extends Fragment {
         mEmailViewModel.getDraftMessage().observe(getViewLifecycleOwner(), messages -> {
             /* Update the cached copy of the messages in the adapter*/
             adapter.submitList(messages);
+            /*get List of Message to show them onClick */
+            adapter.getList(messages);
+
         });
 
         draftViewModel =
@@ -59,9 +66,12 @@ public class DraftFragment extends Fragment {
     }
 
 
+    @Override
+    public void selectedMessage(Message messages) {
 
-
-
-
+        AppCompatActivity activity = (AppCompatActivity) getContext();
+        DialogFragment dialog = MessageShowFragment.newInstance(messages);
+        dialog.show(activity.getSupportFragmentManager(), "tag");
+    }
 }
 

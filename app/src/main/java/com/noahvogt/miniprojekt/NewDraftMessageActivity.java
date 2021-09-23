@@ -13,25 +13,12 @@ import android.widget.Toast;
 
 public class NewDraftMessageActivity extends AppCompatActivity {
 
-
-
-
-
-
    @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_home);
 
        NewDraftMessageActivity.this.finish();
-
-
-
-
-
-
-
-
         }
     }
 

@@ -1,6 +1,7 @@
 package com.noahvogt.miniprojekt.ui.DataBase;
 
 import android.content.Context;
+import android.content.Intent;
 import android.icu.util.Measure;
 
 import androidx.annotation.NonNull;
@@ -38,7 +39,7 @@ public abstract class EmailRoomDatabase extends RoomDatabase{
 
     static EmailRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
-            /* synchronize all threads of WordRoomDatabase */
+            /* synchronize all threads of EmailRoomDatabase */
             synchronized (EmailRoomDatabase.class) {
                 if (INSTANCE == null) {
                     /* passes the interface in the Room and deletes old data/schema from device*/
@@ -77,13 +78,15 @@ public abstract class EmailRoomDatabase extends RoomDatabase{
                        true);
                dao.insert(word);
 
-               for (int n = 1; n < 20; n++) {
+               
+               for (Integer n = 1; n < 20; n++) {
                    word = new Message("Simon", null, null,
-                           "stefan", "tomorrow", "sent20", "lets goo","Sent",
+                           "stefan", "tomorrow", n.toString(), "lets goo", "Sent",
                            true);
                    dao.insert(word);
                }
 
+               /*
                for (int i = 1; i < 20; i++){
                    word = new Message("Simon", null, null,
                            "Hans", "tomorrow", "inbox20", "lets goo","Inbox",
@@ -101,6 +104,9 @@ public abstract class EmailRoomDatabase extends RoomDatabase{
                         "Lenny", "tomorrow", "SpamTest", "lets goo","Spam",
                         true);
                 dao.insert(word);
+
+
+                */
 
 
             });

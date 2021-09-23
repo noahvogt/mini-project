@@ -45,7 +45,7 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
     public Activity activity = new Activity();
     public static Intent replyIntent = new Intent();
 
-    static messageCreateFragment newInstance() {
+    public static messageCreateFragment newInstance() {
         return new messageCreateFragment();
     }
     private AlertDialog dialog;
@@ -72,7 +72,6 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
         View view = inflater.inflate(R.layout.message_create_fragment, container, false);
 
         /* init vars */
-
         ImageButton closeButton = view.findViewById(R.id.create_message_close_button);
         final ImageButton sendButton = view.findViewById(R.id.create_message_send_button);
         ImageButton dotButton = view.findViewById(R.id.create_message_dots_button);
