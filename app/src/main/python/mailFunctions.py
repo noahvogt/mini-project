@@ -93,9 +93,10 @@ def fetchMails(connection, inbox):
 
     return output_list
 
-def sendStarttls(host, sendingMail, receivingMail, password, message, subject, port):
+def sendStarttls(host, sendingMail, receivingMail, password, message="", subject="", port=587, cc=[], bcc=[]):
     context = ssl.create_default_context()
-    utf8Message = "Subject: " + subject + "\n\n" + message
+
+    utf8Message = "Subject: " + subject + "\nCC: " + ",".join(cc) + "\nBCC: " + ",".join(bcc) + "\n\n" + message
     decoded=utf8Message.encode('cp1252').decode('utf-8')
 
     with smtplib.SMTP(host, port) as serverConnection:
