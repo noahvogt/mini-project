@@ -51,8 +51,6 @@ public class GalleryFragment extends Fragment implements CustomAdapter.SelectedM
 
         recyclerView = MainActivity.recyclerView.findViewById(R.id.recyclerView);
 
-        recyclerView.setOnClickListener(v -> Toast.makeText(getContext(), "Single Interception Click on position :"+v,
-                Toast.LENGTH_SHORT).show());
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
@@ -90,18 +88,16 @@ public class GalleryFragment extends Fragment implements CustomAdapter.SelectedM
             adapter.getList(messages);
         });
 
-
-
         return root;
 
     }
 
 
     @Override
-    public void selectedMessage(Message messages) {
+    public void selectedMessage(Message messages, EmailViewModel emailViewModel) {
 
         AppCompatActivity activity = (AppCompatActivity) getContext();
-        DialogFragment dialog = MessageShowFragment.newInstance(messages);
+        DialogFragment dialog = MessageShowFragment.newInstance(messages, mEmailViewModel);
         dialog.show(activity.getSupportFragmentManager(), "tag");
 
     }

@@ -38,7 +38,6 @@ import com.chaquo.python.android.AndroidPlatform;
 import com.google.android.material.snackbar.Snackbar;
 import com.noahvogt.miniprojekt.ui.home.SettingsActivity;
 import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
-import com.noahvogt.miniprojekt.ui.slideshow.EmailViewHolder;
 import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
 
 import java.text.SimpleDateFormat;
@@ -206,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         /* Inflate the menu; this adds items to the action bar if it is present. */
-        getMenuInflater().inflate(R.menu.create_message_options_menu, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -304,9 +303,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     @Override
-    public void selectedMessage(Message emailViewModel) {
+    public void selectedMessage(Message messages, EmailViewModel emailViewModel) {
 
-        DialogFragment dialog = MessageShowFragment.newInstance(emailViewModel);
+        DialogFragment dialog = MessageShowFragment.newInstance(messages, mEmailViewModel);
         dialog.show(getSupportFragmentManager(), "tag");
 
     }

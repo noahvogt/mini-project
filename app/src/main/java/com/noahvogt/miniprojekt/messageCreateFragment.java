@@ -46,7 +46,6 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
     public static messageCreateFragment newInstance() {
         return new messageCreateFragment();
     }
-    private AlertDialog dialog;
 
     private static final int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseWriteExecutor =
