@@ -63,9 +63,16 @@ def fetchMails(connection, inbox):
         print(num)
 
         raw_string = email.header.decode_header(msg['Subject'])[0]
-        raw_from = email.header.decode_header(msg['From'])[0]
-        raw_to = email.header.decode_header(msg['To'])[0]
+        print("raw_string: " + str(raw_string))
+        raw_from = email.header.decode_header(msg['From'])
+        print("raw_from" + str(raw_from))
+        try:
+            raw_to = email.header.decode_header(msg['To'])
+        except TypeError:
+            raw_to = [("", None)]
+        print("raw_to" + str(raw_to))
         raw_date = email.header.decode_header(msg['Date'])[0]
+        print("raw_to" + str(raw_date))
 
         raw_msg = str(msg)
 
