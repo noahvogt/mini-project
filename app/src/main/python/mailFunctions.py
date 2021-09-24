@@ -1,4 +1,28 @@
 import imaplib, smtplib, ssl, email, os
+from itertools import chain
+
+# format raw string you get from fetching mails
+def stringCompiling(inputIterable):
+    # remove first nested iterables
+    try:
+        unitered = list(chain.from_iterable(inputIterable))
+    except TypeError:
+        unitered = inputIterable
+
+    # remove None Type entries
+    nonNoneList = []
+    try:
+        for item in unitered:
+            if item is not None:
+                nonNoneList.append(item)
+    except TypeError:
+        return ""
+
+    # return non empty values
+    if len(nonNoneList) >= 1:
+        return nonNoneList[0]
+    else:
+        return ""
 
 def errorMsgExit(error_msg):
     print("Error: " + error_msg)
@@ -65,7 +89,15 @@ def fetchMails(connection, inbox):
         try:
             raw_to = email.header.decode_header(msg['To'])
         except TypeError:
-            raw_to = [("", None)]
+            raw_to = [""]
+        try:
+            raw_cc = email.header.decode_header(msg['CC'])
+        except TypeError:
+            raw_cc = [""]
+        try:
+            raw_bcc = email.header.decode_header(msg['BCC'])
+        except TypeError:
+            raw_bcc = [""]
         print("raw_to" + str(raw_to))
         raw_date = email.header.decode_header(msg['Date'])[0]
         print("raw_to" + str(raw_date))
@@ -88,9 +120,11 @@ def fetchMails(connection, inbox):
         #print("subject: {}".format(subject))
 
         output_dict['subject'] = subject
-        output_dict['from'] = raw_from[0]
-        output_dict['to'] = raw_to[0]
-        output_dict['date'] = raw_date[0]
+        output_dict['from'] = stringCompiling(raw_from)
+        output_dict['cc'] = stringCompiling(raw_cc)
+        output_dict['bcc'] = stringCompiling(raw_bcc)
+        output_dict['to'] = stringCompiling(raw_to)
+        output_dict['date'] = stringCompiling(raw_date)
         output_dict['content'] = primitive_body
 
         output_list.append(output_dict)
