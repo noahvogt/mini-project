@@ -9,7 +9,7 @@ import com.chaquo.python.Python;
 import java.util.HashMap;
 import java.util.List;
 
-public class mailFunctions {
+public class MailFunctions {
 
     public static boolean canConnect(String host, String email, String password) {
         Python python = Python.getInstance();

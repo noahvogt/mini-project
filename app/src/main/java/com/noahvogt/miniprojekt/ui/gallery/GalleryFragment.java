@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.noahvogt.miniprojekt.MailFunctions;
 import com.noahvogt.miniprojekt.MainActivity;
 import com.noahvogt.miniprojekt.R;
 import com.noahvogt.miniprojekt.ui.DataBase.Message;
@@ -75,6 +76,7 @@ public class GalleryFragment extends Fragment implements CustomAdapter.SelectedM
 
 
         final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff(), this);
+
 
         /* Attach the adapter to the recyclerview to populate items */
         recyclerView.setAdapter(adapter);

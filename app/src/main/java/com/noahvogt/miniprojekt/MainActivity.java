@@ -266,18 +266,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String email = newemail_email.getText().toString();
                 String password = newemail_password.getText().toString();
 
-                if (!mailFunctions.validateEmail(newemail_email) | !mailFunctions.validateName(newemail_name) | !mailFunctions.validatePassword(newemail_password)) {
+                if (!MailFunctions.validateEmail(newemail_email) | !MailFunctions.validateName(newemail_name) | !MailFunctions.validatePassword(newemail_password)) {
                     return;
                 }
 
                 /* connect to mail server and print various debugging output */
                 showToast("Probe Connection ...");
-                if (mailFunctions.canConnect(name, email, password) == Boolean.TRUE) {
+                if (MailFunctions.canConnect(name, email, password) == Boolean.TRUE) {
                     showToast("was able to connect");
-                    //List l =  mailFunctions.listMailboxes(mailFunctions.getIMAPConnection(name, email, password));
-                    //for (int i = 0; i < l.size(); i++) {
-                    //    showToast(l.get(i).toString());
-                    //}
+                    List l =  MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(name, email, password));
+                    for (int i = 0; i < l.size(); i++) {
+                        showToast(l.get(i).toString());
+                        /*gives list of Message Objects/dictionaries */
+                        //List p = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(name, email, password), "INBOX");
+                        System.out.println(l.get(i).toString());
+                    }
+
+                    /*Message word = new Message(
+                            messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_TO),
+                            null,
+                            null,
+                            messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_FROM),
+                            ft.format(dNow),
+                            messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_SUBJECT),
+                            messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_MESSAGE),
+                            "Draft",false);
+                    mEmailViewModel.insert(word);
+
+                     */
+
                     preferencesEditor.putString("name", name);
                     preferencesEditor.putString("email", email);
                     preferencesEditor.putString("password", password);

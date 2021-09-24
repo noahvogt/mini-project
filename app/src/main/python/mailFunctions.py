@@ -16,7 +16,10 @@ def checkConnection(host, username, password, port):
 def connect(host, username, password, port):
     connect = imaplib.IMAP4_SSL(host, port)
     connect.login(username, password)
-    connect.enable("UTF8=ACCEPT")
+    try:
+        connect.enable("UTF8=ACCEPT")
+    except:
+        pass
     return connect
 
 def listMailboxes(connection):
@@ -57,6 +60,7 @@ def fetchMails(connection, inbox):
         msg = email.message_from_bytes(data[0][1])
 
         #print(msg)
+        print(num)
 
         raw_string = email.header.decode_header(msg['Subject'])[0]
         raw_from = email.header.decode_header(msg['From'])[0]

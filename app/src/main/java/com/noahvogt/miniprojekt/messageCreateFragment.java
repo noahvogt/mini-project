@@ -7,8 +7,6 @@ import android.content.SharedPreferences;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,8 +21,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -203,11 +199,11 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
                 String bccStr = bccObject.getText().toString();
 
                 /* check for valid input */
-                if (mailFunctions.validateMessageBody(messageBodyObject) && mailFunctions.validateSubject(subjectObject) &&
-                mailFunctions.validateEmail(receivingAddressObject) && mailFunctions.validateEmail(sendingAddressObject) &&
-                !mailFunctions.checkForSameEmail(sendingAddressObject, receivingAddressObject)) {
+                if (MailFunctions.validateMessageBody(messageBodyObject) && MailFunctions.validateSubject(subjectObject) &&
+                MailFunctions.validateEmail(receivingAddressObject) && MailFunctions.validateEmail(sendingAddressObject) &&
+                !MailFunctions.checkForSameEmail(sendingAddressObject, receivingAddressObject)) {
                     String password = preferences.getString("password","");
-                    mailFunctions.sendStarttlsMail("smtp.edubs.ch", sendingAddress, receivingAddress, password, messageBody, subject, ccStr, bccStr);
+                    MailFunctions.sendStarttlsMail("smtp.edubs.ch", sendingAddress, receivingAddress, password, messageBody, subject, ccStr, bccStr);
                     Toast.makeText(getActivity(), "sending ... ", Toast.LENGTH_SHORT).show();
                     dismiss();
                 } else {
