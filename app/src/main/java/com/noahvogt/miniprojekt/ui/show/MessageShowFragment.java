@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -20,7 +19,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.noahvogt.miniprojekt.R;
 import com.noahvogt.miniprojekt.ui.DataBase.Message;
-import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
 import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
 
 
@@ -33,10 +31,14 @@ public class MessageShowFragment extends DialogFragment implements PopupMenu.OnM
     public TextView showMessage;
 
     private static Message mCurrent;
-    private EmailViewModel mEmailViewModel;
-    public static MessageShowFragment newInstance(com.noahvogt.miniprojekt.ui.DataBase.Message current) {
-       mCurrent = current;
+    private static EmailViewModel mEmailViewModel;
+
+    public static MessageShowFragment newInstance(Message current, EmailViewModel emailViewModel) {
+        mEmailViewModel = emailViewModel;
+        mCurrent = current;
         return new MessageShowFragment();}
+
+
 
     /* set theming style */
     @Override
@@ -119,6 +121,7 @@ public class MessageShowFragment extends DialogFragment implements PopupMenu.OnM
         switch (item.getItemId()) {
             case R.id.create_message_delete:
                 Toast.makeText(getActivity(), "item delete clicked", Toast.LENGTH_LONG).show();
+                mEmailViewModel.deleteMessage(mCurrent);
                 return true;
             case R.id.create_message_spam:
                 Toast.makeText(getActivity(), "item spam clicked", Toast.LENGTH_LONG).show();

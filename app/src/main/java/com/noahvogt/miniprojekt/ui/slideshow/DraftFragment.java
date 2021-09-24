@@ -67,10 +67,10 @@ public class  DraftFragment extends Fragment implements CustomAdapter.SelectedMe
 
 
     @Override
-    public void selectedMessage(Message messages) {
+    public void selectedMessage(Message messages, EmailViewModel emailViewModel) {
 
         AppCompatActivity activity = (AppCompatActivity) getContext();
-        DialogFragment dialog = MessageShowFragment.newInstance(messages);
+        DialogFragment dialog = MessageShowFragment.newInstance(messages, mEmailViewModel);
         dialog.show(activity.getSupportFragmentManager(), "tag");
     }
 }

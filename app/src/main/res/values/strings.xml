@@ -26,6 +26,7 @@
 
     <string name="menu_delete">Delete</string>
     <string name="menu_move_to">Move to</string>
+    <string name="menu_move_archive">Move to Archive</string>
     <string name="menu_spam">Spam</string>
     <string name="menu_sent_to">Sent to</string>
 

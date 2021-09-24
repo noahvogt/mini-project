@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ListAdapter;
 
 import com.noahvogt.miniprojekt.ui.DataBase.Message;
 import com.noahvogt.miniprojekt.ui.slideshow.EmailViewHolder;
+import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
 
 
 import java.util.List;
@@ -44,7 +45,7 @@ public class CustomAdapter extends ListAdapter<Message, EmailViewHolder> {
     }
 
     public interface SelectedMessage{
-        void selectedMessage(Message messages);
+        void selectedMessage(Message messages, EmailViewModel emailViewModel);
     }
 
     public static class EmailDiff extends DiffUtil.ItemCallback<Message> {

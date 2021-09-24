@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--wrong, should just be called in Emailviewer -->
-    <item android:id="@+id/create_message_delete"
-        android:title="@string/menu_delete"/>
     <item android:id="@+id/create_message_spam"
         android:title="@string/menu_spam"/>
+    <item android:id="@+id/create_message_delete"
+        android:title="@string/menu_delete"/>
     <item android:id="@+id/create_message_sent_to"
         android:title="@string/menu_sent_to"/>
     <item android:id="@+id/create_message_move_to"
         android:title="@string/menu_move_to"/>
+    <item android:id="@+id/create_message_move_archive"
+        android:title="@string/menu_move_archive"/>
 </menu>
