@@ -23,6 +23,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -38,6 +40,8 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
     public EditText receivingAddressObject;
     public EditText subjectObject;
     public EditText messageBodyObject;
+    public EditText ccObject;
+    public EditText bccObject;
 
     public static final int RESULT_CANCELED = 0;
     public static final int RESULT_OK = -1;
@@ -79,6 +83,8 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
 
          sendingAddressObject = (EditText) view.findViewById(R.id.create_message_sending_address_text);
          receivingAddressObject = (EditText) view.findViewById(R.id.create_message_receiving_address_text);
+         ccObject = (EditText) view.findViewById(R.id.create_message_cc_text);
+         bccObject = (EditText) view.findViewById(R.id.create_message_bcc_text);
          subjectObject = (EditText) view.findViewById(R.id.create_message_subject_text);
          messageBodyObject = (EditText) view.findViewById(R.id.create_message_body_text);
 
@@ -130,6 +136,8 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
                                     String to = receivingAddressObject.getText().toString();
                                     String subject = subjectObject.getText().toString();
                                     String message = messageBodyObject.getText().toString();
+                                    String cc = ccObject.getText().toString();
+                                    String bcc = bccObject.getText().toString();
 
 
                                     replyIntent.putExtra(EXTRA_FROM, from);
@@ -189,13 +197,15 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
                 String receivingAddress = receivingAddressObject.getText().toString();
                 String subject = subjectObject.getText().toString();
                 String messageBody = messageBodyObject.getText().toString();
+                String ccStr = ccObject.getText().toString();
+                String bccStr = bccObject.getText().toString();
 
                 /* check for valid input */
                 if (mailFunctions.validateMessageBody(messageBodyObject) && mailFunctions.validateSubject(subjectObject) &&
                 mailFunctions.validateEmail(receivingAddressObject) && mailFunctions.validateEmail(sendingAddressObject) &&
                 !mailFunctions.checkForSameEmail(sendingAddressObject, receivingAddressObject)) {
                     String password = preferences.getString("password","");
-                    mailFunctions.sendStarttlsMail("smtp.edubs.ch", sendingAddress, receivingAddress, password, messageBody, subject);
+                    mailFunctions.sendStarttlsMail("smtp.edubs.ch", sendingAddress, receivingAddress, password, messageBody, subject, ccStr, bccStr);
                     Toast.makeText(getActivity(), "sending ... ", Toast.LENGTH_SHORT).show();
                     dismiss();
                 } else {
