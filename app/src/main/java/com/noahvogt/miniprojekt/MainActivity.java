@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         /* open View window */
-            dialogBuilder.setView(emailPopupView);
+        dialogBuilder.setView(emailPopupView);
         dialog = dialogBuilder.create();
         dialog.show();
 
@@ -277,9 +277,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     List l =  MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(name, email, password));
                     for (int i = 0; i < l.size(); i++) {
                         showToast(l.get(i).toString());
+                        // TODO: select right folder to store, Synchronization
                         /*gives list of Message Objects/dictionaries */
-                        //List p = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(name, email, password), "INBOX");
+                        List p = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(name, email, password), l.get(i).toString());
                         System.out.println(l.get(i).toString());
+                        System.out.println(p);
                     }
 
                     /*Message word = new Message(

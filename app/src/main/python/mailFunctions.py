@@ -43,7 +43,12 @@ def listMailboxes(connection):
     return formatted_mailbox_list
 
 def fetchMails(connection, inbox):
-    status, messages = connection.select(inbox)
+    print("###" + inbox + "###")
+    print(type(inbox))
+    try:
+        status, messages = connection.select(inbox)
+    except:
+        return []
     print("status-------\n" + status)
     print("messages-------\n" + str(messages))
     # number of top emails to fetch
