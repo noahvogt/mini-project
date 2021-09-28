@@ -6,7 +6,6 @@ import android.widget.EditText;
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class MailFunctions {

@@ -17,6 +17,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 
 
+import com.chaquo.python.PyObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.noahvogt.miniprojekt.ui.DataBase.Message;
 import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
@@ -44,7 +45,10 @@ import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static com.noahvogt.miniprojekt.R.id.drawer_layout;
 
@@ -280,8 +284,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         // TODO: select right folder to store, Synchronization
                         /*gives list of Message Objects/dictionaries */
                         List p = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(name, email, password), l.get(i).toString());
-                        System.out.println(l.get(i).toString());
                         System.out.println(p);
+                        /*
+                        HashMap hashMap;
+                        System.out.println(l.get(i).toString());
+                        System.out.println(p.toString());
+                        for (int k = 0; k < p.size(); k++) {
+                            System.out.println(m);
+                            System.out.println(p.get(k));
+                            System.out.println((p.get(k).getClass().getName()));
+                            // System.out.println(p.get(k));*/
+
+
                     }
 
                     /*Message word = new Message(
@@ -322,6 +336,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
     }
+
 
     /* show debug output in  specific view */
     private void showSnackbar(View View, String text) {
