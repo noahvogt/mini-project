@@ -63,7 +63,7 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.messageCreateTheme);
-        preferences = getActivity().getSharedPreferences("UserPrefrences", Context.MODE_PRIVATE);
+        preferences = getActivity().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
     }
 
 
