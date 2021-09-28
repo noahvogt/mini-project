@@ -66,13 +66,14 @@ def listMailboxes(connection):
     connection.logout()
     return formatted_mailbox_list
 
-def fetchMails(connection, inbox):
+def fetchMails(connection, inbox, outputType):
     print("###" + inbox + "###")
     print(type(inbox))
     try:
         status, messages = connection.select(inbox)
     except:
         return []
+
     print("status-------\n" + status)
     print("messages-------\n" + str(messages))
     # number of top emails to fetch
@@ -84,7 +85,10 @@ def fetchMails(connection, inbox):
     typ, data = connection.search(None, 'ALL')
     output_list = []
     for num in data[0].split():
-        output_dict = {}
+        if outputType == "dict":
+            output_dict = {}
+        else:
+            inner_output_list = []
         typ, data = connection.fetch(num, '(RFC822)')
         msg = email.message_from_bytes(data[0][1])
 
@@ -128,15 +132,27 @@ def fetchMails(connection, inbox):
 
         #print("subject: {}".format(subject))
 
-        output_dict['subject'] = subject
-        output_dict['from'] = stringCompiling(raw_from)
-        output_dict['cc'] = stringCompiling(raw_cc)
-        output_dict['bcc'] = stringCompiling(raw_bcc)
-        output_dict['to'] = stringCompiling(raw_to)
-        output_dict['date'] = stringCompiling(raw_date)
-        output_dict['content'] = primitive_body
+        if outputType == "dict":
+            output_dict['subject'] = subject
+            output_dict['from'] = stringCompiling(raw_from)
+            output_dict['cc'] = stringCompiling(raw_cc)
+            output_dict['bcc'] = stringCompiling(raw_bcc)
+            output_dict['to'] = stringCompiling(raw_to)
+            output_dict['date'] = stringCompiling(raw_date)
+            output_dict['content'] = primitive_body
 
-        output_list.append(output_dict)
+            output_list.append(output_dict)
+        else:
+            inner_output_list.append(subject)
+            inner_output_list.append(stringCompiling(subject))
+            inner_output_list.append(stringCompiling(raw_cc))
+            inner_output_list.append(stringCompiling(raw_bcc))
+            inner_output_list.append(stringCompiling(raw_to))
+            inner_output_list.append(stringCompiling(raw_date))
+            inner_output_list.append(primitive_body)
+
+            output_list.append(inner_output_dict)
+
 
     connection.close()
     connection.logout()

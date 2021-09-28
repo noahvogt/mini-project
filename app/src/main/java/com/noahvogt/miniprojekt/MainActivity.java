@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         /* invoke preferences */
-        preferences = (SharedPreferences) getSharedPreferences("UserPrefrences", Context.MODE_PRIVATE);
+        preferences = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
 
         /* invoke toolbar */
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         showToast(l.get(i).toString());
                         // TODO: select right folder to store, Synchronization
                         /*gives list of Message Objects/dictionaries */
-                        List p = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(name, email, password), l.get(i).toString());
+                        List p = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(name, email, password), l.get(i).toString(), "list");
                         System.out.println(l.get(i).toString());
                         System.out.println(p);
                     }
@@ -296,7 +296,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mEmailViewModel.insert(word);
 
                      */
-
                     preferencesEditor.putString("name", name);
                     preferencesEditor.putString("email", email);
                     preferencesEditor.putString("password", password);
