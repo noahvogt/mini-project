@@ -17,7 +17,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 
 
-import com.chaquo.python.PyObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.noahvogt.miniprojekt.ui.DataBase.Message;
 import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
@@ -45,10 +44,7 @@ import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import static com.noahvogt.miniprojekt.R.id.drawer_layout;
 
@@ -278,26 +274,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 showToast("Probe Connection ...");
                 if (MailFunctions.canConnect(name, email, password) == Boolean.TRUE) {
                     showToast("was able to connect");
-                    List l =  MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(name, email, password));
-                    for (int i = 0; i < l.size(); i++) {
-                        showToast(l.get(i).toString());
+                    List folders =  MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(name, email, password));
+                    for (int i = 0; i < folders.size(); i++) {
+                        showToast(folders.get(i).toString());
                         // TODO: select right folder to store, Synchronization
                         /*gives list of Message Objects/dictionaries */
+                        List messages = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(name, email, password), folders.get(i).toString(), "list");
+                        System.out.println(folders.get(i).toString());
+                        System.out.println(messages.toString());
 
-                        List p = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(name, email, password), l.get(i).toString(), "list");
-                        System.out.println(l.get(i).toString());
 
-                        System.out.println(p);
-                        /*
-                        HashMap hashMap;
-                        System.out.println(l.get(i).toString());
-                        System.out.println(p.toString());
-                        for (int k = 0; k < p.size(); k++) {
-                            System.out.println(m);
-                            System.out.println(p.get(k));
-                            System.out.println((p.get(k).getClass().getName()));
-                            // System.out.println(p.get(k));*/
+                        for (int k = 0; k < messages.size(); k++) {
+                            System.out.println(messages.get(k));
+                                /*work now, but list of Messages not */
+                                System.out.println(MailFunctions.fetchSubject(k));
+                                System.out.println(MailFunctions.fetchFrom(k));
+                                System.out.println(MailFunctions.fetchCC(k));
+                                System.out.println(MailFunctions.fetchBcc(k));
+                                System.out.println(MailFunctions.fetchTo(k));
+                                System.out.println(MailFunctions.fetchDate(k));
+                                System.out.println(MailFunctions.fetchContent(k));
 
+
+
+                        }
 
                     }
 

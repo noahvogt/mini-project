@@ -1,6 +1,15 @@
 import imaplib, smtplib, ssl, email, os
 from itertools import chain
 
+mSubject = ""
+mFrom = ""
+mCC = ""
+mBcc = ""
+mTo = ""
+mDate = ""
+mContent = ""
+output_list= []
+
 # format raw string you get from fetching mails
 def stringCompiling(inputIterable):
     # remove first nested iterables
@@ -67,38 +76,40 @@ def listMailboxes(connection):
     return formatted_mailbox_list
 
 def fetchMails(connection, inbox, outputType):
-    print("###" + inbox + "###")
-    print(type(inbox))
+    #print("###" + inbox + "###")
+    #print(type(inbox))
     try:
         status, messages = connection.select(inbox)
     except:
         return []
 
-    print("status-------\n" + status)
-    print("messages-------\n" + str(messages))
+    #print("status-------\n" + status)
+    #print("messages-------\n" + str(messages))
     # number of top emails to fetch
     #N = 3
     # total number of emails
     messages_int = int(messages[0])
-    print("message_int------\n" + str(messages_int))
+    #print("message_int------\n" + str(messages_int))
 
     typ, data = connection.search(None, 'ALL')
-    output_list = []
+    global output_list
+
     for num in data[0].split():
         if outputType == "dict":
             output_dict = {}
         else:
-            inner_output_list = []
+           inner_output_list =[]
+
         typ, data = connection.fetch(num, '(RFC822)')
         msg = email.message_from_bytes(data[0][1])
 
         #print(msg)
-        print(num)
+        #print(num)
 
         raw_string = email.header.decode_header(msg['Subject'])[0]
-        print("raw_string: " + str(raw_string))
+        #print("raw_string: " + str(raw_string))
         raw_from = email.header.decode_header(msg['From'])
-        print("raw_from" + str(raw_from))
+        #print("raw_from" + str(raw_from))
         try:
             raw_to = email.header.decode_header(msg['To'])
         except TypeError:
@@ -111,9 +122,9 @@ def fetchMails(connection, inbox, outputType):
             raw_bcc = email.header.decode_header(msg['BCC'])
         except TypeError:
             raw_bcc = [""]
-        print("raw_to" + str(raw_to))
+        #print("raw_to" + str(raw_to))
         raw_date = email.header.decode_header(msg['Date'])[0]
-        print("raw_to" + str(raw_date))
+        #print("raw_to" + str(raw_date))
 
         raw_msg = str(msg)
 
@@ -144,20 +155,58 @@ def fetchMails(connection, inbox, outputType):
             output_list.append(output_dict)
         else:
             inner_output_list.append(subject)
-            inner_output_list.append(stringCompiling(subject))
+            inner_output_list.append(stringCompiling(raw_from))
             inner_output_list.append(stringCompiling(raw_cc))
             inner_output_list.append(stringCompiling(raw_bcc))
             inner_output_list.append(stringCompiling(raw_to))
             inner_output_list.append(stringCompiling(raw_date))
             inner_output_list.append(primitive_body)
 
-            output_list.append(inner_output_dict)
+            output_list.append(inner_output_list)
+
+            global mSubject, mFrom, mCC, mContent, mBcc, mTo, mDate
+            print("subject " + subject)
+            mSubject = subject
+            mFrom = stringCompiling(raw_from)
+            mCC = stringCompiling(raw_cc)
+            mBcc = stringCompiling(raw_bcc)
+            mTo = stringCompiling(raw_to)
+            mDate = stringCompiling(raw_date)
+            mContent = primitive_body
 
 
     connection.close()
     connection.logout()
 
     return output_list
+
+def printSubject(messageIndex):
+    print(output_list[messageIndex][0])
+    return output_list[messageIndex][0]
+
+def printFrom(messageIndex):
+    print(output_list[messageIndex][1])
+    return mFrom
+
+def printCc(messageIndex):
+    print(output_list[messageIndex][2])
+    return mCC
+
+def printBcc(messageIndex):
+    print(output_list[messageIndex][3])
+    return mBcc
+
+def printTo(messageIndex):
+    print(output_list[messageIndex][4])
+    return mTo
+
+def printDate(messageIndex):
+    print(output_list[messageIndex][5])
+    return mDate
+
+def printContent(messageIndex):
+    print(output_list[messageIndex][6])
+    return mContent
 
 def sendStarttls(host, sendingMail, receivingMail, password, message="", subject="", port=587, cc=[], bcc=[]):
     context = ssl.create_default_context()
