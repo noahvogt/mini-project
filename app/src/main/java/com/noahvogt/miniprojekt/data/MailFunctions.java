@@ -1,4 +1,4 @@
-package com.noahvogt.miniprojekt;
+package com.noahvogt.miniprojekt.data;
 
 import android.util.Patterns;
 import android.widget.EditText;
@@ -39,6 +39,44 @@ public class MailFunctions {
         PyObject pythonMailFunctions = python.getModule("mailFunctions");
         return pythonMailFunctions.callAttr("fetchMails", IMAPConnection, Folder, InputType).asList();
     }
+/*
+    public static String fetchSubject(int messageIndex){
+        Python python = Python.getInstance();
+        PyObject pythonMailFunction = python.getModule("mailFunctions");
+        return pythonMailFunction.callAttr("printSubject", messageIndex).toString();
+    }
+
+    public static String fetchFrom(int messageIndex){
+        Python python = Python.getInstance();
+        PyObject pythonMailFunction = python.getModule("mailFunctions");
+        return pythonMailFunction.callAttr("printFrom", messageIndex).toString();
+    }
+    public static String fetchTo(int messageIndex){
+        Python python = Python.getInstance();
+        PyObject pythonMailFunction = python.getModule("mailFunctions");
+        return pythonMailFunction.callAttr("printTo", messageIndex).toString();
+    }
+    public static String fetchBcc(int messageIndex){
+        Python python = Python.getInstance();
+        PyObject pythonMailFunction = python.getModule("mailFunctions");
+        return pythonMailFunction.callAttr("printBcc", messageIndex).toString();
+    }
+    public static String fetchCC(int messageIndex){
+        Python python = Python.getInstance();
+        PyObject pythonMailFunction = python.getModule("mailFunctions");
+        return pythonMailFunction.callAttr("printCc", messageIndex).toString();
+    }
+    public static String fetchDate(int meassageIndex){
+        Python python = Python.getInstance();
+        PyObject pythonMailFunction = python.getModule("mailFunctions");
+        return pythonMailFunction.callAttr("printDate", meassageIndex).toString();
+    }
+    public static String fetchContent(int messageIndex){
+        Python python = Python.getInstance();
+        PyObject pythonMailFunction = python.getModule("mailFunctions");
+        return pythonMailFunction.callAttr("printContent", messageIndex).toString();
+
+ */
 
     public static boolean validateName(EditText emailName) {
         String name = emailName.getText().toString().trim();

@@ -1,4 +1,4 @@
-package com.noahvogt.miniprojekt.ui.DataBase;
+package com.noahvogt.miniprojekt.DataBase;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;

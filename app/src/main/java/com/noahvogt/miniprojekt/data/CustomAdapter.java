@@ -1,4 +1,4 @@
- package com.noahvogt.miniprojekt.ui.home;
+ package com.noahvogt.miniprojekt.data;
 
 
 import android.os.Build;
@@ -10,9 +10,7 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import com.noahvogt.miniprojekt.ui.DataBase.Message;
-import com.noahvogt.miniprojekt.ui.slideshow.EmailViewHolder;
-import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
+import com.noahvogt.miniprojekt.DataBase.Message;
 
 
 import java.util.List;

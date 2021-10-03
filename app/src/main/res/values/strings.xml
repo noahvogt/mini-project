@@ -23,6 +23,9 @@
     <string name="show_To">To </string>
     <string name="show_subject">Subject</string>
     <string name="show_message">Message</string>
+    <string name="show_cc">See CC</string>
+    <string name="show_bcc">See BCC</string>
+    <string name="show_date">Message received at: </string>
 
     <string name="menu_delete">Delete</string>
     <string name="menu_move_to">Move to</string>

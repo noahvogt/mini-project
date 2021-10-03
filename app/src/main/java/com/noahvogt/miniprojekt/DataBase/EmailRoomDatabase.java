@@ -1,8 +1,7 @@
-package com.noahvogt.miniprojekt.ui.DataBase;
+package com.noahvogt.miniprojekt.DataBase;
 
 import android.content.Context;
-import android.content.Intent;
-import android.icu.util.Measure;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -11,6 +10,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -69,22 +69,31 @@ public abstract class EmailRoomDatabase extends RoomDatabase{
 
 
                 Message word = new Message("Noah", null , null,
-                        "Samuel", "31.9.21", "inboxTest", "I Try my best", "Inbox",
+                        "Samuel", "31.09.21", "inboxTest", "I Try my best", "Inbox",
                         true);
-               dao.insert(word);
+                dao.insert(word);
 
-               word = new Message("Noah", null, null,
+                word = new Message("Pueblo", "my Man, your Girl", null,
+                        "Escobar", "31.02.21", "DateSortTest", "I hope the Sorting works", "Inbox",
+                        true);
+                dao.insert(word);
+
+                word = new Message("Pueblo", "my Man, your Girl", null,
+                        "Escobar", "31.02.21", "VariableTest", "I hope the Sorting works", "Inbox",
+                        true);
+                dao.insert(word);
+
+                word = new Message("Again", null, null, "Again", "31.09.21", "DateTest",
+                        "Does this Date work know?", "Inbox", true);
+                dao.insert(word);
+
+
+                word = new Message("Noah", null, null,
                        "arldemeier", "bobo", "sentTest", "i could cry", "Sent",
                        true);
-               dao.insert(word);
+                dao.insert(word);
 
-               
-               for (Integer n = 1; n < 20; n++) {
-                   word = new Message("Simon", null, null,
-                           "stefan", "tomorrow", n.toString(), "lets goo", "Sent",
-                           true);
-                   dao.insert(word);
-               }
+
 
                /*
                for (int i = 1; i < 20; i++){

@@ -1,12 +1,12 @@
-package com.noahvogt.miniprojekt.ui.slideshow;
+package com.noahvogt.miniprojekt.data;
 
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.AndroidViewModel;
 
-import com.noahvogt.miniprojekt.ui.DataBase.EmailRepository;
-import com.noahvogt.miniprojekt.ui.DataBase.Message;
+import com.noahvogt.miniprojekt.DataBase.EmailRepository;
+import com.noahvogt.miniprojekt.DataBase.Message;
 
 import java.util.List;
 
@@ -46,5 +46,5 @@ public class EmailViewModel extends AndroidViewModel {
 
     public void deleteMessage(Message message){mEmailRepository.deleteMessage(message);}
 
-    public void updateMessage(Message message){mEmailRepository.updateMessage(message);}
+    public void updateMessage(int id, String folder){mEmailRepository.updateMessage(id, folder);}
 }

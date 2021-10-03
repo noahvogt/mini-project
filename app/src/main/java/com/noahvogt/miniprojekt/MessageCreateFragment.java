@@ -21,15 +21,21 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.noahvogt.miniprojekt.DataBase.Message;
+import com.noahvogt.miniprojekt.data.EmailViewModel;
+import com.noahvogt.miniprojekt.data.MailFunctions;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class messageCreateFragment extends DialogFragment implements PopupMenu.OnMenuItemClickListener {
+public class MessageCreateFragment extends DialogFragment implements PopupMenu.OnMenuItemClickListener {
 
     public static final String EXTRA_TO = "com.example.android.namelistsql.NAME";
     public static final String EXTRA_FROM = "com.example.android.namelistsql.FROM";
     public static final String EXTRA_SUBJECT = "com.example.android.namelistsql.SUBJECT";
     public static final String EXTRA_MESSAGE = "com.example.android.namelistsql.MESSAGE";
+    public static final String EXTRA_CC = "com.example.android.namelistsql.CC";
+    public static final String EXTRA_BCC = "com.example.android.namelistsql.BCC";
     public static final String EXTRA_DATE = "com.example.android.namelistsql.DATE";
 
     public EditText sendingAddressObject;
@@ -39,14 +45,23 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
     public EditText ccObject;
     public EditText bccObject;
 
+    Message mMessage = null;
+    public EmailViewModel mEmailViewModel = null;
+
     public static final int RESULT_CANCELED = 0;
     public static final int RESULT_OK = -1;
 
     public Activity activity = new Activity();
     public static Intent replyIntent = new Intent();
 
-    public static messageCreateFragment newInstance() {
-        return new messageCreateFragment();
+    public static MessageCreateFragment newInstance() {
+        return new MessageCreateFragment();
+    }
+
+    public MessageCreateFragment getMessage(Message message, EmailViewModel emailViewModel, MessageCreateFragment messageCreateFragment){
+        this.mEmailViewModel = emailViewModel;
+        this.mMessage = message;
+        return messageCreateFragment;
     }
 
     private AlertDialog dialog;
@@ -91,10 +106,14 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
         sendingAddressObject.setText(loginEmail);
 
         /* get string vars, MAYBE NOT HERE */
-        String sendingAddress = sendingAddressObject.getText().toString();
-        String receivingAddress = receivingAddressObject.getText().toString();
-        //String subject = subjectObject.getText().toString();
-        String messageBody = messageBodyObject.getText().toString();
+        if (mMessage != null) {
+            sendingAddressObject.setText(mMessage.getFrom());
+            receivingAddressObject.setText(mMessage.getTo());
+            subjectObject.setText(mMessage.getSubject());
+            messageBodyObject.setText(mMessage.getTextContent());
+            bccObject.setText(mMessage.getBcc());
+            ccObject.setText(mMessage.getCc());
+        }
 
         /* TODO: add cc + bcc functionality */
 
@@ -140,14 +159,14 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
 
                                     replyIntent.putExtra(EXTRA_FROM, from);
                                     replyIntent.putExtra(EXTRA_TO, to);
+                                    replyIntent.putExtra(EXTRA_CC, cc);
+                                    replyIntent.putExtra(EXTRA_BCC, bcc);
                                     replyIntent.putExtra(EXTRA_SUBJECT, subject);
                                     replyIntent.putExtra(EXTRA_MESSAGE, message);
                                     activity.setResult(RESULT_OK, replyIntent);
 
                                     activity.finish();
 
-                                    Toast.makeText(getContext(), "messageCreateFragmentReadIn", Toast.LENGTH_SHORT).show();
-                                    Toast.makeText(getContext(), replyIntent.getStringExtra(EXTRA_FROM), Toast.LENGTH_SHORT).show();
 
                                     Intent intent = new Intent(getContext(), NewDraftMessageActivity.class);
                                     startActivityForResult(intent, MainActivity.NEW_WORD_ACTIVITY_REQUEST_CODE);
@@ -181,7 +200,7 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
             @Override
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(getActivity(), v);
-                popupMenu.setOnMenuItemClickListener(messageCreateFragment.this::onMenuItemClick);
+                popupMenu.setOnMenuItemClickListener(MessageCreateFragment.this::onMenuItemClick);
                 popupMenu.inflate(R.menu.create_message_options_menu);
                 popupMenu.show();
             }
@@ -236,12 +255,6 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
                 return true;
             case R.id.create_message_spam:
                 Toast.makeText(getActivity(), "item 2 clicked", Toast.LENGTH_LONG).show();
-                return true;
-            case R.id.create_message_move_to:
-                Toast.makeText(getActivity(), "item 3 clicked", Toast.LENGTH_LONG).show();
-                return true;
-            case R.id.create_message_sent_to:
-                Toast.makeText(getActivity(), "item 4 clicked", Toast.LENGTH_LONG).show();
                 return true;
             default: /* this case should never occur */
                 return false;

@@ -16,11 +16,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.noahvogt.miniprojekt.data.EmailViewModel;
 import com.noahvogt.miniprojekt.MainActivity;
 import com.noahvogt.miniprojekt.R;
-import com.noahvogt.miniprojekt.ui.DataBase.Message;
-import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
-import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
+import com.noahvogt.miniprojekt.DataBase.Message;
+import com.noahvogt.miniprojekt.data.CustomAdapter;
+import com.noahvogt.miniprojekt.MessageCreateFragment;
 
 public class  DraftFragment extends Fragment implements CustomAdapter.SelectedMessage{
 
@@ -68,9 +69,11 @@ public class  DraftFragment extends Fragment implements CustomAdapter.SelectedMe
 
     @Override
     public void selectedMessage(Message messages, EmailViewModel emailViewModel) {
+        MessageCreateFragment messageCreateFragment = new MessageCreateFragment();
 
+        //TODO: make this Fragment editable
         AppCompatActivity activity = (AppCompatActivity) getContext();
-        DialogFragment dialog = MessageShowFragment.newInstance(messages, mEmailViewModel);
+        DialogFragment dialog = messageCreateFragment.getMessage(messages, emailViewModel, messageCreateFragment);
         dialog.show(activity.getSupportFragmentManager(), "tag");
     }
 }

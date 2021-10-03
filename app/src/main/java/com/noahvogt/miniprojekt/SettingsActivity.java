@@ -1,10 +1,11 @@
-package com.noahvogt.miniprojekt.ui.home;
+package com.noahvogt.miniprojekt;
 
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.noahvogt.miniprojekt.R;
+import com.noahvogt.miniprojekt.SettingsFragment;
 import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
 
 import java.util.Objects;

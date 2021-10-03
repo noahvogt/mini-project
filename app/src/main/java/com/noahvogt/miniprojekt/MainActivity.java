@@ -18,8 +18,7 @@ import androidx.fragment.app.DialogFragment;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.noahvogt.miniprojekt.ui.DataBase.Message;
-import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
+import com.noahvogt.miniprojekt.DataBase.Message;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -38,9 +37,10 @@ import androidx.navigation.ui.NavigationUI;
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
 import com.google.android.material.snackbar.Snackbar;
-import com.noahvogt.miniprojekt.ui.home.SettingsActivity;
+import com.noahvogt.miniprojekt.data.CustomAdapter;
+import com.noahvogt.miniprojekt.data.EmailViewModel;
+import com.noahvogt.miniprojekt.data.MailFunctions;
 import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
-import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
 
-                DialogFragment dialog = messageCreateFragment.newInstance();
+                DialogFragment dialog = MessageCreateFragment.newInstance();
                 dialog.show(getSupportFragmentManager(), "tag");
 
             }
@@ -174,35 +174,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         /* gets the data from the Email writer and adds it to the Database */
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(requestCode, resultCode, messageCreateFragment.replyIntent);
+            super.onActivityResult(requestCode, resultCode, MessageCreateFragment.replyIntent);
 
             /* Creates class for the Date when Email is written */
             Date dNow = new Date();
             SimpleDateFormat ft =
                     new SimpleDateFormat("dd.MM.yy");
+            System.out.println(dNow);
 
          //   if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
                 Message word = new Message(
-                        messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_TO),
+                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_TO),
                         null,
                         null,
-                        messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_FROM),
+                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_FROM),
                         ft.format(dNow),
-                        messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_SUBJECT),
-                        messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_MESSAGE),
+                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_SUBJECT),
+                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_MESSAGE),
                         "Draft",false);
                 mEmailViewModel.insert(word);
-          //  } else {
-                Toast.makeText(
-                        getApplicationContext(),
-                        R.string.empty_not_saved,
-                        Toast.LENGTH_LONG).show();
 
-            Toast.makeText(
-                    getApplicationContext(),
-                    messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_FROM),
-                    Toast.LENGTH_LONG).show();
-          //  }
 
 
         }
@@ -274,14 +265,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 showToast("Probe Connection ...");
                 if (MailFunctions.canConnect(name, email, password) == Boolean.TRUE) {
                     showToast("was able to connect");
-                    List l =  MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(name, email, password));
-                    for (int i = 0; i < l.size(); i++) {
-                        showToast(l.get(i).toString());
+                    List folders =  MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(name, email, password));
+                    for (int i = 0; i < folders.size(); i++) {
+                        showToast(folders.get(i).toString());
                         // TODO: select right folder to store, Synchronization
                         /*gives list of Message Objects/dictionaries */
-                        List p = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(name, email, password), l.get(i).toString(), "list");
-                        System.out.println(l.get(i).toString());
-                        System.out.println(p);
+                        List messages = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(name, email, password), folders.get(i).toString(), "list");
+                        System.out.println(folders.get(i).toString());
+                        System.out.println(messages.toString());
+
+
+                        for (int k = 0; k < messages.size(); k++) {
+                            System.out.println(messages.get(k));
+                                /*work now, but list of Messages not */
+
+
+
+
+                        }
+
                     }
 
                     /*Message word = new Message(
@@ -321,6 +323,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
     }
+
 
     /* show debug output in  specific view */
     private void showSnackbar(View View, String text) {

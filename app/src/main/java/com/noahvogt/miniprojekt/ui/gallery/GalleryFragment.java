@@ -18,13 +18,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.noahvogt.miniprojekt.MailFunctions;
 import com.noahvogt.miniprojekt.MainActivity;
 import com.noahvogt.miniprojekt.R;
-import com.noahvogt.miniprojekt.ui.DataBase.Message;
-import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
+import com.noahvogt.miniprojekt.DataBase.Message;
+import com.noahvogt.miniprojekt.data.CustomAdapter;
 import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
-import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
+import com.noahvogt.miniprojekt.data.EmailViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -52,29 +51,6 @@ public class GalleryFragment extends Fragment implements CustomAdapter.SelectedM
 
         recyclerView = MainActivity.recyclerView.findViewById(R.id.recyclerView);
 
-
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(@NonNull @NotNull RecyclerView rv, @NonNull @NotNull MotionEvent e) {
-              //  Toast.makeText(getContext(), "Single Interception Click on position :"+rv,
-             //           Toast.LENGTH_SHORT).show();
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(@NonNull @NotNull RecyclerView rv, @NonNull @NotNull MotionEvent e) {
-                Toast.makeText(getContext(), "Single Click on position :"+rv,
-                        Toast.LENGTH_SHORT).show();
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
-
-
         final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff(), this);
 
 
@@ -95,9 +71,9 @@ public class GalleryFragment extends Fragment implements CustomAdapter.SelectedM
     }
 
 
+    /*starts Dialog of clicked message*/
     @Override
     public void selectedMessage(Message messages, EmailViewModel emailViewModel) {
-
         AppCompatActivity activity = (AppCompatActivity) getContext();
         DialogFragment dialog = MessageShowFragment.newInstance(messages, mEmailViewModel);
         dialog.show(activity.getSupportFragmentManager(), "tag");
