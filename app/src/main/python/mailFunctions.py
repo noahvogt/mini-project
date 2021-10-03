@@ -113,63 +113,69 @@ def fetchMails(connection, inbox):
     messages_int = int(messages[0])
     print("message_int------\n" + str(messages_int))
 
-    typ, data = connection.search(None, 'ALL')
     output_list = []
-    for num in data[0].split():
-        output_dict = {}
-        typ, data = connection.fetch(num, '(RFC822)')
-        msg = email.message_from_bytes(data[0][1])
 
-        #print(msg)
-        print(num)
+    for seentype in ['(UNSEEN)', '(SEEN)']:
+        typ, data = connection.search(None, 'ALL', seentype)
+        for num in data[0].split():
+            output_dict = {}
+            typ, data = connection.fetch(num, '(RFC822)')
 
-        raw_string = email.header.decode_header(msg['Subject'])[0]
-        print("raw_string: " + str(raw_string))
-        raw_from = email.header.decode_header(msg['From'])
-        print("raw_from" + str(raw_from))
-        try:
-            raw_to = email.header.decode_header(msg['To'])
-        except TypeError:
-            raw_to = [""]
-        try:
-            raw_cc = email.header.decode_header(msg['CC'])
-        except TypeError:
-            raw_cc = [""]
-        try:
-            raw_bcc = email.header.decode_header(msg['BCC'])
-        except TypeError:
-            raw_bcc = [""]
-        print("raw_to" + str(raw_to))
-        raw_date = email.header.decode_header(msg['Date'])[0]
-        print("raw_to" + str(raw_date))
+            msg = email.message_from_bytes(data[0][1])
 
-        raw_msg = str(msg)
+            print(num)
 
-        primitive_body = raw_msg[raw_msg.find('\n\n'):].strip()
+            raw_string = email.header.decode_header(msg['Subject'])[0]
+            print("raw_string: " + str(raw_string))
+            raw_from = email.header.decode_header(msg['From'])
+            print("raw_from" + str(raw_from))
+            try:
+                raw_to = email.header.decode_header(msg['To'])
+            except TypeError:
+                raw_to = [""]
+            try:
+                raw_cc = email.header.decode_header(msg['CC'])
+            except TypeError:
+                raw_cc = [""]
+            try:
+                raw_bcc = email.header.decode_header(msg['BCC'])
+            except TypeError:
+                raw_bcc = [""]
+            print("raw_to" + str(raw_to))
+            raw_date = email.header.decode_header(msg['Date'])[0]
+            print("raw_to" + str(raw_date))
 
-        #raw_body = email.header.decode_header(msg['Body'])[0][0]
+            raw_msg = str(msg)
 
-        # set subject to an empty string when not found
-        try:
-            if raw_string[1] == 'utf-8':
-                subject = raw_string[0].raw_string('utf-8')
+            primitive_body = raw_msg[raw_msg.find('\n\n'):].strip()
+
+            #raw_body = email.header.decode_header(msg['Body'])[0][0]
+
+            # set subject to an empty string when not found
+            try:
+                if raw_string[1] == 'utf-8':
+                    subject = raw_string[0].raw_string('utf-8')
+                else:
+                    subject = raw_string[0].decode("iso-8859-1")
+                            #nonNoneList.append(str(item.decode("iso-8859-1")))
+            except AttributeError:
+                subject=""
+
+            output_dict['subject'] = subject
+            output_dict['from'] = stringCompiling(raw_from)
+            output_dict['cc'] = stringCompiling(raw_cc)
+            output_dict['bcc'] = stringCompiling(raw_bcc)
+            output_dict['to'] = stringCompiling(raw_to)
+            output_dict['date'] = stringCompiling(raw_date)
+            output_dict['content'] = primitive_body
+            if seentype == '(SEEN)':
+                output_dict['seen'] = "True"
             else:
-                subject = raw_string[0].decode("iso-8859-1")
-                        #nonNoneList.append(str(item.decode("iso-8859-1")))
-        except AttributeError:
-            subject=""
+                output_dict['seen'] = "False"
+                # make sure the fetch command doesn't add a SEEN flag
+                connection.store(num, '-FLAGS', '(\Seen)')
 
-        #print("subject: {}".format(subject))
-
-        output_dict['subject'] = subject
-        output_dict['from'] = stringCompiling(raw_from)
-        output_dict['cc'] = stringCompiling(raw_cc)
-        output_dict['bcc'] = stringCompiling(raw_bcc)
-        output_dict['to'] = stringCompiling(raw_to)
-        output_dict['date'] = stringCompiling(raw_date)
-        output_dict['content'] = primitive_body
-
-        output_list.append(output_dict)
+            output_list.append(output_dict)
 
 
     connection.close()
