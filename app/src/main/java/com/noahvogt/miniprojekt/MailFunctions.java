@@ -55,6 +55,25 @@ public class MailFunctions {
         }
     }
 
+    public static String getImapHostFromEmail(String email) {
+        String topLevelHost = email.substring(email.lastIndexOf("@") + 1);
+        if (topLevelHost.endsWith("edubs.ch")) {
+            return "teamwork.edubs.ch";
+        } else {
+            return "imap." + topLevelHost;
+        }
+    }
+
+    public static String getSmtpHostFromEmail(String email) {
+        String topLevelHost = email.substring(email.lastIndexOf("@") + 1);
+        if (topLevelHost.equals("noahvogt.com")) {
+            return "mail.noahvogt.com";
+        } else {
+            return "smtp." + topLevelHost;
+        }
+    }
+
+
     public static boolean validateEmail(EditText emailAddress) {
         String email = emailAddress.getText().toString().trim();
 
