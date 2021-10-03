@@ -256,12 +256,6 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
             case R.id.create_message_spam:
                 Toast.makeText(getActivity(), "item 2 clicked", Toast.LENGTH_LONG).show();
                 return true;
-            case R.id.create_message_move_to:
-                Toast.makeText(getActivity(), "item 3 clicked", Toast.LENGTH_LONG).show();
-                return true;
-            case R.id.create_message_sent_to:
-                Toast.makeText(getActivity(), "item 4 clicked", Toast.LENGTH_LONG).show();
-                return true;
             default: /* this case should never occur */
                 return false;
         }

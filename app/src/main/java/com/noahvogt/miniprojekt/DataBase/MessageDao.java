@@ -25,8 +25,8 @@ public interface MessageDao {
     @Delete(entity = Message.class)
     void delete(Message message);
 
-    @Update(entity = Message.class)
-    void updateMessage(Message message);
+    @Query("UPDATE message_table SET folder = :folder WHERE id = :id")
+    void updateMessage(int id, String folder);
 
     @Query("DELETE FROM message_table WHERE subject='DELETE'")
     void deleteNewMessage();

@@ -61,23 +61,14 @@ public class EmailRepository {
     }
 
     public void deleteMessage(final Message message){
-       /* new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                db.MessageDao().deleteMessage(message);
-                return null;
-            }
-        }.execute();
-
-        */
         EmailRoomDatabase.databaseWriteExecutor.execute(() -> {
             messageDao.delete(message);
         });
     }
 
-    public void updateMessage(final Message message){
+    public void updateMessage(final int id, String folder){
         EmailRoomDatabase.databaseWriteExecutor.execute(() -> {
-            messageDao.updateMessage(message);
+            messageDao.updateMessage(id ,folder);
         });
     }
 }

@@ -46,5 +46,5 @@ public class EmailViewModel extends AndroidViewModel {
 
     public void deleteMessage(Message message){mEmailRepository.deleteMessage(message);}
 
-    public void updateMessage(Message message){mEmailRepository.updateMessage(message);}
+    public void updateMessage(int id, String folder){mEmailRepository.updateMessage(id, folder);}
 }

@@ -149,13 +149,13 @@ public class MessageShowFragment extends DialogFragment implements PopupMenu.OnM
                 return true;
             case R.id.create_message_spam:
                 Toast.makeText(getActivity(), "item spam clicked", Toast.LENGTH_LONG).show();
+                mEmailViewModel.updateMessage(mCurrent.getId(), "Spam");
                 return true;
-            case R.id.create_message_sent_to:
-                Toast.makeText(getActivity(), "item sent to clicked", Toast.LENGTH_LONG).show();
-                return true;
-            case R.id.create_message_move_to:
-                Toast.makeText(getActivity(), "item move to clicked", Toast.LENGTH_LONG).show();
-                return true;
+            case R.id.create_message_move_archive:
+                Toast.makeText(getActivity(), "item archive clicked", Toast.LENGTH_LONG).show();
+                mEmailViewModel.updateMessage(mCurrent.getId(), "Archive");
+
+
             default: // this case should never occur
                 return false;
         }
