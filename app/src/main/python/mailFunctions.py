@@ -1,4 +1,4 @@
-import imaplib, smtplib, ssl, email, os
+import imaplib, smtplib, ssl, email, os, json
 from itertools import chain
 
 mSubject = ""
@@ -23,7 +23,20 @@ def stringCompiling(inputIterable):
     try:
         for item in unitered:
             if item is not None:
-                nonNoneList.append(item)
+                if type(item) is not str:
+                    try:
+                        nonNoneList.append(str(item.decode("utf-8")))
+                    except UnicodeDecodeError:
+                        nonNoneList.append(str(item.decode("iso-8859-1")))
+                    except AttributeError:
+                        print(item)
+                        print(type(item))
+                        print(inputIterable)
+                        print(nonNoneList)
+                        exit()
+                else:
+                    nonNoneList.append(item)
+
     except TypeError:
         return ""
 
@@ -75,16 +88,33 @@ def listMailboxes(connection):
     connection.logout()
     return formatted_mailbox_list
 
-def fetchMails(connection, inbox, outputType):
-    #print("###" + inbox + "###")
-    #print(type(inbox))
+    # check that there are no bytes anymore that cannot be dumped into a json
+def verifyNoBytes(messages, output_list):
+    for messages in output_list:
+        for item in messages:
+            print(type(item))
+            print(item)
+            print(messages["{}".format(item)])
+            if type(messages["{}".format(item)]) is not str:
+                print("ERROREXIT: .format failed")
+                print(messages["{}".format(item)])
+                print(type(messages["{}".format(item)]))
+
+                exit()
+            if type(item) is not str:
+                print("ERROREXIT")
+                exit()
+
+def fetchMails(connection, inbox):
+    print("###" + inbox + "###")
+    print(type(inbox))
     try:
         status, messages = connection.select(inbox)
     except:
         return []
 
-    #print("status-------\n" + status)
-    #print("messages-------\n" + str(messages))
+    print("status-------\n" + status)
+    print("messages-------\n" + str(messages))
     # number of top emails to fetch
     #N = 3
     # total number of emails
@@ -141,7 +171,67 @@ def fetchMails(connection, inbox, outputType):
         except AttributeError:
             subject=""
 
-        #print("subject: {}".format(subject))
+    output_list = []
+
+    for seentype in ['(UNSEEN)', '(SEEN)']:
+        typ, data = connection.search(None, 'ALL', seentype)
+        for num in data[0].split():
+            output_dict = {}
+            typ, data = connection.fetch(num, '(RFC822)')
+
+            msg = email.message_from_bytes(data[0][1])
+
+            print(num)
+
+            raw_string = email.header.decode_header(msg['Subject'])[0]
+            print("raw_string: " + str(raw_string))
+            raw_from = email.header.decode_header(msg['From'])
+            print("raw_from" + str(raw_from))
+            try:
+                raw_to = email.header.decode_header(msg['To'])
+            except TypeError:
+                raw_to = [""]
+            try:
+                raw_cc = email.header.decode_header(msg['CC'])
+            except TypeError:
+                raw_cc = [""]
+            try:
+                raw_bcc = email.header.decode_header(msg['BCC'])
+            except TypeError:
+                raw_bcc = [""]
+            print("raw_to" + str(raw_to))
+            raw_date = email.header.decode_header(msg['Date'])[0]
+            print("raw_to" + str(raw_date))
+
+            raw_msg = str(msg)
+
+            primitive_body = raw_msg[raw_msg.find('\n\n'):].strip()
+
+            #raw_body = email.header.decode_header(msg['Body'])[0][0]
+
+            # set subject to an empty string when not found
+            try:
+                if raw_string[1] == 'utf-8':
+                    subject = raw_string[0].raw_string('utf-8')
+                else:
+                    subject = raw_string[0].decode("iso-8859-1")
+                            #nonNoneList.append(str(item.decode("iso-8859-1")))
+            except AttributeError:
+                subject=""
+
+            output_dict['subject'] = subject
+            output_dict['from'] = stringCompiling(raw_from)
+            output_dict['cc'] = stringCompiling(raw_cc)
+            output_dict['bcc'] = stringCompiling(raw_bcc)
+            output_dict['to'] = stringCompiling(raw_to)
+            output_dict['date'] = stringCompiling(raw_date)
+            output_dict['content'] = primitive_body
+            if seentype == '(SEEN)':
+                output_dict['seen'] = "True"
+            else:
+                output_dict['seen'] = "False"
+                # make sure the fetch command doesn't add a SEEN flag
+                connection.store(num, '-FLAGS', '(\Seen)')
 
         if outputType == "dict":
             output_dict['subject'] = subject
@@ -174,11 +264,18 @@ def fetchMails(connection, inbox, outputType):
             mDate = stringCompiling(raw_date)
             mContent = primitive_body
 
+            output_list.append(output_dict)
+
 
     connection.close()
     connection.logout()
 
-    return output_list
+    verifyNoBytes(messages, output_list)
+
+    print("Finstep")
+
+    return json.dumps(output_list)
+
 
 def printSubject(messageIndex):
     print(output_list[messageIndex][0])

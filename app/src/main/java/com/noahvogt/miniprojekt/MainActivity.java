@@ -1,6 +1,7 @@
 package com.noahvogt.miniprojekt;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.noahvogt.miniprojekt.DataBase.Message;
 
@@ -43,8 +45,14 @@ import com.noahvogt.miniprojekt.data.MailFunctions;
 import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import com.google.gson.Gson;
+
+
 
 import static com.noahvogt.miniprojekt.R.id.drawer_layout;
 
@@ -59,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AlertDialog dialog;
     private EditText newemail_name, newemail_email, newemail_password; /* may not be private */
 
-    SharedPreferences preferences;
+    SharedPreferences preferences, mailServerCredentials;
 
     /* empty descriptor */
     public MainActivity() {}
@@ -108,6 +116,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         /* invoke preferences */
         preferences = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
+
+        mailServerCredentials = getSharedPreferences("Credentials", Context.MODE_PRIVATE);
 
         /* invoke toolbar */
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -169,6 +179,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
+
+        /* start python instance right on startup */
+        if (! Python.isStarted()) {
+            Python.start(new AndroidPlatform(this));
+        }
     }
 
 
@@ -218,7 +233,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /* better leave empty to avoid any listener disambiguity */
     public void onClick(View view) { }
 
+    public void changeMailServerSettingsDialog(String name, String email, String password) {
+        // define View window
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        final View changeMailServerSettingsView = getLayoutInflater().inflate(R.layout.mail_credentials_customizer, null);
 
+        EditText incomingServerObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_incoming_server_text);
+        EditText outgoingServerObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_outgoing_server_text);
+        EditText incomingPortObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_incoming_port_text);
+        EditText outgoingPortObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_outgoing_port_text);
+        EditText serverUsernameObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_username_text);
+        EditText passwordObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_password_text);
+
+        incomingServerObject.setText(MailFunctions.getImapHostFromEmail(email));
+        outgoingServerObject.setText(MailFunctions.getSmtpHostFromEmail(email));
+        incomingPortObject.setText("993");
+        outgoingPortObject.setText("587");
+        serverUsernameObject.setText(email);
+        passwordObject.setText(password);
+
+        /* open View window */
+        dialogBuilder.setView(changeMailServerSettingsView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+    }
+
+    public void askForChangeMailServerSettingsDialog(String name, String email, String password) {
+        /* define View window */
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+
+        /* open View window */
+        dialogBuilder.setTitle("failed to connect :(");
+        dialogBuilder
+                .setMessage("Do you want to further customize your mail server settings?")
+                .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        /*if this button is clicked, close the whole fragment */
+                        changeMailServerSettingsDialog(name, email, password);
+                    }
+                })
+                .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        /* if this button is clicked, close the hole fragment */
+                        dialog.dismiss();
+                    }
+                });
+        dialog = dialogBuilder.create();
+        dialog.show();
+    }
 
     public void createNewEmailDialog(){
         /* define View window */
@@ -242,6 +304,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialog.show();
 
         SharedPreferences.Editor preferencesEditor = preferences.edit();
+        SharedPreferences.Editor credentialsEditor = mailServerCredentials.edit();
 
         if (! Python.isStarted()) {
             Python.start(new AndroidPlatform(this));
@@ -263,63 +326,57 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 /* connect to mail server and print various debugging output */
                 showToast("Probe Connection ...");
-                if (MailFunctions.canConnect(name, email, password) == Boolean.TRUE) {
+                if (MailFunctions.canConnect(MailFunctions.getImapHostFromEmail(email), email, password) == Boolean.TRUE) {
                     showToast("was able to connect");
-                    List folders =  MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(name, email, password));
+
+                    List folders =  MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(MailFunctions.getImapHostFromEmail(email), email, password));
                     for (int i = 0; i < folders.size(); i++) {
                         showToast(folders.get(i).toString());
                         // TODO: select right folder to store, Synchronization
                         /*gives list of Message Objects/dictionaries */
-                        List messages = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(name, email, password), folders.get(i).toString(), "list");
-                        System.out.println(folders.get(i).toString());
-                        System.out.println(messages.toString());
-
-
-                        for (int k = 0; k < messages.size(); k++) {
-                            System.out.println(messages.get(k));
-                                /*work now, but list of Messages not */
-                                System.out.println(MailFunctions.fetchSubject(k));
-                                System.out.println(MailFunctions.fetchFrom(k));
-                                System.out.println(MailFunctions.fetchCC(k));
-                                System.out.println(MailFunctions.fetchBcc(k));
-                                System.out.println(MailFunctions.fetchTo(k));
-                                System.out.println(MailFunctions.fetchDate(k));
-                                System.out.println(MailFunctions.fetchContent(k));
-
-
-
-                        }
-
+                        /*List p = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(name, email, password), l.get(i).toString(), "list");
+                        System.out.println(l.get(i).toString());
+                        System.out.println(p);*/
                     }
 
-                    /*Message word = new Message(
-                            messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_TO),
-                            null,
-                            null,
-                            messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_FROM),
-                            ft.format(dNow),
-                            messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_SUBJECT),
-                            messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_MESSAGE),
-                            "Draft",false);
-                    mEmailViewModel.insert(word);
 
-                     */
+
+
                     preferencesEditor.putString("name", name);
                     preferencesEditor.putString("email", email);
                     preferencesEditor.putString("password", password);
                     preferencesEditor.apply();
+
+                    /* ArrayList<String> newUserSettings = new ArrayList<String>();
+                    newUserSettings.add(name);
+                    newUserSettings.add(email);
+                    newUserSettings.add(password);
+                    System.out.println("newUserSettings: " + newUserSettings);
+
+
+                    //Retrieve the values
+                    Set<String> oldSet = mailServerCredentials.getStringSet("UserSettings", null);
+
+                    //Set the values
+                    Set<String> newSet = new HashSet<String>();
+                    newSet.addAll(newUserSettings);
+                    credentialsEditor.putStringSet("UserSettings", newSet);
+                    credentialsEditor.commit();*/
+
+                    Gson gson = new Gson();
+                    MailServerCredentials newMailServerCredentials = new MailServerCredentials(
+                            name, password, email, MailFunctions.getImapHostFromEmail(email), MailFunctions.getSmtpHostFromEmail(email), 993, "");
+                    String newCredentialsJson = gson.toJson(newMailServerCredentials);
+                    System.out.println(newCredentialsJson);
+                    credentialsEditor.putString("data", newCredentialsJson);
+                    credentialsEditor.apply();
+
                 } else {
-                    showToast("failed to connect");
-
-                    /* show all strings the user gave, this will later be stored to a secure database and checked for validation */
-                    showToast(name);
-                    showToast(email);
-                    showToast(password);
+                    askForChangeMailServerSettingsDialog(name, email, password);
                 }
-
-
             }
         });
+
 
         newemail_cancel_button.setOnClickListener(new View.OnClickListener() {
             @Override
