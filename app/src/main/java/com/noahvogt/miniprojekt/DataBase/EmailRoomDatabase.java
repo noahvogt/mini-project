@@ -1,8 +1,6 @@
-package com.noahvogt.miniprojekt.ui.DataBase;
+package com.noahvogt.miniprojekt.DataBase;
 
 import android.content.Context;
-import android.content.Intent;
-import android.icu.util.Measure;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -69,9 +67,9 @@ public abstract class EmailRoomDatabase extends RoomDatabase{
 
 
                 Message word = new Message("Noah", null , null,
-                        "Samuel", "31.9.21", "inboxTest", "I Try my best", "Inbox",
+                        "Samuel", "31.09.21", "inboxTest", "I Try my best", "Inbox",
                         true);
-               dao.insert(word);
+                dao.insert(word);
 
                word = new Message("Noah", null, null,
                        "arldemeier", "bobo", "sentTest", "i could cry", "Sent",

@@ -21,6 +21,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.noahvogt.miniprojekt.DataBase.Message;
+import com.noahvogt.miniprojekt.data.EmailViewHolder;
+import com.noahvogt.miniprojekt.data.EmailViewModel;
+import com.noahvogt.miniprojekt.data.MailFunctions;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -39,6 +44,9 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
     public EditText ccObject;
     public EditText bccObject;
 
+    Message mMessage = null;
+    public EmailViewModel mEmailViewModel = null;
+
     public static final int RESULT_CANCELED = 0;
     public static final int RESULT_OK = -1;
 
@@ -47,6 +55,12 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
 
     public static messageCreateFragment newInstance() {
         return new messageCreateFragment();
+    }
+
+    public messageCreateFragment getMessage(Message message, EmailViewModel emailViewModel, messageCreateFragment messageCreateFragment){
+        this.mEmailViewModel = emailViewModel;
+        this.mMessage = message;
+        return messageCreateFragment;
     }
 
     private AlertDialog dialog;
@@ -91,10 +105,15 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
         sendingAddressObject.setText(loginEmail);
 
         /* get string vars, MAYBE NOT HERE */
-        String sendingAddress = sendingAddressObject.getText().toString();
-        String receivingAddress = receivingAddressObject.getText().toString();
-        //String subject = subjectObject.getText().toString();
-        String messageBody = messageBodyObject.getText().toString();
+        System.out.println("mMessage is " + mMessage.toString() + "\n mEmailViewModel is " + mEmailViewModel.toString() );
+        if (mMessage != null && mEmailViewModel != null) {
+            sendingAddressObject.setText(mMessage.getFrom());
+            receivingAddressObject.setText(mMessage.getTo());
+            subjectObject.setText(mMessage.getSubject());
+            messageBodyObject.setText(mMessage.getTextContent());
+            bccObject.setText(mMessage.getBcc());
+            ccObject.setText(mMessage.getCc());
+        }
 
         /* TODO: add cc + bcc functionality */
 
@@ -146,8 +165,6 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
 
                                     activity.finish();
 
-                                    Toast.makeText(getContext(), "messageCreateFragmentReadIn", Toast.LENGTH_SHORT).show();
-                                    Toast.makeText(getContext(), replyIntent.getStringExtra(EXTRA_FROM), Toast.LENGTH_SHORT).show();
 
                                     Intent intent = new Intent(getContext(), NewDraftMessageActivity.class);
                                     startActivityForResult(intent, MainActivity.NEW_WORD_ACTIVITY_REQUEST_CODE);

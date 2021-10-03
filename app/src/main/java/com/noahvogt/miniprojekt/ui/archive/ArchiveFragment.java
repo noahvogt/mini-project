@@ -18,10 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.noahvogt.miniprojekt.MainActivity;
 import com.noahvogt.miniprojekt.R;
-import com.noahvogt.miniprojekt.ui.DataBase.Message;
-import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
+import com.noahvogt.miniprojekt.DataBase.Message;
+import com.noahvogt.miniprojekt.data.CustomAdapter;
 import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
-import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
+import com.noahvogt.miniprojekt.data.EmailViewModel;
 
 public class ArchiveFragment extends Fragment implements CustomAdapter.SelectedMessage{
 

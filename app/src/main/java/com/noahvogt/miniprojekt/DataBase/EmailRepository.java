@@ -1,7 +1,6 @@
-package com.noahvogt.miniprojekt.ui.DataBase;
+package com.noahvogt.miniprojekt.DataBase;
 
 import android.app.Application;
-import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 

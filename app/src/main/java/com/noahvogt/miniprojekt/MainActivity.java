@@ -18,8 +18,7 @@ import androidx.fragment.app.DialogFragment;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.noahvogt.miniprojekt.ui.DataBase.Message;
-import com.noahvogt.miniprojekt.ui.home.CustomAdapter;
+import com.noahvogt.miniprojekt.DataBase.Message;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -38,9 +37,10 @@ import androidx.navigation.ui.NavigationUI;
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
 import com.google.android.material.snackbar.Snackbar;
-import com.noahvogt.miniprojekt.ui.home.SettingsActivity;
+import com.noahvogt.miniprojekt.data.CustomAdapter;
+import com.noahvogt.miniprojekt.data.EmailViewModel;
+import com.noahvogt.miniprojekt.data.MailFunctions;
 import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
-import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -192,17 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_MESSAGE),
                         "Draft",false);
                 mEmailViewModel.insert(word);
-          //  } else {
-                Toast.makeText(
-                        getApplicationContext(),
-                        R.string.empty_not_saved,
-                        Toast.LENGTH_LONG).show();
 
-            Toast.makeText(
-                    getApplicationContext(),
-                    messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_FROM),
-                    Toast.LENGTH_LONG).show();
-          //  }
 
 
         }

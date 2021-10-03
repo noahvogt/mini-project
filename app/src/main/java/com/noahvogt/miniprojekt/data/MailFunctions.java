@@ -1,4 +1,4 @@
-package com.noahvogt.miniprojekt;
+package com.noahvogt.miniprojekt.data;
 
 import android.util.Patterns;
 import android.widget.EditText;

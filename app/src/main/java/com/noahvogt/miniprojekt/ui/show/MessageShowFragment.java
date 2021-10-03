@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -19,15 +18,15 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.noahvogt.miniprojekt.R;
-import com.noahvogt.miniprojekt.ui.DataBase.Message;
-import com.noahvogt.miniprojekt.ui.slideshow.EmailViewModel;
+import com.noahvogt.miniprojekt.DataBase.Message;
+import com.noahvogt.miniprojekt.data.EmailViewModel;
 
 
 public class MessageShowFragment extends DialogFragment implements PopupMenu.OnMenuItemClickListener {
 
 
-    public EditText showTo;
-    public EditText showFrom;
+    public TextView showTo;
+    public TextView showFrom;
     public TextView showSubject;
     public TextView showMessage;
 
@@ -73,12 +72,12 @@ public class MessageShowFragment extends DialogFragment implements PopupMenu.OnM
         ImageButton dotButton = view.findViewById(R.id.show_message_dots_button);
         ImageButton attachButton = view.findViewById(R.id.show_message_attach_button);
 
-        showTo = (EditText) view.findViewById(R.id.show_To);
-        showFrom = (EditText) view.findViewById(R.id.show_From);
+        showTo = (TextView) view.findViewById(R.id.show_To);
+        showFrom = (TextView) view.findViewById(R.id.show_From);
         showSubject = (TextView) view.findViewById(R.id.show_Subject);
         showMessage = (TextView) view.findViewById(R.id.show_Message);
 
-        showTo.setText(mCurrent.getFrom());
+        showTo.setText(mCurrent.getTo());
         showFrom.setText(mCurrent.getFrom());
         showSubject.setText(mCurrent.getSubject());
         showMessage.setText(mCurrent.getTextContent());
