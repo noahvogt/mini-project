@@ -22,19 +22,20 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.noahvogt.miniprojekt.DataBase.Message;
-import com.noahvogt.miniprojekt.data.EmailViewHolder;
 import com.noahvogt.miniprojekt.data.EmailViewModel;
 import com.noahvogt.miniprojekt.data.MailFunctions;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class messageCreateFragment extends DialogFragment implements PopupMenu.OnMenuItemClickListener {
+public class MessageCreateFragment extends DialogFragment implements PopupMenu.OnMenuItemClickListener {
 
     public static final String EXTRA_TO = "com.example.android.namelistsql.NAME";
     public static final String EXTRA_FROM = "com.example.android.namelistsql.FROM";
     public static final String EXTRA_SUBJECT = "com.example.android.namelistsql.SUBJECT";
     public static final String EXTRA_MESSAGE = "com.example.android.namelistsql.MESSAGE";
+    public static final String EXTRA_CC = "com.example.android.namelistsql.CC";
+    public static final String EXTRA_BCC = "com.example.android.namelistsql.BCC";
     public static final String EXTRA_DATE = "com.example.android.namelistsql.DATE";
 
     public EditText sendingAddressObject;
@@ -53,11 +54,11 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
     public Activity activity = new Activity();
     public static Intent replyIntent = new Intent();
 
-    public static messageCreateFragment newInstance() {
-        return new messageCreateFragment();
+    public static MessageCreateFragment newInstance() {
+        return new MessageCreateFragment();
     }
 
-    public messageCreateFragment getMessage(Message message, EmailViewModel emailViewModel, messageCreateFragment messageCreateFragment){
+    public MessageCreateFragment getMessage(Message message, EmailViewModel emailViewModel, MessageCreateFragment messageCreateFragment){
         this.mEmailViewModel = emailViewModel;
         this.mMessage = message;
         return messageCreateFragment;
@@ -105,8 +106,7 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
         sendingAddressObject.setText(loginEmail);
 
         /* get string vars, MAYBE NOT HERE */
-        System.out.println("mMessage is " + mMessage.toString() + "\n mEmailViewModel is " + mEmailViewModel.toString() );
-        if (mMessage != null && mEmailViewModel != null) {
+        if (mMessage != null) {
             sendingAddressObject.setText(mMessage.getFrom());
             receivingAddressObject.setText(mMessage.getTo());
             subjectObject.setText(mMessage.getSubject());
@@ -159,6 +159,8 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
 
                                     replyIntent.putExtra(EXTRA_FROM, from);
                                     replyIntent.putExtra(EXTRA_TO, to);
+                                    replyIntent.putExtra(EXTRA_CC, cc);
+                                    replyIntent.putExtra(EXTRA_BCC, bcc);
                                     replyIntent.putExtra(EXTRA_SUBJECT, subject);
                                     replyIntent.putExtra(EXTRA_MESSAGE, message);
                                     activity.setResult(RESULT_OK, replyIntent);
@@ -198,7 +200,7 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
             @Override
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(getActivity(), v);
-                popupMenu.setOnMenuItemClickListener(messageCreateFragment.this::onMenuItemClick);
+                popupMenu.setOnMenuItemClickListener(MessageCreateFragment.this::onMenuItemClick);
                 popupMenu.inflate(R.menu.create_message_options_menu);
                 popupMenu.show();
             }

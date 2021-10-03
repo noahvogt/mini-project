@@ -1,11 +1,13 @@
 package com.noahvogt.miniprojekt.ui.show;
 
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -29,6 +31,10 @@ public class MessageShowFragment extends DialogFragment implements PopupMenu.OnM
     public TextView showFrom;
     public TextView showSubject;
     public TextView showMessage;
+    public TextView showDate;
+
+    public Button showBccButton;
+    public Button showCCButton;
 
     private static Message mCurrent;
     private static EmailViewModel mEmailViewModel;
@@ -72,20 +78,38 @@ public class MessageShowFragment extends DialogFragment implements PopupMenu.OnM
         ImageButton dotButton = view.findViewById(R.id.show_message_dots_button);
         ImageButton attachButton = view.findViewById(R.id.show_message_attach_button);
 
+        showBccButton = view.findViewById(R.id.show_bcc);
+        showCCButton = view.findViewById(R.id.show_cc);
+
         showTo = (TextView) view.findViewById(R.id.show_To);
         showFrom = (TextView) view.findViewById(R.id.show_From);
         showSubject = (TextView) view.findViewById(R.id.show_Subject);
         showMessage = (TextView) view.findViewById(R.id.show_Message);
+        showDate = (TextView) view.findViewById(R.id.show_date);
 
         showTo.setText(mCurrent.getTo());
         showFrom.setText(mCurrent.getFrom());
         showSubject.setText(mCurrent.getSubject());
         showMessage.setText(mCurrent.getTextContent());
+        showDate.setText(mCurrent.getDate());
 
 
         // TODO: add cc + bcc functionality
 
         // button listeners
+        showBccButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNewPopup(true);
+            }
+        });
+
+        showCCButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNewPopup(false);
+            }
+        });
 
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,5 +159,25 @@ public class MessageShowFragment extends DialogFragment implements PopupMenu.OnM
             default: // this case should never occur
                 return false;
         }
+    }
+
+    public void createNewPopup(boolean bcc){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+        AlertDialog dialog;
+        final View bccPopupView = getLayoutInflater().inflate(R.layout.cc_bcc_popup, null);
+        TextView mBcc = bccPopupView.findViewById(R.id.show_listBcc);
+
+        alertDialog.setView(bccPopupView);
+        dialog = alertDialog.create();
+        dialog.show();
+
+        if (bcc){
+            mBcc.setText(mCurrent.getBcc());
+        }else {
+            mBcc.setText(mCurrent.getCc());
+        }
+
+
+
     }
 }

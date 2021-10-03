@@ -13,7 +13,7 @@ import java.util.List;
 @Dao
 public interface MessageDao {
 
-    // TODO: updating messages, search funktion
+    // TODO: updating messages, search funktion, read in cc and bcc as list
     // allowing the insert of the same word multiple times by passing a
     // conflict resolution strategy
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -41,23 +41,23 @@ public interface MessageDao {
     LiveData<List<Message>> getDateMessages();
 
     /* get Draft messages*/
-    @Query("SELECT * FROM message_table WHERE folder LIKE 'Draft' ORDER BY date ASC")
+    @Query("SELECT * FROM message_table WHERE folder LIKE 'Draft' ORDER BY date DESC")
     LiveData<List<Message>> getDraftMessages();
 
     /* get Inbox messages*/
-    @Query("SELECT * FROM message_table WHERE folder LIKE 'Inbox' ORDER BY date ASC")
+    @Query("SELECT * FROM message_table WHERE folder LIKE 'Inbox' ORDER BY date DESC")
     LiveData<List<Message>> getInboxMessages();
 
     /* get Sent messages*/
-    @Query("SELECT * FROM message_table WHERE folder LIKE 'Sent' ORDER BY date ASC")
+    @Query("SELECT * FROM message_table WHERE folder LIKE 'Sent' ORDER BY date DESC")
     LiveData<List<Message>> getSentMessages();
 
     /* get Archive messages*/
-    @Query("SELECT * FROM message_table WHERE folder LIKE 'Archive' ORDER BY date ASC")
+    @Query("SELECT * FROM message_table WHERE folder LIKE 'Archive' ORDER BY date DESC")
     LiveData<List<Message>> getArchiveMessages();
 
     /* get Spam messages*/
-    @Query("SELECT * FROM message_table WHERE folder LIKE 'Spam' ORDER BY date ASC")
+    @Query("SELECT * FROM message_table WHERE folder LIKE 'Spam' ORDER BY date DESC")
     LiveData<List<Message>> getSpamMessages();
 
 

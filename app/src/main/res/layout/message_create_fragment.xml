@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/messageFragment"
     android:orientation="vertical"
-    tools:context=".messageCreateFragment">
+    tools:context=".MessageCreateFragment">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"

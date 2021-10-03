@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
 
-                DialogFragment dialog = messageCreateFragment.newInstance();
+                DialogFragment dialog = MessageCreateFragment.newInstance();
                 dialog.show(getSupportFragmentManager(), "tag");
 
             }
@@ -174,22 +174,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         /* gets the data from the Email writer and adds it to the Database */
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(requestCode, resultCode, messageCreateFragment.replyIntent);
+            super.onActivityResult(requestCode, resultCode, MessageCreateFragment.replyIntent);
 
             /* Creates class for the Date when Email is written */
             Date dNow = new Date();
             SimpleDateFormat ft =
                     new SimpleDateFormat("dd.MM.yy");
+            System.out.println(dNow);
 
          //   if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
                 Message word = new Message(
-                        messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_TO),
+                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_TO),
                         null,
                         null,
-                        messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_FROM),
+                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_FROM),
                         ft.format(dNow),
-                        messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_SUBJECT),
-                        messageCreateFragment.replyIntent.getStringExtra(messageCreateFragment.EXTRA_MESSAGE),
+                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_SUBJECT),
+                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_MESSAGE),
                         "Draft",false);
                 mEmailViewModel.insert(word);
 

@@ -21,8 +21,7 @@ import com.noahvogt.miniprojekt.MainActivity;
 import com.noahvogt.miniprojekt.R;
 import com.noahvogt.miniprojekt.DataBase.Message;
 import com.noahvogt.miniprojekt.data.CustomAdapter;
-import com.noahvogt.miniprojekt.messageCreateFragment;
-import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
+import com.noahvogt.miniprojekt.MessageCreateFragment;
 
 public class  DraftFragment extends Fragment implements CustomAdapter.SelectedMessage{
 
@@ -70,7 +69,7 @@ public class  DraftFragment extends Fragment implements CustomAdapter.SelectedMe
 
     @Override
     public void selectedMessage(Message messages, EmailViewModel emailViewModel) {
-        messageCreateFragment messageCreateFragment = new messageCreateFragment();
+        MessageCreateFragment messageCreateFragment = new MessageCreateFragment();
 
         //TODO: make this Fragment editable
         AppCompatActivity activity = (AppCompatActivity) getContext();

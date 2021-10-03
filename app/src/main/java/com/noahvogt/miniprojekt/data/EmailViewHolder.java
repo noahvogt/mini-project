@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 /* adds the content to the View of RecyclerView*/
 public class EmailViewHolder extends RecyclerView.ViewHolder {
@@ -76,10 +77,10 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
     }
 
     public static boolean isDate(String date){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
-        dateFormat.setLenient(false);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yy", Locale.getDefault());
+        //dateFormat.setLenient(false);
         try {
-            dateFormat.parse(date.trim());
+            dateFormat.parse(date);
         } catch (ParseException e){
             return false;
         }

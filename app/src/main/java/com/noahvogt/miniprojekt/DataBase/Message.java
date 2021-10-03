@@ -5,6 +5,11 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.Objects;
+
 /* @Embedded to express entitys together
  *  https://developer.android.com/training/data-storage/room/relationships
  * to learn more */

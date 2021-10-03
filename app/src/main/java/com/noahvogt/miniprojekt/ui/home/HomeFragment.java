@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,9 @@ import com.noahvogt.miniprojekt.R;
 import com.noahvogt.miniprojekt.DataBase.Message;
 import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
 import com.noahvogt.miniprojekt.data.EmailViewModel;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class HomeFragment extends Fragment implements CustomAdapter.SelectedMessage{
 
