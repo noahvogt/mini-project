@@ -37,7 +37,7 @@ public class MailFunctions {
     public static List fetchMailsFromBox(PyObject IMAPConnection, String Folder, String InputType) {
         Python python = Python.getInstance();
         PyObject pythonMailFunctions = python.getModule("mailFunctions");
-        return pythonMailFunctions.callAttr("fetchMails", IMAPConnection, Folder, InputType).asList();
+        return pythonMailFunctions.callAttr("fetchMails", IMAPConnection, Folder).asList();
     }
 
     public static boolean validateName(EditText emailName) {
