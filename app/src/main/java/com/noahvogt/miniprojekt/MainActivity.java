@@ -178,6 +178,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
+
+        /* start python instance right on startup */
+        if (! Python.isStarted()) {
+            Python.start(new AndroidPlatform(this));
+        }
     }
 
 
@@ -236,29 +241,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /* better leave empty to avoid any listener disambiguity */
     public void onClick(View view) { }
 
-    public void changeMailServerSettingsDialog() {
+    public void changeMailServerSettingsDialog(String name, String email, String password) {
         // define View window
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         final View changeMailServerSettingsView = getLayoutInflater().inflate(R.layout.mail_credentials_customizer, null);
 
-        // open View window
+        EditText incomingServerObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_incoming_server_text);
+        EditText outgoingServerObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_outgoing_server_text);
+        EditText incomingPortObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_incoming_port_text);
+        EditText outgoingPortObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_outgoing_port_text);
+        EditText serverUsernameObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_username_text);
+        EditText passwordObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_password_text);
+
+        incomingServerObject.setText(MailFunctions.getImapHostFromEmail(email));
+        outgoingServerObject.setText(MailFunctions.getSmtpHostFromEmail(email));
+        incomingPortObject.setText("993");
+        outgoingPortObject.setText("587");
+        serverUsernameObject.setText(email);
+        passwordObject.setText(password);
+
+        /* open View window */
         dialogBuilder.setView(changeMailServerSettingsView);
         dialog = dialogBuilder.create();
         dialog.show();
     }
 
-    public void askForChangeMailServerSettingsDialog() {
-        // define View window
+    public void askForChangeMailServerSettingsDialog(String name, String email, String password) {
+        /* define View window */
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 
-        // open View window
+        /* open View window */
         dialogBuilder.setTitle("failed to connect :(");
         dialogBuilder
                 .setMessage("Do you want to further customize your mail server settings?")
                 .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         /*if this button is clicked, close the whole fragment */
-                        changeMailServerSettingsDialog();
+                        changeMailServerSettingsDialog(name, email, password);
                     }
                 })
                 .setNegativeButton("No",new DialogInterface.OnClickListener() {
@@ -365,14 +384,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     Gson gson = new Gson();
                     MailServerCredentials newMailServerCredentials = new MailServerCredentials(
-                            name, password, email, MailFunctions.getImapHostFromEmail(email), MailFunctions.getSmtpHostFromEmail(email), 993);
+                            name, password, email, MailFunctions.getImapHostFromEmail(email), MailFunctions.getSmtpHostFromEmail(email), 993, "");
                     String newCredentialsJson = gson.toJson(newMailServerCredentials);
                     System.out.println(newCredentialsJson);
                     credentialsEditor.putString("data", newCredentialsJson);
                     credentialsEditor.apply();
 
                 } else {
-                    askForChangeMailServerSettingsDialog();
+                    askForChangeMailServerSettingsDialog(name, email, password);
                 }
             }
         });

@@ -119,7 +119,7 @@ public class messageCreateFragment extends DialogFragment implements PopupMenu.O
                     dismiss();
                 }
                 else {
-                    /* setup dialog */
+                    /* setup dialog for saving draft message */
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                     alertDialogBuilder.setTitle("Warning");
                     alertDialogBuilder
