@@ -42,6 +42,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.noahvogt.miniprojekt.data.CustomAdapter;
 import com.noahvogt.miniprojekt.data.EmailViewModel;
 import com.noahvogt.miniprojekt.data.MailFunctions;
+import com.noahvogt.miniprojekt.data.ReadInMailsActivity;
 import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
 
 import java.text.SimpleDateFormat;
@@ -324,20 +325,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     return;
                 }
 
+
                 /* connect to mail server and print various debugging output */
                 showToast("Probe Connection ...");
                 if (MailFunctions.canConnect(MailFunctions.getImapHostFromEmail(email), email, password) == Boolean.TRUE) {
                     showToast("was able to connect");
 
+                    Intent intent = new Intent(getBaseContext(), ReadInMailsActivity.class);
+                    intent.putExtra("Email", email);
+                    intent.putExtra("Password", password);
+                    startActivity(intent);
+                    //startActivityForResult(intent, MainActivity.NEW_WORD_ACTIVITY_REQUEST_CODE);
+
+
+                    /*
                     List folders =  MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(MailFunctions.getImapHostFromEmail(email), email, password));
                     for (int i = 0; i < folders.size(); i++) {
                         showToast(folders.get(i).toString());
                         // TODO: select right folder to store, Synchronization
                         /*gives list of Message Objects/dictionaries */
-                        /*List p = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(name, email, password), l.get(i).toString(), "list");
-                        System.out.println(l.get(i).toString());
-                        System.out.println(p);*/
+                       /* List p = MailFunctions.fetchMailsFromBox(
+                                MailFunctions.getIMAPConnection(
+                                        MailFunctions.getImapHostFromEmail(email), email, password),
+                                folders.get(i).toString(), "list");
+                        System.out.println(folders.get(i).toString());
+                        System.out.println(p);
                     }
+
+                        */
 
 
 

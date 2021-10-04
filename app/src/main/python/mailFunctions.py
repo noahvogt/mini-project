@@ -1,14 +1,7 @@
 import imaplib, smtplib, ssl, email, os, json
 from itertools import chain
 
-mSubject = ""
-mFrom = ""
-mCC = ""
-mBcc = ""
-mTo = ""
-mDate = ""
-mContent = ""
-output_list= []
+
 
 # format raw string you get from fetching mails
 def stringCompiling(inputIterable):
@@ -121,56 +114,6 @@ def fetchMails(connection, inbox):
     messages_int = int(messages[0])
     #print("message_int------\n" + str(messages_int))
 
-    typ, data = connection.search(None, 'ALL')
-    global output_list
-
-    for num in data[0].split():
-        if outputType == "dict":
-            output_dict = {}
-        else:
-           inner_output_list =[]
-
-        typ, data = connection.fetch(num, '(RFC822)')
-        msg = email.message_from_bytes(data[0][1])
-
-        #print(msg)
-        #print(num)
-
-        raw_string = email.header.decode_header(msg['Subject'])[0]
-        #print("raw_string: " + str(raw_string))
-        raw_from = email.header.decode_header(msg['From'])
-        #print("raw_from" + str(raw_from))
-        try:
-            raw_to = email.header.decode_header(msg['To'])
-        except TypeError:
-            raw_to = [""]
-        try:
-            raw_cc = email.header.decode_header(msg['CC'])
-        except TypeError:
-            raw_cc = [""]
-        try:
-            raw_bcc = email.header.decode_header(msg['BCC'])
-        except TypeError:
-            raw_bcc = [""]
-        #print("raw_to" + str(raw_to))
-        raw_date = email.header.decode_header(msg['Date'])[0]
-        #print("raw_to" + str(raw_date))
-
-        raw_msg = str(msg)
-
-        primitive_body = raw_msg[raw_msg.find('\n\n'):].strip()
-
-        #raw_body = email.header.decode_header(msg['Body'])[0][0]
-
-        # set subject to an empty string when not found
-        try:
-            if raw_string[1] == 'utf-8':
-                subject = raw_string[0].raw_string('utf-8')
-            else:
-                subject = raw_string[0]
-        except AttributeError:
-            subject=""
-
     output_list = []
 
     for seentype in ['(UNSEEN)', '(SEEN)']:
@@ -233,7 +176,7 @@ def fetchMails(connection, inbox):
                 # make sure the fetch command doesn't add a SEEN flag
                 connection.store(num, '-FLAGS', '(\Seen)')
 
-        if outputType == "dict":
+
             output_dict['subject'] = subject
             output_dict['from'] = stringCompiling(raw_from)
             output_dict['cc'] = stringCompiling(raw_cc)
@@ -241,28 +184,12 @@ def fetchMails(connection, inbox):
             output_dict['to'] = stringCompiling(raw_to)
             output_dict['date'] = stringCompiling(raw_date)
             output_dict['content'] = primitive_body
-
-            output_list.append(output_dict)
-        else:
-            inner_output_list.append(subject)
-            inner_output_list.append(stringCompiling(raw_from))
-            inner_output_list.append(stringCompiling(raw_cc))
-            inner_output_list.append(stringCompiling(raw_bcc))
-            inner_output_list.append(stringCompiling(raw_to))
-            inner_output_list.append(stringCompiling(raw_date))
-            inner_output_list.append(primitive_body)
-
-            output_list.append(inner_output_list)
-
-            global mSubject, mFrom, mCC, mContent, mBcc, mTo, mDate
-            print("subject " + subject)
-            mSubject = subject
-            mFrom = stringCompiling(raw_from)
-            mCC = stringCompiling(raw_cc)
-            mBcc = stringCompiling(raw_bcc)
-            mTo = stringCompiling(raw_to)
-            mDate = stringCompiling(raw_date)
-            mContent = primitive_body
+            if seentype == '(SEEN)':
+                output_dict['seen'] = "True"
+            else:
+                output_dict['seen'] = "False"
+                # make sure the fetch command doesn't add a SEEN flag
+                connection.store(num, '-FLAGS', '(\Seen)')
 
             output_list.append(output_dict)
 
@@ -275,35 +202,6 @@ def fetchMails(connection, inbox):
     print("Finstep")
 
     return json.dumps(output_list)
-
-
-def printSubject(messageIndex):
-    print(output_list[messageIndex][0])
-    return output_list[messageIndex][0]
-
-def printFrom(messageIndex):
-    print(output_list[messageIndex][1])
-    return mFrom
-
-def printCc(messageIndex):
-    print(output_list[messageIndex][2])
-    return mCC
-
-def printBcc(messageIndex):
-    print(output_list[messageIndex][3])
-    return mBcc
-
-def printTo(messageIndex):
-    print(output_list[messageIndex][4])
-    return mTo
-
-def printDate(messageIndex):
-    print(output_list[messageIndex][5])
-    return mDate
-
-def printContent(messageIndex):
-    print(output_list[messageIndex][6])
-    return mContent
 
 def sendStarttls(host, sendingMail, receivingMail, password, message="", subject="", port=587, cc=[], bcc=[]):
     context = ssl.create_default_context()
