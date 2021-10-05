@@ -22,7 +22,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".SettingsActivity"/>
-        <activity android:name=".data.ReadInMailsActivity"/>
     </application>
 
 </manifest>

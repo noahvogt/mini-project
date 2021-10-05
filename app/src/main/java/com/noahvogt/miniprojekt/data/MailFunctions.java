@@ -36,6 +36,7 @@ public class MailFunctions {
         return pythonMailFunctions.callAttr("listMailboxes", IMAPConnection).asList();
     }
 
+
     public static String fetchMailsFromBox(PyObject IMAPConnection, String Folder) {
         Python python = Python.getInstance();
         PyObject pythonMailFunctions = python.getModule("mailFunctions");
@@ -62,6 +63,10 @@ public class MailFunctions {
         String topLevelHost = email.substring(email.lastIndexOf("@") + 1);
         if (topLevelHost.endsWith("edubs.ch")) {
             return "teamwork.edubs.ch";
+
+        }else if (topLevelHost.endsWith("yahoo.com")){
+            return "imap.mail.yahoo.com";
+
         } else {
             return "imap." + topLevelHost;
         }
@@ -71,7 +76,11 @@ public class MailFunctions {
         String topLevelHost = email.substring(email.lastIndexOf("@") + 1);
         if (topLevelHost.equals("noahvogt.com")) {
             return "mail.noahvogt.com";
-        } else {
+
+        } else if (topLevelHost.endsWith("yahoo.com")){
+            return "smtp.mail.yahoo.com";
+        }
+        else {
             return "smtp." + topLevelHost;
         }
     }

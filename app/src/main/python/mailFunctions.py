@@ -98,15 +98,15 @@ def verifyNoBytes(messages, output_list):
                 exit()
 
 def fetchMails(connection, inbox):
-    print("###" + inbox + "###")
-    print(type(inbox))
+    #print("###" + inbox + "###")
+    #print(type(inbox))
     try:
         status, messages = connection.select(inbox)
     except:
         return []
 
-    print("status-------\n" + status)
-    print("messages-------\n" + str(messages))
+    #print("status-------\n" + status)
+    #print("messages-------\n" + str(messages))
     # number of top emails to fetch
     #N = 3
     # total number of emails
@@ -123,12 +123,12 @@ def fetchMails(connection, inbox):
 
             msg = email.message_from_bytes(data[0][1])
 
-            print(num)
+            #print(num)
 
             raw_string = email.header.decode_header(msg['Subject'])[0]
-            print("raw_string: " + str(raw_string))
+            #print("raw_string: " + str(raw_string))
             raw_from = email.header.decode_header(msg['From'])
-            print("raw_from" + str(raw_from))
+            #print("raw_from" + str(raw_from))
             try:
                 raw_to = email.header.decode_header(msg['To'])
             except TypeError:
@@ -141,9 +141,9 @@ def fetchMails(connection, inbox):
                 raw_bcc = email.header.decode_header(msg['BCC'])
             except TypeError:
                 raw_bcc = [""]
-            print("raw_to" + str(raw_to))
+            #print("raw_to" + str(raw_to))
             raw_date = email.header.decode_header(msg['Date'])[0]
-            print("raw_to" + str(raw_date))
+            #print("raw_to" + str(raw_date))
 
             raw_msg = str(msg)
 

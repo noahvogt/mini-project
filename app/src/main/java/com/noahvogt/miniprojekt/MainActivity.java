@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -18,7 +20,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -37,6 +38,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.work.Data;
 
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
@@ -44,7 +46,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.noahvogt.miniprojekt.data.CustomAdapter;
 import com.noahvogt.miniprojekt.data.EmailViewModel;
 import com.noahvogt.miniprojekt.data.MailFunctions;
-import com.noahvogt.miniprojekt.data.ReadInMailsActivity;
+import com.noahvogt.miniprojekt.workers.DownloadWorker;
 import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
 import com.noahvogt.miniprojekt.data.BooleanTypeAdapter;
 
@@ -52,20 +54,22 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
 import com.google.gson.Gson;
 
 
 
 import static com.noahvogt.miniprojekt.R.id.drawer_layout;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, CustomAdapter.SelectedMessage {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, CustomAdapter.SelectedMessage, PopupMenu.OnMenuItemClickListener {
 
     private AppBarConfiguration mAppBarConfiguration;
 
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
+    public static final String emailData = "Email";
+    public static final String passwordData = "Password";
+    public static final String nameData = "Name";
     public static EmailViewModel mEmailViewModel;
     public static RecyclerView recyclerView;
 
@@ -220,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onCreateOptionsMenu(Menu menu) {
         /* Inflate the menu; this adds items to the action bar if it is present. */
         getMenuInflater().inflate(R.menu.main, menu);
+
         return true;
     }
 
@@ -286,6 +291,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialog.show();
     }
 
+    public static MailServerCredentials newMailServerCredentials;
+    public static SharedPreferences.Editor credentialsEditor;
+
     public void createNewEmailDialog(){
         /* define View window */
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -308,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialog.show();
 
         SharedPreferences.Editor preferencesEditor = preferences.edit();
-        SharedPreferences.Editor credentialsEditor = mailServerCredentials.edit();
+        credentialsEditor = mailServerCredentials.edit();
 
         if (! Python.isStarted()) {
             Python.start(new AndroidPlatform(this));
@@ -325,21 +333,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String email = newemail_email.getText().toString();
                 String password = newemail_password.getText().toString();
 
+                Data.Builder builder = new Data.Builder();
+                builder.putString(emailData, email)
+                        .putString(passwordData, password)
+                        .putString(nameData, name);
+
                 if (!MailFunctions.validateEmail(newemail_email) | !MailFunctions.validateName(newemail_name) |
                         !MailFunctions.validatePassword(newemail_password)) {
                     return;
                 }
-
                 /* connect to mail server */
                 showToast("Probe Connection ...");
                 if (MailFunctions.canConnect(MailFunctions.getImapHostFromEmail(email), email, password) == Boolean.TRUE) {
                     showToast("was able to connect");
 
-                    // Intent intent = new Intent(getBaseContext(), ReadInMailsActivity.class);
-                    // intent.putExtra("Email", email);
-                    // intent.putExtra("Password", password);
-                    // startActivity(intent);
-                    // startActivityForResult(intent, MainActivity.NEW_WORD_ACTIVITY_REQUEST_CODE);
+
+                    /*
+                    Intent intent = new Intent(getBaseContext(), DownloadWorker.class);
+                    intent.putExtra("Email", email);
+                    intent.putExtra("Password", password);
+                    startActivity(intent);
+
+                     */
+                    //startActivityForResult(intent, MainActivity.NEW_WORD_ACTIVITY_REQUEST_CODE);
 
                     /* TODO: replace legacy strings down below completely with serialized settings json string */
                     preferencesEditor.putString("name", name);
@@ -360,8 +376,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     boolean newEmailIsUnique = true;
                     try {
                         for (int i = 0; i < allUsersCredentials.size(); i++) {
-                            System.out.println("User #" + i + 1);
-                            System.out.println(allUsersCredentials.get(i).getUsername());
                             if (allUsersCredentials.get(i).getUsername().equals(email)) {
                                 newEmailIsUnique = false;
                                 break;
@@ -383,21 +397,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         showToast("Success: added new email account");
                     } else {
                         showToast("Error: cannot add the same email twice");
-                    }
-                } else {
-                    askForChangeMailServerSettingsDialog(name, email, password);
                 }
+            } else {
+                    askForChangeMailServerSettingsDialog(name, email, password);
             }
-        });
+        }});
 
-
-        newemail_cancel_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-    }
+    newemail_cancel_button.setOnClickListener(v -> dialog.dismiss());
+ }
 
 
     /* show debug output in  specific view */
@@ -417,6 +424,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         DialogFragment dialog = MessageShowFragment.newInstance(messages, mEmailViewModel);
         dialog.show(getSupportFragmentManager(), "tag");
 
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_refresh:
+
+                return true;
+        }
+        return false;
     }
 }
 

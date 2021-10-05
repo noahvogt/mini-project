@@ -4,15 +4,20 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import com.noahvogt.miniprojekt.DataBase.EmailRepository;
 import com.noahvogt.miniprojekt.DataBase.Message;
+import com.noahvogt.miniprojekt.workers.DownloadWorker;
 
 import java.util.List;
 
 public class EmailViewModel extends AndroidViewModel {
 
     private EmailRepository mEmailRepository;
+    private WorkManager mWorkManager;
 
     private LiveData<List<Message>> mDraftMessage;
     private LiveData<List<Message>> mInboxMessage;
@@ -22,12 +27,23 @@ public class EmailViewModel extends AndroidViewModel {
 
     public EmailViewModel(Application application) {
         super(application);
+        mWorkManager = WorkManager.getInstance(application);
         mEmailRepository = new EmailRepository(application);
         mInboxMessage = mEmailRepository.getInboxMessages();
         mDraftMessage = mEmailRepository.getDraftMessages();
         mSentMessage = mEmailRepository.getSentMessages();
         mArchiveMessage = mEmailRepository.getArchiveMessages();
         mSpamMessage = mEmailRepository.getSpamMessage();
+    }
+
+    /*requests Worker and applies password, email to it */
+    public void applyDownload(Data data){
+        OneTimeWorkRequest downloadRequest =
+                new OneTimeWorkRequest.Builder(DownloadWorker.class)
+                .setInputData(data)
+                .build();
+
+        mWorkManager.enqueue(downloadRequest);
     }
 
     public LiveData<List<Message>> getDraftMessage(){
@@ -47,4 +63,6 @@ public class EmailViewModel extends AndroidViewModel {
     public void deleteMessage(Message message){mEmailRepository.deleteMessage(message);}
 
     public void updateMessage(int id, String folder){mEmailRepository.updateMessage(id, folder);}
+
+
 }
