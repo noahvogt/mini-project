@@ -117,7 +117,7 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
 
         /* TODO: add cc + bcc functionality */
 
-        /* dosen't wotk cause Activity is not extendet and used as variable */
+        /* doesn't work cause Activity is not extended and used as variable */
 
 
 

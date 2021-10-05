@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     SharedPreferences preferences, mailServerCredentials;
 
-    /* empty descriptor */
+    /* leave descriptor empty */
     public MainActivity() {}
 
 
@@ -172,7 +172,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
 
-
         /* Start email Writer*/
         FloatingActionButton message_create_button = findViewById(R.id.messageButton);
         message_create_button.setOnClickListener(new View.OnClickListener() {
@@ -213,9 +212,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_MESSAGE),
                         "Draft",false);
                 mEmailViewModel.insert(word);
-
-
-
         }
 
 
@@ -239,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) { }
 
     public void changeMailServerSettingsDialog(String name, String email, String password) {
-        // define View window
+        /* define View window */
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         final View changeMailServerSettingsView = getLayoutInflater().inflate(R.layout.mail_credentials_customizer, null);
 
@@ -250,12 +246,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         EditText serverUsernameObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_username_text);
         EditText passwordObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_password_text);
 
+        /* set assumed input in corresponding fields */
         incomingServerObject.setText(MailFunctions.getImapHostFromEmail(email));
         outgoingServerObject.setText(MailFunctions.getSmtpHostFromEmail(email));
         incomingPortObject.setText("993");
         outgoingPortObject.setText("587");
         serverUsernameObject.setText(email);
         passwordObject.setText(password);
+
+        /* TODO: add save and cancel button functionality */
 
         /* open View window */
         dialogBuilder.setView(changeMailServerSettingsView);
@@ -334,58 +333,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 showToast("Probe Connection ...");
                 if (MailFunctions.canConnect(MailFunctions.getImapHostFromEmail(email), email, password) == Boolean.TRUE) {
                     showToast("was able to connect");
-/*
-                    Intent intent = new Intent(getBaseContext(), ReadInMailsActivity.class);
-                    intent.putExtra("Email", email);
-                    intent.putExtra("Password", password);
-                    startActivity(intent);*/
-                    //startActivityForResult(intent, MainActivity.NEW_WORD_ACTIVITY_REQUEST_CODE);
+
+                    // Intent intent = new Intent(getBaseContext(), ReadInMailsActivity.class);
+                    // intent.putExtra("Email", email);
+                    // intent.putExtra("Password", password);
+                    // startActivity(intent);
+                    // startActivityForResult(intent, MainActivity.NEW_WORD_ACTIVITY_REQUEST_CODE);
 
 
-                    /*
-                    List folders =  MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(MailFunctions.getImapHostFromEmail(email), email, password));
-                    for (int i = 0; i < folders.size(); i++) {
-                        showToast(folders.get(i).toString());
-                        // TODO: select right folder to store, Synchronization
-                        /*gives list of Message Objects/dictionaries */
-                       /* List p = MailFunctions.fetchMailsFromBox(
-                                MailFunctions.getIMAPConnection(
-                                        MailFunctions.getImapHostFromEmail(email), email, password),
-                                folders.get(i).toString(), "list");
-                        System.out.println(folders.get(i).toString());
-                        System.out.println(p);
-                    }
-
-                        */
+                    // List folders =  MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(MailFunctions.getImapHostFromEmail(email), email, password));
+                    // for (int i = 0; i < folders.size(); i++) {
+                    //     showToast(folders.get(i).toString());
+                    //     // TODO: select right folder to store, Synchronization
+                    //     /*gives list of Message Objects/dictionaries
+                    // List p = MailFunctions.fetchMailsFromBox(
+                    //             MailFunctions.getIMAPConnection(
+                    //                     MailFunctions.getImapHostFromEmail(email), email, password),
+                    //             folders.get(i).toString(), "list");
+                    //     System.out.println(folders.get(i).toString());
+                    //     System.out.println(p);
+                    // }
 
 
 
-
+                    /* TODO: replace legacy strings down below completely with serialized settings json string */
                     preferencesEditor.putString("name", name);
                     preferencesEditor.putString("email", email);
                     preferencesEditor.putString("password", password);
                     preferencesEditor.apply();
 
-                    /* ArrayList<String> newUserSettings = new ArrayList<String>();
-                    newUserSettings.add(name);
-                    newUserSettings.add(email);
-                    newUserSettings.add(password);
-                    System.out.println("newUserSettings: " + newUserSettings);
-
-
-                    //Retrieve the values
-                    Set<String> oldSet = mailServerCredentials.getStringSet("UserSettings", null);
-
-                    //Set the values
-                    Set<String> newSet = new HashSet<String>();
-                    newSet.addAll(newUserSettings);
-                    credentialsEditor.putStringSet("UserSettings", newSet);
-                    credentialsEditor.commit();*/
-
+                    /* init custom gson with hook to parse booleans correctly */
                     GsonBuilder builder = new GsonBuilder();
                     builder.registerTypeAdapter(Boolean.class, new BooleanTypeAdapter());
                     Gson gson = builder.create();
-                    //Gson gson = new Gson();
 
                     /* safe mail server login credentials */
                     MailServerCredentials newMailServerCredentials = new MailServerCredentials(
@@ -401,21 +381,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     SharedPreferences credentialsReader = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
                     String readJsonData = credentialsReader.getString("data", "");
                     MailServerCredentials readMailServerCredentials = gson.fromJson(readJsonData, MailServerCredentials.class);
-                    //System.out.println(newMailServerCredentials);
 
-                    /* print out draft messages */
+                    /* fetch and print draft messages */
                     String fetchedMails = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(newMailServerCredentials.getImapHost(),
                             newMailServerCredentials.getUsername(), newMailServerCredentials.getPassword(), newMailServerCredentials.getImapPort()), "Drafts");
                     System.out.println(fetchedMails);
 
+                    /* parse messages in arraylist of Message class and loop through it */
                     Type messageType = new TypeToken<ArrayList<Message>>(){}.getType();
                     ArrayList<Message> messages = gson.fromJson(fetchedMails, messageType);
                     for (int i = 0; i < messages.size(); i++) {
                         System.out.println("Message #" + i);
                         System.out.println(messages.get(i).toString());
                     }
-
-
                 } else {
                     askForChangeMailServerSettingsDialog(name, email, password);
                 }
@@ -429,7 +407,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 dialog.dismiss();
             }
         });
-
     }
 
 
@@ -447,7 +424,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void selectedMessage(Message messages, EmailViewModel emailViewModel) {
-
         DialogFragment dialog = MessageShowFragment.newInstance(messages, mEmailViewModel);
         dialog.show(getSupportFragmentManager(), "tag");
 
