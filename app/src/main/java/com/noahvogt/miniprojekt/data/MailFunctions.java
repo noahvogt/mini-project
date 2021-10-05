@@ -22,10 +22,10 @@ public class MailFunctions {
         pythonMailFunctions.callAttr("sendStarttls", host, sendingMail, receivingMail, password, message, subject, 587, cc, bcc);
     }
 
-    public static PyObject getIMAPConnection(String host, String email, String password) {
+    public static PyObject getIMAPConnection(String host, String email, String password, int port) {
         Python python = Python.getInstance();
         PyObject pythonMailFunctions = python.getModule("mailFunctions");
-        return pythonMailFunctions.callAttr("connect", host, email, password, 993);
+        return pythonMailFunctions.callAttr("connect", host, email, password, port);
     }
 
     public static List listMailboxes(PyObject IMAPConnection) {

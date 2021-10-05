@@ -168,6 +168,7 @@ def fetchMails(connection, inbox):
             output_dict['to'] = stringCompiling(raw_to)
             output_dict['date'] = stringCompiling(raw_date)
             output_dict['content'] = primitive_body
+            output_dict['folder'] = inbox
             if seentype == '(SEEN)':
                 output_dict['seen'] = "True"
             else:

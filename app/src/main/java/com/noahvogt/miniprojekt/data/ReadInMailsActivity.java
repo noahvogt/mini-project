@@ -29,7 +29,7 @@ public class ReadInMailsActivity extends AppCompatActivity {
         if (MailFunctions.canConnect(MailFunctions.getImapHostFromEmail(mEmail), mEmail, mPassword) == Boolean.TRUE) {
             //showToast("was able to connect");
 
-            List folders = MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(MailFunctions.getImapHostFromEmail(mEmail), mEmail, mPassword));
+            List folders = MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(MailFunctions.getImapHostFromEmail(mEmail), mEmail, mPassword, 993));
             for (int i = 0; i < folders.size(); i++) {
                 //showToast(folders.get(i).toString());
                 // TODO: select right folder to store, Synchronization

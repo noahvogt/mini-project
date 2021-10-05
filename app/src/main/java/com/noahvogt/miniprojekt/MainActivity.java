@@ -382,25 +382,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     /* safe mail server login credentials */
                     MailServerCredentials newMailServerCredentials = new MailServerCredentials(
-                            name, password, email, MailFunctions.getImapHostFromEmail(email), MailFunctions.getSmtpHostFromEmail(email), 993, "");
+                            name, email, password, MailFunctions.getImapHostFromEmail(email), MailFunctions.getSmtpHostFromEmail(email), 993, "");
                     String newCredentialsJson = gson.toJson(newMailServerCredentials);
                     System.out.println(newCredentialsJson);
                     credentialsEditor.putString("data", newCredentialsJson);
                     credentialsEditor.apply();
 
-                    /* download all messages from mail server
+                    /* download all messages from mail server */
 
-                    /* read login credentials from SharedPreferences
+                    /* read login credentials from SharedPreferences */
                     SharedPreferences credentialsReader = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
                     String readJsonData = credentialsReader.getString("data", "");
                     MailServerCredentials readMailServerCredentials = gson.fromJson(readJsonData, MailServerCredentials.class);
                     //System.out.println(newMailServerCredentials);
 
-                    /* print out draft messages
-                    String fetchedMails = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(newMailServerCredentials.getImapHost(), newMailServerCredentials.getUsername(),
-                            newMailServerCredentials.getPassword()), "Drafts");
+                    /* print out draft messages */
+                    String fetchedMails = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(newMailServerCredentials.getImapHost(),
+                            newMailServerCredentials.getUsername(), newMailServerCredentials.getPassword()), "Drafts");
                     System.out.println(fetchedMails);
-*/
+
                 } else {
                     askForChangeMailServerSettingsDialog(name, email, password);
                 }
