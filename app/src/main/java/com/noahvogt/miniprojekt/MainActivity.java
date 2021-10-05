@@ -314,22 +314,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Python.start(new AndroidPlatform(this));
         }
 
+
+
         /* store user input */
         newemail_save_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                /* store user input (only needed for DEBUGGING) */
+                /* store user input */
                 String name = newemail_name.getText().toString();
                 String email = newemail_email.getText().toString();
                 String password = newemail_password.getText().toString();
 
-                if (!MailFunctions.validateEmail(newemail_email) | !MailFunctions.validateName(newemail_name) | !MailFunctions.validatePassword(newemail_password)) {
+                if (!MailFunctions.validateEmail(newemail_email) | !MailFunctions.validateName(newemail_name) |
+                        !MailFunctions.validatePassword(newemail_password)) {
                     return;
                 }
 
-
-                /* connect to mail server and print various debugging output */
+                /* connect to mail server */
                 showToast("Probe Connection ...");
                 if (MailFunctions.canConnect(MailFunctions.getImapHostFromEmail(email), email, password) == Boolean.TRUE) {
                     showToast("was able to connect");
@@ -340,59 +341,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     // startActivity(intent);
                     // startActivityForResult(intent, MainActivity.NEW_WORD_ACTIVITY_REQUEST_CODE);
 
-
-                    // List folders =  MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(MailFunctions.getImapHostFromEmail(email), email, password));
-                    // for (int i = 0; i < folders.size(); i++) {
-                    //     showToast(folders.get(i).toString());
-                    //     // TODO: select right folder to store, Synchronization
-                    //     /*gives list of Message Objects/dictionaries
-                    // List p = MailFunctions.fetchMailsFromBox(
-                    //             MailFunctions.getIMAPConnection(
-                    //                     MailFunctions.getImapHostFromEmail(email), email, password),
-                    //             folders.get(i).toString(), "list");
-                    //     System.out.println(folders.get(i).toString());
-                    //     System.out.println(p);
-                    // }
-
-
-
                     /* TODO: replace legacy strings down below completely with serialized settings json string */
                     preferencesEditor.putString("name", name);
                     preferencesEditor.putString("email", email);
                     preferencesEditor.putString("password", password);
                     preferencesEditor.apply();
 
-                    /* init custom gson with hook to parse booleans correctly */
-                    GsonBuilder builder = new GsonBuilder();
-                    builder.registerTypeAdapter(Boolean.class, new BooleanTypeAdapter());
-                    Gson gson = builder.create();
-
-                    /* safe mail server login credentials */
-                    MailServerCredentials newMailServerCredentials = new MailServerCredentials(
-                            name, email, password, MailFunctions.getImapHostFromEmail(email), MailFunctions.getSmtpHostFromEmail(email), 993, 587, "");
-                    String newCredentialsJson = gson.toJson(newMailServerCredentials);
-                    System.out.println(newCredentialsJson);
-                    credentialsEditor.putString("data", newCredentialsJson);
-                    credentialsEditor.apply();
-
-                    /* download all messages from mail server */
+                    Gson gson = new Gson();
 
                     /* read login credentials from SharedPreferences */
-                    SharedPreferences credentialsReader = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
-                    String readJsonData = credentialsReader.getString("data", "");
-                    MailServerCredentials readMailServerCredentials = gson.fromJson(readJsonData, MailServerCredentials.class);
+                    SharedPreferences initialCredentialsReader = getSharedPreferences(
+                            "Credentials", Context.MODE_PRIVATE);
+                    String initialReadJsonData = initialCredentialsReader.getString("data", "");
+                    Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>(){}.getType();
+                    ArrayList<MailServerCredentials> allUsersCredentials = gson.fromJson(initialReadJsonData, credentialsType);
 
-                    /* fetch and print draft messages */
-                    String fetchedMails = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(newMailServerCredentials.getImapHost(),
-                            newMailServerCredentials.getUsername(), newMailServerCredentials.getPassword(), newMailServerCredentials.getImapPort()), "Drafts");
-                    System.out.println(fetchedMails);
+                    /* check for unique email */
+                    boolean newEmailIsUnique = true;
+                    try {
+                        for (int i = 0; i < allUsersCredentials.size(); i++) {
+                            System.out.println("User #" + i + 1);
+                            System.out.println(allUsersCredentials.get(i).getUsername());
+                            if (allUsersCredentials.get(i).getUsername().equals(email)) {
+                                newEmailIsUnique = false;
+                                break;
+                            }
+                        }
+                    } catch (NullPointerException e) {
+                        System.out.println("creating new arraylist for user credentials, as it seems to be empty");
+                        allUsersCredentials = new ArrayList<>();
+                    }
 
-                    /* parse messages in arraylist of Message class and loop through it */
-                    Type messageType = new TypeToken<ArrayList<Message>>(){}.getType();
-                    ArrayList<Message> messages = gson.fromJson(fetchedMails, messageType);
-                    for (int i = 0; i < messages.size(); i++) {
-                        System.out.println("Message #" + i);
-                        System.out.println(messages.get(i).toString());
+                    /* add new email account if the email hasn't been entered before */
+                    if (newEmailIsUnique) {
+                        allUsersCredentials.add(new MailServerCredentials(name, email, password,
+                                MailFunctions.getImapHostFromEmail(email), MailFunctions.getSmtpHostFromEmail(email), 993,
+                                587, ""));
+                        credentialsEditor.putString("data", gson.toJson(allUsersCredentials, credentialsType));
+                        credentialsEditor.putString("currentUser", email);
+                        credentialsEditor.apply();
+                        showToast("Success: added new email account");
+                    } else {
+                        showToast("Error: cannot add the same email twice");
                     }
                 } else {
                     askForChangeMailServerSettingsDialog(name, email, password);

@@ -20,15 +20,15 @@ public class MailServerCredentials {
     public String getSignature () {return this.mSignature;}
 
     public MailServerCredentials(String name, String username, String password, String imapHost, String smtpHost, int imapPort, int smtpPort, String signature) {
-        mName = name;
-        mUsername = username;
-        mPassword = password;
+        this.mName = name;
+        this.mUsername = username;
+        this.mPassword = password;
 
-        mImapHost = imapHost;
-        mImapPort = imapPort;
-        mSmtpPort = smtpPort;
-        mSmtpHost = smtpHost;
+        this.mImapHost = imapHost;
+        this.mImapPort = imapPort;
+        this.mSmtpPort = smtpPort;
+        this.mSmtpHost = smtpHost;
 
-        mSignature = signature;
+        this.mSignature = signature;
     }
 }
