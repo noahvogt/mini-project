@@ -20,6 +20,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.noahvogt.miniprojekt.DataBase.Message;
 
 import androidx.fragment.app.Fragment;
@@ -44,7 +46,9 @@ import com.noahvogt.miniprojekt.data.EmailViewModel;
 import com.noahvogt.miniprojekt.data.MailFunctions;
 import com.noahvogt.miniprojekt.data.ReadInMailsActivity;
 import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
+import com.noahvogt.miniprojekt.data.BooleanTypeAdapter;
 
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -378,11 +382,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     credentialsEditor.putStringSet("UserSettings", newSet);
                     credentialsEditor.commit();*/
 
-                    Gson gson = new Gson();
+                    GsonBuilder builder = new GsonBuilder();
+                    builder.registerTypeAdapter(Boolean.class, new BooleanTypeAdapter());
+                    Gson gson = builder.create();
+                    //Gson gson = new Gson();
 
                     /* safe mail server login credentials */
                     MailServerCredentials newMailServerCredentials = new MailServerCredentials(
-                            name, email, password, MailFunctions.getImapHostFromEmail(email), MailFunctions.getSmtpHostFromEmail(email), 993, "");
+                            name, email, password, MailFunctions.getImapHostFromEmail(email), MailFunctions.getSmtpHostFromEmail(email), 993, 587, "");
                     String newCredentialsJson = gson.toJson(newMailServerCredentials);
                     System.out.println(newCredentialsJson);
                     credentialsEditor.putString("data", newCredentialsJson);
@@ -398,8 +405,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     /* print out draft messages */
                     String fetchedMails = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(newMailServerCredentials.getImapHost(),
-                            newMailServerCredentials.getUsername(), newMailServerCredentials.getPassword()), "Drafts");
+                            newMailServerCredentials.getUsername(), newMailServerCredentials.getPassword(), newMailServerCredentials.getImapPort()), "Drafts");
                     System.out.println(fetchedMails);
+
+                    Type messageType = new TypeToken<ArrayList<Message>>(){}.getType();
+                    ArrayList<Message> messages = gson.fromJson(fetchedMails, messageType);
+                    for (int i = 0; i < messages.size(); i++) {
+                        System.out.println("Message #" + i);
+                        System.out.println(messages.get(i).toString());
+                    }
+
 
                 } else {
                     askForChangeMailServerSettingsDialog(name, email, password);
