@@ -64,11 +64,13 @@ public class MailFunctions {
         if (topLevelHost.endsWith("edubs.ch")) {
             return "teamwork.edubs.ch";
 
-        }else if (topLevelHost.endsWith("yahoo.com")){
+        } else if (topLevelHost.endsWith("yahoo.com")){
             return "imap.mail.yahoo.com";
 
+        } else if (topLevelHost.equals("noahvogt.com")) {
+            return "mail.noahvogt.com";
         } else {
-            return "imap." + topLevelHost;
+                return "imap." + topLevelHost;
         }
     }
 
@@ -79,8 +81,9 @@ public class MailFunctions {
 
         } else if (topLevelHost.endsWith("yahoo.com")){
             return "smtp.mail.yahoo.com";
-        }
-        else {
+        } else if (topLevelHost.endsWith("edubs.ch")) {
+            return "smtp.edubs.ch";
+        } else {
             return "smtp." + topLevelHost;
         }
     }
