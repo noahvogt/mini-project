@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AlertDialog dialog;
     private EditText newemail_name, newemail_email, newemail_password; /* may not be private */
 
-    SharedPreferences preferences, mailServerCredentials;
+    SharedPreferences mailServerCredentials;
 
     /* leave descriptor empty */
     public MainActivity() {}
@@ -124,8 +124,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         /* invoke preferences */
-        preferences = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
-
         mailServerCredentials = getSharedPreferences("Credentials", Context.MODE_PRIVATE);
 
         /* invoke toolbar */
@@ -311,19 +309,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void addNewAccountCredentials(String name, String email, String password, int imapPort,
                                          int smtpPort, String imapHost, String smtpHost, DialogInterface dialogContext,
                                          boolean wantConnectionFailedDialog) {
-        SharedPreferences.Editor preferencesEditor = preferences.edit();
         credentialsEditor = mailServerCredentials.edit();
 
         /* connect to mail server */
         showToast("Probe Connection ...");
         if (MailFunctions.canConnect(MailFunctions.getImapHostFromEmail(email), email, password) == Boolean.TRUE) {
             showToast("was able to connect");
-
-            /* TODO: replace legacy strings down below completely with serialized settings json string */
-            preferencesEditor.putString("name", name);
-            preferencesEditor.putString("email", email);
-            preferencesEditor.putString("password", password);
-            preferencesEditor.apply();
 
             Gson gson = new Gson();
 
@@ -389,7 +380,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialog = dialogBuilder.create();
         dialog.show();
 
-        SharedPreferences.Editor preferencesEditor = preferences.edit();
         credentialsEditor = mailServerCredentials.edit();
 
         /* store user input */

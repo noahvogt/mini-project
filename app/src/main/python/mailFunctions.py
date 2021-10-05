@@ -154,12 +154,13 @@ def fetchMails(connection, inbox):
             # set subject to an empty string when not found
             try:
                 if raw_string[1] == 'utf-8':
-                    subject = raw_string[0].raw_string('utf-8')
+                    subject = raw_string[0].decode('utf-8')
+                elif raw_string[1] == 'iso-8859-1':
+                    subject = raw_string[0].decode('iso-8859-1')
                 else:
-                    subject = raw_string[0].decode("iso-8859-1")
-                            #nonNoneList.append(str(item.decode("iso-8859-1")))
+                    subject = str(raw_string[0])
             except AttributeError:
-                subject=""
+                 subject = str(raw_string[0])
 
             output_dict['subject'] = subject
             output_dict['from'] = stringCompiling(raw_from)
