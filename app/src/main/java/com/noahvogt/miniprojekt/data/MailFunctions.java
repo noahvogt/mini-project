@@ -22,10 +22,10 @@ public class MailFunctions {
         pythonMailFunctions.callAttr("sendStarttls", host, sendingMail, receivingMail, password, message, subject, 587, cc, bcc);
     }
 
-    public static PyObject getIMAPConnection(String host, String email, String password) {
+    public static PyObject getIMAPConnection(String host, String email, String password, int port) {
         Python python = Python.getInstance();
         PyObject pythonMailFunctions = python.getModule("mailFunctions");
-        return pythonMailFunctions.callAttr("connect", host, email, password, 993);
+        return pythonMailFunctions.callAttr("connect", host, email, password, port);
     }
 
     public static List listMailboxes(PyObject IMAPConnection) {
@@ -34,12 +34,19 @@ public class MailFunctions {
         return pythonMailFunctions.callAttr("listMailboxes", IMAPConnection).asList();
     }
 
+<<<<<<< HEAD
     public static PyObject fetchMailsFromBox(PyObject IMAPConnection, String Folder) {
         Python python = Python.getInstance();
         PyObject pythonMailFunctions = python.getModule("mailFunctions");
         System.out.println(pythonMailFunctions);
         System.out.println("YAAAAAAYYYY " + pythonMailFunctions.callAttr("fetchMails", IMAPConnection, Folder).toString() + "\n For REAAALLL");
         return pythonMailFunctions.callAttr("fetchMails", IMAPConnection, Folder);
+=======
+    public static String fetchMailsFromBox(PyObject IMAPConnection, String Folder) {
+        Python python = Python.getInstance();
+        PyObject pythonMailFunctions = python.getModule("mailFunctions");
+        return pythonMailFunctions.callAttr("fetchMails", IMAPConnection, Folder).toString();
+>>>>>>> 5f6a1c7705d3f893ac179bbc5641f5813f31fb08
     }
 
 

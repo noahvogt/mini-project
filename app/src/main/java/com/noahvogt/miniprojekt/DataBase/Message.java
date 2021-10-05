@@ -5,6 +5,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 /* @Embedded to express entitys together
  *  https://developer.android.com/training/data-storage/room/relationships
  * to learn more */
@@ -18,34 +20,42 @@ public class Message {
     /* name of Columm */
     @NonNull
     @ColumnInfo(name = "to")
+    @SerializedName("to")
     private String mTo ;
 
-
     @ColumnInfo(name = "cc")
+    @SerializedName("cc")
     private String mCc;
 
     @ColumnInfo(name = "bcc")
+    @SerializedName("bcc")
     private String mBcc; //blind carpet copy, not see who sees mails
 
     @NonNull
     @ColumnInfo(name = "fromEmail")
+    @SerializedName("from")
     private String mFrom;
 
     @NonNull
     @ColumnInfo(name = "date")
+    @SerializedName("date")
     private String mDate;
 
     @ColumnInfo(name = "subject")
+    @SerializedName("subject")
     private String mSubject;
 
     @ColumnInfo(name = "textContent")
+    @SerializedName("content")
     private String mTextContent;
 
     @NonNull
     @ColumnInfo(name = "folder")
+    @SerializedName("folder")
     private String mFolder;
 
     @ColumnInfo(name = "seen")
+    @SerializedName("seen")
     private boolean mSeen;
 
     public String getTo(){return this.mTo;}
