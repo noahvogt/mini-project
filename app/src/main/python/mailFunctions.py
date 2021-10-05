@@ -1,8 +1,6 @@
 import imaplib, smtplib, ssl, email, os, json
 from itertools import chain
 
-
-
 # format raw string you get from fetching mails
 def stringCompiling(inputIterable):
     # remove first nested iterables
@@ -81,6 +79,7 @@ def listMailboxes(connection):
     connection.logout()
     return formatted_mailbox_list
 
+
     # check that there are no bytes anymore that cannot be dumped into a json
 def verifyNoBytes(messages, output_list):
     for messages in output_list:
@@ -112,7 +111,7 @@ def fetchMails(connection, inbox):
     #N = 3
     # total number of emails
     messages_int = int(messages[0])
-    #print("message_int------\n" + str(messages_int))
+    print("message_int------\n" + str(messages_int))
 
     output_list = []
 
@@ -176,21 +175,6 @@ def fetchMails(connection, inbox):
                 # make sure the fetch command doesn't add a SEEN flag
                 connection.store(num, '-FLAGS', '(\Seen)')
 
-
-            output_dict['subject'] = subject
-            output_dict['from'] = stringCompiling(raw_from)
-            output_dict['cc'] = stringCompiling(raw_cc)
-            output_dict['bcc'] = stringCompiling(raw_bcc)
-            output_dict['to'] = stringCompiling(raw_to)
-            output_dict['date'] = stringCompiling(raw_date)
-            output_dict['content'] = primitive_body
-            if seentype == '(SEEN)':
-                output_dict['seen'] = "True"
-            else:
-                output_dict['seen'] = "False"
-                # make sure the fetch command doesn't add a SEEN flag
-                connection.store(num, '-FLAGS', '(\Seen)')
-
             output_list.append(output_dict)
 
 
@@ -202,6 +186,7 @@ def fetchMails(connection, inbox):
     print("Finstep")
 
     return json.dumps(output_list)
+
 
 def sendStarttls(host, sendingMail, receivingMail, password, message="", subject="", port=587, cc=[], bcc=[]):
     context = ssl.create_default_context()
