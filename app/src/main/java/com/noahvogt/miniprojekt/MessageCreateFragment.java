@@ -228,8 +228,6 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
                 } else {
                     Toast.makeText(getActivity(), "Please check your input", Toast.LENGTH_SHORT).show();
                 }
-
-                /* TODO: implement actual sending functionality */
             }
         });
 

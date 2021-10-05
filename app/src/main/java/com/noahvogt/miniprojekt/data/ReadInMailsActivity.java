@@ -34,12 +34,12 @@ public class ReadInMailsActivity extends AppCompatActivity {
                 //showToast(folders.get(i).toString());
                 // TODO: select right folder to store, Synchronization
                 /*gives list of Message Objects/dictionaries */
-                List p = MailFunctions.fetchMailsFromBox(
-                        MailFunctions.getIMAPConnection(
-                                MailFunctions.getImapHostFromEmail(mEmail), mEmail, mPassword),
-                        folders.get(i).toString());
-                System.out.println(folders.get(i).toString());
-                System.out.println(p);
+                //List p = MailFunctions.fetchMailsFromBox(
+                //        MailFunctions.getIMAPConnection(
+                //                MailFunctions.getImapHostFromEmail(mEmail), mEmail, mPassword),
+                //        folders.get(i).toString());
+                //System.out.println(folders.get(i).toString());
+                //System.out.println(p);
             }
         }
 

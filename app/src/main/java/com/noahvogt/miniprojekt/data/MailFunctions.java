@@ -34,10 +34,10 @@ public class MailFunctions {
         return pythonMailFunctions.callAttr("listMailboxes", IMAPConnection).asList();
     }
 
-    public static List fetchMailsFromBox(PyObject IMAPConnection, String Folder) {
+    public static String fetchMailsFromBox(PyObject IMAPConnection, String Folder) {
         Python python = Python.getInstance();
         PyObject pythonMailFunctions = python.getModule("mailFunctions");
-        return pythonMailFunctions.callAttr("fetchMails", IMAPConnection, Folder).asList();
+        return pythonMailFunctions.callAttr("fetchMails", IMAPConnection, Folder).toString();
     }
 
 
