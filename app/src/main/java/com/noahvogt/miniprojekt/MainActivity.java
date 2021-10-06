@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AlertDialog dialog;
     private EditText newemail_name, newemail_email, newemail_password; /* may not be private */
 
-    SharedPreferences preferences, mailServerCredentials;
+    SharedPreferences mailServerCredentials;
 
     /* leave descriptor empty */
     public MainActivity() {}
@@ -136,8 +136,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         /* invoke preferences */
-        preferences = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
-
         mailServerCredentials = getSharedPreferences("Credentials", Context.MODE_PRIVATE);
 
         /* invoke toolbar */
@@ -256,12 +254,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         final View changeMailServerSettingsView = getLayoutInflater().inflate(R.layout.mail_credentials_customizer, null);
 
+        /* access objects */
         EditText incomingServerObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_incoming_server_text);
         EditText outgoingServerObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_outgoing_server_text);
         EditText incomingPortObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_incoming_port_text);
         EditText outgoingPortObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_outgoing_port_text);
         EditText serverUsernameObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_username_text);
         EditText passwordObject = (EditText) changeMailServerSettingsView.findViewById(R.id.custom_mail_server_password_text);
+        Button saveButton = (Button) changeMailServerSettingsView.findViewById(R.id.saveCustomizeButton);
+        Button cancelButton = (Button) changeMailServerSettingsView.findViewById(R.id.cancelCustomizeButton);
 
         /* set assumed input in corresponding fields */
         incomingServerObject.setText(MailFunctions.getImapHostFromEmail(email));
@@ -277,6 +278,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialogBuilder.setView(changeMailServerSettingsView);
         dialog = dialogBuilder.create();
         dialog.show();
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addNewAccountCredentials(name, serverUsernameObject.getText().toString(), passwordObject.getText().toString(),
+                        Integer.parseInt(incomingPortObject.getText().toString()), Integer.parseInt(outgoingPortObject.getText().toString()),
+                        incomingServerObject.getText().toString(), outgoingServerObject.getText().toString(), dialog, false);
+            }
+        });
+
+        cancelButton.setOnClickListener(v -> dialog.dismiss());
     }
 
     public void askForChangeMailServerSettingsDialog(String name, String email, String password) {
@@ -294,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 })
                 .setNegativeButton("No",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
+                    public void onClick(DialogInterface dialog, int id) {
                         /* if this button is clicked, close the hole fragment */
                         dialog.dismiss();
                     }
@@ -334,6 +346,59 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String password;
     Data.Builder builder = new Data.Builder();
 
+    public void addNewAccountCredentials(String name, String email, String password, int imapPort,
+                                         int smtpPort, String imapHost, String smtpHost, DialogInterface dialogContext,
+                                         boolean wantConnectionFailedDialog) {
+        credentialsEditor = mailServerCredentials.edit();
+
+        /* connect to mail server */
+        showToast("Probe Connection ...");
+        if (MailFunctions.canConnect(MailFunctions.getImapHostFromEmail(email), email, password) == Boolean.TRUE) {
+            showToast("was able to connect");
+
+            Gson gson = new Gson();
+
+            /* read login credentials from SharedPreferences */
+            SharedPreferences initialCredentialsReader = getSharedPreferences(
+                    "Credentials", Context.MODE_PRIVATE);
+            String initialReadJsonData = initialCredentialsReader.getString("data", "");
+            Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>(){}.getType();
+            ArrayList<MailServerCredentials> allUsersCredentials = gson.fromJson(initialReadJsonData, credentialsType);
+
+            /* check for unique email */
+            boolean newEmailIsUnique = true;
+            try {
+                for (int i = 0; i < allUsersCredentials.size(); i++) {
+                    if (allUsersCredentials.get(i).getUsername().equals(email)) {
+                        newEmailIsUnique = false;
+                        break;
+                    }
+                }
+            } catch (NullPointerException e) {
+                System.out.println("creating new arraylist for user credentials, as it seems to be empty");
+                allUsersCredentials = new ArrayList<>();
+            }
+
+            /* add new email account if the email hasn't been entered before */
+            if (newEmailIsUnique) {
+                allUsersCredentials.add(new MailServerCredentials(name, email, password, imapHost, smtpHost, imapPort,
+                        smtpPort, ""));
+                credentialsEditor.putString("data", gson.toJson(allUsersCredentials, credentialsType));
+                credentialsEditor.putString("currentUser", email);
+                credentialsEditor.apply();
+                showToast("Success: added new email account");
+                dialogContext.dismiss();
+            } else {
+                showToast("Error: cannot add the same email twice");
+            }
+        } else {
+            if (wantConnectionFailedDialog)
+                askForChangeMailServerSettingsDialog(name, email, password);
+            else
+                showToast("Error: failed to get connection");
+        }
+    }
+
     public void createNewEmailDialog(){
         /* define View window */
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -355,41 +420,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialog = dialogBuilder.create();
         dialog.show();
 
-        SharedPreferences.Editor preferencesEditor = preferences.edit();
         credentialsEditor = mailServerCredentials.edit();
-
-        if (! Python.isStarted()) {
-            Python.start(new AndroidPlatform(this));
-        }
 
         /* store user input */
         newemail_save_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                /* store user input (only needed for DEBUGGING) */
-                name = newemail_name.getText().toString();
-                email = newemail_email.getText().toString();
-                password = newemail_password.getText().toString();
 
                 builder = new Data.Builder();
                 builder.putString(emailData, email)
                         .putString(passwordData, password)
                         .putString(nameData, name);
 
-                if (!MailFunctions.validateEmail(newemail_email) | !MailFunctions.validateName(newemail_name) | !MailFunctions.validatePassword(newemail_password)) {
-                    return;
-                }
                 /* connect to mail server and print various debugging output */
                 showToast("Probe Connection ...");
                 if (MailFunctions.canConnect(MailFunctions.getImapHostFromEmail(email), email, password) == Boolean.TRUE) {
                     showToast("was able to connect");
 
-                    /* TODO: replace legacy strings down below completely with serialized settings json string */
-                    preferencesEditor.putString("name", name);
-                    preferencesEditor.putString("email", email);
-                    preferencesEditor.putString("password", password);
-                    preferencesEditor.apply();
 
                     dialog.dismiss();
                     /*makes request to worker and gives data to it*/
@@ -398,14 +446,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     askForChangeMailServerSettingsDialog(name, email, password);
                 }
-            }
-        });
 
 
-        newemail_cancel_button.setOnClickListener(v -> dialog.dismiss());
 
-    }
+                /* store user input */
+                String name = newemail_name.getText().toString();
+                String email = newemail_email.getText().toString();
+                String password = newemail_password.getText().toString();
 
+                /* validate user input before connecting */
+                if (!MailFunctions.validateEmail(newemail_email) | !MailFunctions.validateName(newemail_name) |
+                        !MailFunctions.validatePassword(newemail_password)) {
+                    return;
+                }
+
+                addNewAccountCredentials(name, email, password, 993, 587, MailFunctions.getImapHostFromEmail(email),
+                        MailFunctions.getSmtpHostFromEmail(email), dialog, true);
+        }});
+
+    newemail_cancel_button.setOnClickListener(v -> dialog.dismiss());
+ }
 
     /* show debug output in  specific view */
     private void showSnackbar(View View, String text) {

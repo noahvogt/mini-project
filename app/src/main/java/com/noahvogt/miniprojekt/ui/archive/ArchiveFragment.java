@@ -61,7 +61,7 @@ public class ArchiveFragment extends Fragment implements CustomAdapter.SelectedM
         archiveViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                textView.setText(s);
+
             }
         });
         return root;

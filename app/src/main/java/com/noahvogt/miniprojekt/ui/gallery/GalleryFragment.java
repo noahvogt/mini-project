@@ -45,7 +45,6 @@ public class GalleryFragment extends Fragment implements CustomAdapter.SelectedM
         galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                textView.setText(s);
             }
         });
 

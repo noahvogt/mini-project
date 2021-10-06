@@ -38,7 +38,7 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
         dateItemView = itemView.findViewById(R.id.date);
         messageItemView = itemView.findViewById(R.id.message);
         System.out.println("Called EmailViewHolder");
-        
+
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -63,7 +63,7 @@ public class SpamFragment extends Fragment implements CustomAdapter.SelectedMess
         spamViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                textView.setText(s);
+                
             }
         });
         return root;
