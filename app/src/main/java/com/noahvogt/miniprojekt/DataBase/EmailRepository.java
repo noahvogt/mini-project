@@ -32,7 +32,6 @@ public class EmailRepository {
         mArchiveLiveMessage = messageDao.getLiveArchiveMessages();
         mSentLiveMessage = messageDao.getLiveSentMessages();
         mSpamLiveMessage = messageDao.getLiveSpamMessages();
-        //mAllMessages = messageDao.getAllMessages();
     }
 
     // Room executes all queries on a separate thread.
@@ -75,21 +74,15 @@ public class EmailRepository {
         });
     }
 
-    public void deleteFolder(final String folder){
+    public void updateFolder(final int id, String folder){
         EmailRoomDatabase.databaseWriteExecutor.execute(() -> {
-            messageDao.deleteFolder(folder);
+            messageDao.updateFolder(id ,folder);
         });
     }
 
-    public void deleteAll(final String folder){
+    public void updateDate(final int id, final String date){
         EmailRoomDatabase.databaseWriteExecutor.execute(() -> {
-            messageDao.deleteAll(folder);
-        });
-    }
-
-    public void updateMessage(final int id, String folder){
-        EmailRoomDatabase.databaseWriteExecutor.execute(() -> {
-            messageDao.updateMessage(id ,folder);
+            messageDao.updateDate(id, date);
         });
     }
 }

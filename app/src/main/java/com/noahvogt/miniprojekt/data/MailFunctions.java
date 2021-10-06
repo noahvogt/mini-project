@@ -35,10 +35,10 @@ public class MailFunctions {
     }
 
 
-    public static String fetchMailsFromBox(PyObject IMAPConnection, String Folder) {
+    public static String fetchMailsFromBox(PyObject IMAPConnection, String FolderServer, String FolderLocal) {
         Python python = Python.getInstance();
         PyObject pythonMailFunctions = python.getModule("mailFunctions");
-        return pythonMailFunctions.callAttr("fetchMails", IMAPConnection, Folder).toString();
+        return pythonMailFunctions.callAttr("fetchMails", IMAPConnection, FolderServer, FolderLocal).toString();
     }
 
 

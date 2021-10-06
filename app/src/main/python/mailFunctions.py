@@ -97,7 +97,7 @@ def verifyNoBytes(messages, output_list):
                 print("ERROREXIT")
                 exit()
 
-def fetchMails(connection, inbox):
+def fetchMails(connection, inbox, folderLocal):
     #print("###" + inbox + "###")
     #print(type(inbox))
     try:
@@ -170,8 +170,9 @@ def fetchMails(connection, inbox):
             output_dict['to'] = stringCompiling(raw_to)
             output_dict['date'] = stringCompiling(raw_date)
             output_dict['content'] = primitive_body
-            output_dict['folder'] = inbox
-            print('Folder: ' + inbox)
+            output_dict['folder'] = folderLocal
+            print('FolderServer: ' + inbox)
+            print('FolderLocal: ' + folderLocal)
             print('From: ' + stringCompiling(raw_from))
             print('Outputdictionary: ' + str(output_dict))
 

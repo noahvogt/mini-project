@@ -220,8 +220,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          //   if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
                 Message word = new Message(
                         MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_TO),
-                        null,
-                        null,
+                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_CC),
+                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_BCC),
                         MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_FROM),
                         ft.format(dNow),
                         MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_SUBJECT),
@@ -332,7 +332,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String name;
     String email;
     String password;
-    Data.Builder builder;
+    Data.Builder builder = new Data.Builder();
 
     public void createNewEmailDialog(){
         /* define View window */

@@ -29,7 +29,10 @@ public interface MessageDao {
     void deleteAll(String folder);
 
     @Query("UPDATE message_table SET folder = :folder WHERE id = :id")
-    void updateMessage(int id, String folder);
+    void updateFolder(int id, String folder);
+
+    @Query("UPDATE message_table SET date = :date WHERE id = :id")
+    void updateDate(int id, String date);
 
 
     @Query("SELECT * FROM message_table ORDER BY id ASC")

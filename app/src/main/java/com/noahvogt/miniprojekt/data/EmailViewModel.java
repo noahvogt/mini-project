@@ -48,8 +48,8 @@ public class EmailViewModel extends AndroidViewModel {
     public void applyDownload(Data data){
         OneTimeWorkRequest downloadRequest =
                 new OneTimeWorkRequest.Builder(DownloadWorker.class)
-                .setInputData(data)
-                .build();
+                        .setInputData(data)
+                        .build();
 
         mWorkManager.enqueue(downloadRequest);
     }
@@ -123,7 +123,9 @@ public class EmailViewModel extends AndroidViewModel {
 
     public void deleteMessage(Message message){mEmailRepository.deleteMessage(message);}
 
-    public void updateMessage(int id, String folder){mEmailRepository.updateMessage(id, folder);}
+    public void updateFolder(int id, String folder){mEmailRepository.updateFolder(id, folder);}
+
+    public void updateDate(int id, String date){ mEmailRepository.updateDate(id, date); }
 
 
 }

@@ -32,8 +32,8 @@ public abstract class EmailRoomDatabase extends RoomDatabase{
         }
     };
 
-    /* creating 4 threads */
-    private static final int NUMBER_OF_THREADS = 4;
+    /* creating n threads */
+    private static final int NUMBER_OF_THREADS = 6;
     static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
