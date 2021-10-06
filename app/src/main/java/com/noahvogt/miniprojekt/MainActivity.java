@@ -209,6 +209,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
 
+                /* needed to use array in inner method later */
+                String[] finalUserArray = userArray;
+
                 deleteAccountObject.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -221,6 +224,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             for (int i = 0; i < currentUserCredentials.size(); i++) {
                                 if (currentUserCredentials.get(i).getUsername().equals(userInput)) {
                                     currentUserCredentials.remove(i);
+
+                                    /* live update adapter for dropdown menu */
+
+                                    int k = 0;
+                                    String[] newUserArray = new String[finalUserArray.length - 1];
+                                    for (String s : finalUserArray) {
+                                        if (!s.contains(userInput)) {
+                                            newUserArray[k] = s;
+                                            k++;
+                                        }
+                                    }
+
+                                    ArrayAdapter<String> newDropDownAdapter = new ArrayAdapter<String>(getApplicationContext(),
+                                            R.layout.dropdown_item, R.id.textViewDropDownItem, newUserArray);
+                                    accountSelectorObject.setAdapter(newDropDownAdapter);
+
+                                    showCurrentUserObject.setText(R.string.NoEmailsInDropDownMenuAvailable);
+
+                                    /* update credentials strings */
                                     credEditor.putString("data", gson.toJson(currentUserCredentials, credentialsType)).apply();
                                     if (!currentUserCredentials.isEmpty()) {
                                         String usernameZero = currentUserCredentials.get(0).getUsername();
@@ -274,15 +296,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
 
-
-
-
         /* Lookup the recyclerview in activity layout */
         recyclerView = findViewById(R.id.recyclerView);
 
         final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff(),this);
-
-
 
         /* Attach the adapter to the recyclerview to populate items */
         recyclerView.setAdapter(adapter);
@@ -319,8 +336,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         message_create_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment dialog = MessageCreateFragment.newInstance();
-                dialog.show(getSupportFragmentManager(), "tag");
+                DialogFragment dialogFragment = MessageCreateFragment.newInstance();
+                dialogFragment.show(getSupportFragmentManager(), "tag");
             }
         });
 
@@ -428,8 +445,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         /* open View window */
         dialogBuilder.setView(changeMailServerSettingsView);
-        dialog = dialogBuilder.create();
-        dialog.show();
+        AlertDialog rootChangeServerSettingsDialog = dialogBuilder.create();
+        rootChangeServerSettingsDialog.show();
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -437,18 +454,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (wantToAddNew) {
                     addNewAccountCredentials(name, serverUsernameObject.getText().toString(), passwordObject.getText().toString(),
                             Integer.parseInt(incomingPortObject.getText().toString()), Integer.parseInt(outgoingPortObject.getText().toString()),
-                            incomingServerObject.getText().toString(), outgoingServerObject.getText().toString(), dialog, false,
+                            incomingServerObject.getText().toString(), outgoingServerObject.getText().toString(), rootChangeServerSettingsDialog, false,
                             headerView);
                 } else {
                     changeAccountCredentials(name, serverUsernameObject.getText().toString(),
                             passwordObject.getText().toString(), Integer.parseInt(incomingPortObject.getText().toString()),
                             Integer.parseInt(outgoingPortObject.getText().toString()), incomingServerObject.getText().toString(),
-                            outgoingServerObject.getText().toString(), dialog, headerView, email);
+                            outgoingServerObject.getText().toString(), rootChangeServerSettingsDialog, headerView, email);
                 }
             }
         });
 
-        cancelButton.setOnClickListener(v -> dialog.dismiss());
+        cancelButton.setOnClickListener(v -> rootChangeServerSettingsDialog.dismiss());
     }
 
     public void askForChangeMailServerSettingsDialog(String name, String email, String password, View headerView) {
@@ -468,13 +485,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 })
                 .setNegativeButton("No",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+                    public void onClick(DialogInterface dialogInput, int id) {
                         /* if this button is clicked, close the hole fragment */
-                        dialog.dismiss();
+                        dialogInput.dismiss();
                     }
                 });
-        dialog = dialogBuilder.create();
-        dialog.show();
+        AlertDialog rootAskForChangeServerDialog = dialogBuilder.create();
+        rootAskForChangeServerDialog.show();
     }
 
     public static MailServerCredentials newMailServerCredentials;
@@ -588,8 +605,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         /* open View window */
         dialogBuilder.setView(emailPopupView);
-        dialog = dialogBuilder.create();
-        dialog.show();
+        AlertDialog rootCreateNewEmailPopupDialog = dialogBuilder.create();
+        rootCreateNewEmailPopupDialog.show();
 
         credentialsEditor = mailServerCredentials.edit();
 
@@ -609,19 +626,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
                 addNewAccountCredentials(name, email, password, 993, 587, MailFunctions.getImapHostFromEmail(email),
-                        MailFunctions.getSmtpHostFromEmail(email), dialog, true, headerView);
+                        MailFunctions.getSmtpHostFromEmail(email), rootCreateNewEmailPopupDialog, true, headerView);
         }});
 
-        newemail_cancel_button.setOnClickListener(v -> dialog.dismiss());
+        newemail_cancel_button.setOnClickListener(v -> rootCreateNewEmailPopupDialog.dismiss());
     }
 
-    /* show debug output in  specific view */
-    private void showSnackbar(View View, String text) {
-        Snackbar.make(View, text, Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
-    }
-
-    /* like showSnackbar(), but global and uglier */
+    /* print relatively globally messages at the bottom of the screen */
     private void showToast(String text) {
         Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
     }
@@ -631,17 +642,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void selectedMessage(Message messages, EmailViewModel emailViewModel) {
         DialogFragment dialog = MessageShowFragment.newInstance(messages, mEmailViewModel);
         dialog.show(getSupportFragmentManager(), "tag");
-
     }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_refresh:
-
-                return true;
-        }
-        return false;
+        return item.getItemId() == R.id.action_refresh;
     }
 }
 

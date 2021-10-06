@@ -68,5 +68,6 @@
     <string name="empty_not_saved">Email not saved because it was empty.</string>
     <string name="noAccountsAddedNavHeaderMessageEmail">No Account added</string>
     <string name="noAccountsAddedNavHeaderMessageName">No Email added</string>
+    <string name="NoEmailsInDropDownMenuAvailable">None</string>
 </resources>
 
