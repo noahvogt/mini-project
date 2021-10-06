@@ -47,6 +47,10 @@ def checkConnection(host, username, password, port):
         connection.logout()
         return True
     except Exception as e:
+        print("host: " + host)
+        print("username: " + username)
+        print("password: " + password)
+        print("port: " + str(port))
         print(str(e))
         return False
 

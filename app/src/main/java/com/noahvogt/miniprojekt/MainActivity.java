@@ -66,6 +66,7 @@ import com.google.gson.Gson;
 
 
 import static com.noahvogt.miniprojekt.R.id.drawer_layout;
+import static com.noahvogt.miniprojekt.R.id.exitButton;
 
 import org.w3c.dom.Text;
 
@@ -111,16 +112,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /* define button listeners */
-
-
-
-        /*creates account manager by clicking on profile */
+        /* show account manager when clicking on profile */
         View accountView = findViewById(R.id.accountView);
         accountView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                /* define View window */
+            public void onClick(View onClickView) {
+                /* define dialog */
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
                 final View accountManagerView = getLayoutInflater().inflate(R.layout.account_manager, null);
 
@@ -128,15 +125,67 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         (AutoCompleteTextView) accountManagerView.findViewById(R.id.accountSelectorTextView);
 
                 /* get string data for drop down menu */
-                String[] dummyMails = getResources().getStringArray(R.array.dummy_emails);
+                SharedPreferences credReader = getSharedPreferences("Credentials", Context.MODE_PRIVATE);
+                String currentUser = credReader.getString("currentUser", "");
+                SharedPreferences.Editor credEditor = credReader.edit();
+
+                TextView showCurrentUserObject = (TextView) accountManagerView.findViewById(R.id.showCurrentUser);
+                Button switchAccountObject = (Button) accountManagerView.findViewById(R.id.switchToAccountButton);
+                Button deleteAccountObject = (Button) accountManagerView.findViewById(R.id.deleteAccountButton);
+                Button changeServerSettingsObject = (Button) accountManagerView.findViewById(R.id.changeServerSettingsButton);
+                Button exit = (Button) accountManagerView.findViewById(R.id.exitButton);
+
+                showCurrentUserObject.setText(String.format("current user:\n%s", currentUser));
+
+
+                Gson gson = new Gson();
+
+                String jsonCredData = credReader.getString("data", "");
+                Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>() {
+                }.getType();
+                ArrayList<MailServerCredentials> currentUsersCredentials = gson.fromJson(jsonCredData, credentialsType);
+                String[] userArray = new String[0];
+                if (!currentUsersCredentials.isEmpty()) {
+                    userArray = new String[currentUsersCredentials.size()];
+                    for (int i = 0; i < currentUsersCredentials.size(); i++) {
+                        userArray[i] = currentUsersCredentials.get(i).getUsername();
+                    }
+                }
+
+                //String[] dummyMails = getResources().getStringArray(R.array.dummy_emails);
                 ArrayAdapter<String> dropDownAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.dropdown_item,
-                        R.id.textViewDropDownItem, dummyMails);
+                        R.id.textViewDropDownItem, userArray);
                 accountSelectorObject.setAdapter(dropDownAdapter);
 
-                /* open View window */
+                /* open dialog */
                 dialogBuilder.setView(accountManagerView);
                 dialog = dialogBuilder.create();
                 dialog.show();
+
+                switchAccountObject.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Gson gson = new Gson();
+
+                        String userInput = accountSelectorObject.getText().toString();
+                        String jsonCredData = credReader.getString("data", "");
+                        Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>() {
+                        }.getType();
+                        ArrayList<MailServerCredentials> currentUsersCredentials = gson.fromJson(jsonCredData, credentialsType);
+
+                        System.out.println(userInput);
+                        for (int i = 0; i < currentUsersCredentials.size(); i++) {
+                            if (currentUsersCredentials.get(i).getUsername().equals(userInput)) {
+                                credEditor.putString("currentUser", userInput);
+                                showCurrentUserObject.setText(String.format("current user:\n%s", userInput));
+                                showToast("switched account");
+                                break;
+                            }
+                        }
+                    }
+                });
+
+                exit.setOnClickListener(v -> dialog.dismiss());
             }
         });
 
