@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupMenu;
@@ -122,6 +124,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
                 final View accountManagerView = getLayoutInflater().inflate(R.layout.account_manager, null);
 
+                AutoCompleteTextView accountSelectorObject =
+                        (AutoCompleteTextView) accountManagerView.findViewById(R.id.accountSelectorTextView);
+
+                /* get string data for drop down menu */
+                String[] dummyMails = getResources().getStringArray(R.array.dummy_emails);
+                ArrayAdapter<String> dropDownAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.dropdown_item,
+                        R.id.textViewDropDownItem, dummyMails);
+                accountSelectorObject.setAdapter(dropDownAdapter);
 
                 /* open View window */
                 dialogBuilder.setView(accountManagerView);

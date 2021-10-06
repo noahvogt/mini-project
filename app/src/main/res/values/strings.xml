@@ -1,4 +1,10 @@
 <resources>
+    <string-array name="dummy_emails">
+        <item>Dummy Mail 1</item>
+        <item>Dummy Mail 2</item>
+        <item>Dummy Mail 3</item>
+    </string-array>
+
     <string name="app_name">Mini Projekt</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
