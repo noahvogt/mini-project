@@ -5,12 +5,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -62,6 +65,8 @@ import com.google.gson.Gson;
 
 import static com.noahvogt.miniprojekt.R.id.drawer_layout;
 
+import org.w3c.dom.Text;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, CustomAdapter.SelectedMessage, PopupMenu.OnMenuItemClickListener {
 
     private AppBarConfiguration mAppBarConfiguration;
@@ -106,25 +111,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         /* define button listeners */
 
-        Button add_email_button = (Button) findViewById(R.id.addEmailButton);
-        add_email_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createNewEmailDialog();
-            }
-        });
 
-        /*creates accountmanager by clicking on profil */
+
+        /*creates account manager by clicking on profile */
         View accountView = findViewById(R.id.accountView);
         accountView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewEmailDialog();
+                /* define View window */
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                final View accountManagerView = getLayoutInflater().inflate(R.layout.account_manager, null);
+
+
+                /* open View window */
+                dialogBuilder.setView(accountManagerView);
+                dialog = dialogBuilder.create();
+                dialog.show();
             }
         });
 
-        /* invoke preferences */
-        mailServerCredentials = getSharedPreferences("Credentials", Context.MODE_PRIVATE);
+
 
         /* invoke toolbar */
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -133,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /* invoke drawer */
         DrawerLayout drawer = findViewById(drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
         /*
          Passing each menu ID as a set of Ids because each
          menu should be considered as top level destinations.
@@ -163,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             adapter.submitList(messages);
         });
 
+        updateNavHeaderText(headerView);
 
         Button settingButton = findViewById(R.id.settingsButton);
         settingButton.setOnClickListener(new View.OnClickListener() {
@@ -173,6 +181,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        Button add_email_button = (Button) findViewById(R.id.addEmailButton);
+        add_email_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNewEmailDialog(headerView);
+            }
+        });
 
         /* Start email Writer*/
         FloatingActionButton message_create_button = findViewById(R.id.messageButton);
@@ -193,29 +208,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-        /* gets the data from the Email writer and adds it to the Database */
-        public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(requestCode, resultCode, MessageCreateFragment.replyIntent);
+    /* gets the data from the Email writer and adds it to the Database */
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, MessageCreateFragment.replyIntent);
 
-            /* Creates class for the Date when Email is written */
-            Date dNow = new Date();
-            SimpleDateFormat ft =
-                    new SimpleDateFormat("dd.MM.yy");
-            System.out.println(dNow);
+        /* Creates class for the Date when Email is written */
+        Date dNow = new Date();
+        SimpleDateFormat ft =
+                new SimpleDateFormat("dd.MM.yy");
+        System.out.println(dNow);
+        //   if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+        Message word = new Message(
+                MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_TO),
+                null,
+                null,
+                MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_FROM),
+                ft.format(dNow),
+                MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_SUBJECT),
+                MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_MESSAGE),
+                "Draft",false);
+        mEmailViewModel.insert(word);
+    }
 
-         //   if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-                Message word = new Message(
-                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_TO),
-                        null,
-                        null,
-                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_FROM),
-                        ft.format(dNow),
-                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_SUBJECT),
-                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_MESSAGE),
-                        "Draft",false);
-                mEmailViewModel.insert(word);
+    /* set nav header name + email to current user data */
+    public void updateNavHeaderText(View headerView) {
+        mailServerCredentials = getSharedPreferences("Credentials", Context.MODE_PRIVATE);
+
+        TextView navHeaderNameObject = (TextView) headerView.findViewById(R.id.navHeaderName);
+        TextView navHeaderEmailObject = (TextView) headerView.findViewById(R.id.navHeaderEmail);
+
+        String startupUser = mailServerCredentials.getString("currentUser","");
+
+        if (!startupUser.isEmpty()) {
+            Gson gson = new Gson();
+
+            String startupJsonData = mailServerCredentials.getString("data", "");
+            Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>(){}.getType();
+            ArrayList<MailServerCredentials> startupUsersCredentials = gson.fromJson(startupJsonData, credentialsType);
+
+            for (int i = 0; i < startupUsersCredentials.size(); i++) {
+                if (startupUsersCredentials.get(i).getUsername().equals(startupUser)) {
+                    navHeaderNameObject.setText(startupUser);
+                    navHeaderEmailObject.setText(startupUsersCredentials.get(i).getName());
+                    break;
+                }
+            }
         }
-
+    }
 
 
     @Override
@@ -237,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /* better leave empty to avoid any listener disambiguity */
     public void onClick(View view) { }
 
-    public void changeMailServerSettingsDialog(String name, String email, String password) {
+    public void changeMailServerSettingsDialog(String name, String email, String password, View headerView) {
         /* define View window */
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         final View changeMailServerSettingsView = getLayoutInflater().inflate(R.layout.mail_credentials_customizer, null);
@@ -272,14 +311,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View view) {
                 addNewAccountCredentials(name, serverUsernameObject.getText().toString(), passwordObject.getText().toString(),
                         Integer.parseInt(incomingPortObject.getText().toString()), Integer.parseInt(outgoingPortObject.getText().toString()),
-                        incomingServerObject.getText().toString(), outgoingServerObject.getText().toString(), dialog, false);
+                        incomingServerObject.getText().toString(), outgoingServerObject.getText().toString(), dialog, false,
+                        headerView);
             }
         });
 
         cancelButton.setOnClickListener(v -> dialog.dismiss());
     }
 
-    public void askForChangeMailServerSettingsDialog(String name, String email, String password) {
+    public void askForChangeMailServerSettingsDialog(String name, String email, String password, View headerView) {
         /* define View window */
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 
@@ -290,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         /*if this button is clicked, close the whole fragment */
-                        changeMailServerSettingsDialog(name, email, password);
+                        changeMailServerSettingsDialog(name, email, password, headerView);
                     }
                 })
                 .setNegativeButton("No",new DialogInterface.OnClickListener() {
@@ -308,7 +348,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void addNewAccountCredentials(String name, String email, String password, int imapPort,
                                          int smtpPort, String imapHost, String smtpHost, DialogInterface dialogContext,
-                                         boolean wantConnectionFailedDialog) {
+                                         boolean wantConnectionFailedDialog, View headerView) {
         credentialsEditor = mailServerCredentials.edit();
 
         /* connect to mail server */
@@ -347,19 +387,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 credentialsEditor.putString("currentUser", email);
                 credentialsEditor.apply();
                 showToast("Success: added new email account");
+                updateNavHeaderText(headerView);
                 dialogContext.dismiss();
             } else {
                 showToast("Error: cannot add the same email twice");
             }
         } else {
             if (wantConnectionFailedDialog)
-                askForChangeMailServerSettingsDialog(name, email, password);
+                askForChangeMailServerSettingsDialog(name, email, password, headerView);
             else
                 showToast("Error: failed to get connection");
         }
     }
 
-    public void createNewEmailDialog(){
+    public void createNewEmailDialog(View headerView){
         /* define View window */
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         final View emailPopupView = getLayoutInflater().inflate(R.layout.popup, null);
@@ -398,11 +439,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
                 addNewAccountCredentials(name, email, password, 993, 587, MailFunctions.getImapHostFromEmail(email),
-                        MailFunctions.getSmtpHostFromEmail(email), dialog, true);
+                        MailFunctions.getSmtpHostFromEmail(email), dialog, true, headerView);
         }});
 
-    newemail_cancel_button.setOnClickListener(v -> dialog.dismiss());
- }
+        newemail_cancel_button.setOnClickListener(v -> dialog.dismiss());
+    }
 
     /* show debug output in  specific view */
     private void showSnackbar(View View, String text) {
