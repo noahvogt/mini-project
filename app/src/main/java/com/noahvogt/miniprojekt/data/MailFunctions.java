@@ -37,10 +37,10 @@ public class MailFunctions {
     }
 
 
-    public static String fetchMailsFromBox(PyObject IMAPConnection, String Folder) {
+    public static String fetchMailsFromBox(PyObject IMAPConnection, String FolderServer, String FolderLocal) {
         Python python = Python.getInstance();
         PyObject pythonMailFunctions = python.getModule("mailFunctions");
-        return pythonMailFunctions.callAttr("fetchMails", IMAPConnection, Folder).toString();
+        return pythonMailFunctions.callAttr("fetchMails", IMAPConnection, FolderServer, FolderLocal).toString();
     }
 
 
@@ -67,6 +67,11 @@ public class MailFunctions {
         } else if (topLevelHost.endsWith("yahoo.com")){
             return "imap.mail.yahoo.com";
 
+        } else if (topLevelHost.endsWith("gmx.ch")){
+            return "imap.gmx.net";
+        } else if (topLevelHost.endsWith("gmx.de")){
+            return "imap.gmx.net";
+
         } else if (topLevelHost.equals("noahvogt.com")) {
             return "mail.noahvogt.com";
         } else {
@@ -81,6 +86,11 @@ public class MailFunctions {
 
         } else if (topLevelHost.endsWith("yahoo.com")){
             return "smtp.mail.yahoo.com";
+        }else if (topLevelHost.endsWith("gmx.ch")){
+            return  "mail.gmx.net";
+        }else if (topLevelHost.endsWith("gmx.de")) {
+            return "mail.gmx.net";
+
         } else if (topLevelHost.endsWith("edubs.ch")) {
             return "smtp.edubs.ch";
         } else {

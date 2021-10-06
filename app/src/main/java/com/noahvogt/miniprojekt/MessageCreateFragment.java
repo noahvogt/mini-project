@@ -69,6 +69,7 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
     }
 
     private AlertDialog dialog;
+    SharedPreferences preferences;
 
     private static final int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseWriteExecutor =
@@ -79,6 +80,8 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.messageCreateTheme);
+        preferences = getActivity().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
+
     }
 
     @Nullable
@@ -238,6 +241,7 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
                 
                 /* check for valid input */
                 if (MailFunctions.validateMessageBody(messageBodyObject) && MailFunctions.validateSubject(subjectObject) &&
+
                 MailFunctions.validateEmail(receivingAddressObject) && MailFunctions.validateEmail(sendingAddressObject) &&
                 !MailFunctions.checkForSameEmail(sendingAddressObject, receivingAddressObject)) {
                     MailFunctions.sendStarttlsMail(smtpHost, sendingAddress, receivingAddress, password, messageBody,

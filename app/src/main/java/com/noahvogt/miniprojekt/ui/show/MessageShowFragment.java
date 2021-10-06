@@ -83,7 +83,7 @@ public class MessageShowFragment extends DialogFragment implements PopupMenu.OnM
 
         showTo = (TextView) view.findViewById(R.id.show_To);
         showFrom = (TextView) view.findViewById(R.id.show_From);
-        showSubject = (TextView) view.findViewById(R.id.show_Subject);
+        showSubject = (TextView) view.findViewById(R.id.show_subject);
         showMessage = (TextView) view.findViewById(R.id.show_Message);
         showDate = (TextView) view.findViewById(R.id.show_date);
 
@@ -145,15 +145,16 @@ public class MessageShowFragment extends DialogFragment implements PopupMenu.OnM
         switch (item.getItemId()) {
             case R.id.create_message_delete:
                 Toast.makeText(getActivity(), "item delete clicked", Toast.LENGTH_LONG).show();
+                //mEmailViewModel.deleteFolder("Inbox");
                 mEmailViewModel.deleteMessage(mCurrent);
                 return true;
             case R.id.create_message_spam:
                 Toast.makeText(getActivity(), "item spam clicked", Toast.LENGTH_LONG).show();
-                mEmailViewModel.updateMessage(mCurrent.getId(), "Spam");
+                mEmailViewModel.updateFolder(mCurrent.getId(), "Spam");
                 return true;
             case R.id.create_message_move_archive:
                 Toast.makeText(getActivity(), "item archive clicked", Toast.LENGTH_LONG).show();
-                mEmailViewModel.updateMessage(mCurrent.getId(), "Archive");
+                mEmailViewModel.updateFolder(mCurrent.getId(), "Archive");
 
 
             default: // this case should never occur

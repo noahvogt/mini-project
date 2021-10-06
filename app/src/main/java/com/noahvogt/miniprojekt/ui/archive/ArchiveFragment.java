@@ -2,6 +2,7 @@ package com.noahvogt.miniprojekt.ui.archive;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -49,7 +50,8 @@ public class ArchiveFragment extends Fragment implements CustomAdapter.SelectedM
             adapter.submitList(messages);
             /*get List of Message to show them onClick */
             adapter.getList(messages);
-
+            /*gives list of messages to EmailViewModel */
+            MainActivity.mEmailViewModel.setListAll(messages, "Archive");
         });
 
 
@@ -60,7 +62,7 @@ public class ArchiveFragment extends Fragment implements CustomAdapter.SelectedM
         archiveViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                textView.setText(s);
+
             }
         });
         return root;
@@ -77,5 +79,10 @@ public class ArchiveFragment extends Fragment implements CustomAdapter.SelectedM
         AppCompatActivity activity = (AppCompatActivity) getContext();
         DialogFragment dialog = MessageShowFragment.newInstance(messages, mEmailViewModel);
         dialog.show(activity.getSupportFragmentManager(), "tag");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item, View headerView) {
+        return false;
     }
 }

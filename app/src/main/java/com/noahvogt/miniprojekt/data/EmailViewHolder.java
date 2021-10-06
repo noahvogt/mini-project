@@ -1,6 +1,8 @@
 package com.noahvogt.miniprojekt.data;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +10,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.noahvogt.miniprojekt.DataBase.Message;
+import com.noahvogt.miniprojekt.MainActivity;
 import com.noahvogt.miniprojekt.R;
 
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.ParseException;
@@ -33,6 +37,8 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
         subjectItemView = itemView.findViewById(R.id.subject);
         dateItemView = itemView.findViewById(R.id.date);
         messageItemView = itemView.findViewById(R.id.message);
+        System.out.println("Called EmailViewHolder");
+
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

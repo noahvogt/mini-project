@@ -20,10 +20,10 @@ def stringCompiling(inputIterable):
                     except UnicodeDecodeError:
                         nonNoneList.append(str(item.decode("iso-8859-1")))
                     except AttributeError:
-                        print(item)
-                        print(type(item))
-                        print(inputIterable)
-                        print(nonNoneList)
+                        #print(item)
+                        #print(type(item))
+                        #print(inputIterable)
+                        #print(nonNoneList)
                         exit()
                 else:
                     nonNoneList.append(item)
@@ -47,7 +47,7 @@ def checkConnection(host, username, password, port):
         connection.logout()
         return True
     except Exception as e:
-        print(str(e))
+        #print(str(e))
         return False
 
 def connect(host, username, password, port):
@@ -84,9 +84,9 @@ def listMailboxes(connection):
 def verifyNoBytes(messages, output_list):
     for messages in output_list:
         for item in messages:
-            print(type(item))
-            print(item)
-            print(messages["{}".format(item)])
+            #print(type(item))
+            #print(item)
+            #print(messages["{}".format(item)])
             if type(messages["{}".format(item)]) is not str:
                 print("ERROREXIT: .format failed")
                 print(messages["{}".format(item)])
@@ -97,13 +97,15 @@ def verifyNoBytes(messages, output_list):
                 print("ERROREXIT")
                 exit()
 
-def fetchMails(connection, inbox):
+def fetchMails(connection, inbox, folderLocal):
     #print("###" + inbox + "###")
     #print(type(inbox))
     try:
         status, messages = connection.select(inbox)
+
     except:
         return []
+
 
     #print("status-------\n" + status)
     #print("messages-------\n" + str(messages))
@@ -111,7 +113,7 @@ def fetchMails(connection, inbox):
     #N = 3
     # total number of emails
     messages_int = int(messages[0])
-    print("message_int------\n" + str(messages_int))
+    #print("message_int------\n" + str(messages_int))
 
     output_list = []
 
@@ -169,7 +171,12 @@ def fetchMails(connection, inbox):
             output_dict['to'] = stringCompiling(raw_to)
             output_dict['date'] = stringCompiling(raw_date)
             output_dict['content'] = primitive_body
-            output_dict['folder'] = inbox
+            output_dict['folder'] = folderLocal
+            print('FolderServer: ' + inbox)
+            print('FolderLocal: ' + folderLocal)
+            print('From: ' + stringCompiling(raw_from))
+            print('Outputdictionary: ' + str(output_dict))
+
             if seentype == '(SEEN)':
                 output_dict['seen'] = "True"
             else:
@@ -204,27 +211,3 @@ def sendStarttls(host, sendingMail, receivingMail, password, message="", subject
         serverConnection.starttls(context=context)
         serverConnection.login(sendingMail, password)
         serverConnection.sendmail(sendingMail, receivingMail, decoded)
-
-def afetchMails(con):
-    con.select("Sent")
-    status, email_ids = con.search(None, "ALL")
-    if status != 'OK':
-        raise Exception("Error running imap search for spinvox messages: "
-                        "%s" % status)
-
-    print(email_ids[0])
-    fetch_ids = ','.join(str(email_ids[0]).split())
-    status, data = con.fetch(3, '(RFC822)')
-    if status != 'OK':
-        raise Exception("Error running imap fetch for spinvox message: "
-                        "%s" % status)
-    for i in range(3,4):
-        header_msg = email.message_from_string(data[i * 3 + 0][1])
-        subject = header_msg['Subject'],
-        print(subject)
-        date = header_msg['Date'],
-        print(date)
-        body = data[i * 3 + 1][1]
-        print(body)
-    connection.close()
-    connection.logout()

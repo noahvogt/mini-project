@@ -2,6 +2,7 @@ package com.noahvogt.miniprojekt.ui.spam;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -49,6 +50,8 @@ public class SpamFragment extends Fragment implements CustomAdapter.SelectedMess
             adapter.submitList(messages);
             /*get List of Message to show them onClick */
             adapter.getList(messages);
+            /*gives list of messages to EmailViewModel */
+            MainActivity.mEmailViewModel.setListAll(messages, "Spam");
 
         });
 
@@ -61,7 +64,7 @@ public class SpamFragment extends Fragment implements CustomAdapter.SelectedMess
         spamViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                textView.setText(s);
+                
             }
         });
         return root;
@@ -77,5 +80,10 @@ public class SpamFragment extends Fragment implements CustomAdapter.SelectedMess
         AppCompatActivity activity = (AppCompatActivity) getContext();
         DialogFragment dialog = MessageShowFragment.newInstance(messages, mEmailViewModel);
         dialog.show(activity.getSupportFragmentManager(), "tag");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item, View headerView) {
+        return false;
     }
 }

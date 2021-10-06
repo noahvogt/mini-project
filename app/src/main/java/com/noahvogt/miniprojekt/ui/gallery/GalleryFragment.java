@@ -2,6 +2,7 @@ package com.noahvogt.miniprojekt.ui.gallery;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,6 @@ public class GalleryFragment extends Fragment implements CustomAdapter.SelectedM
         galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                textView.setText(s);
             }
         });
 
@@ -64,6 +64,8 @@ public class GalleryFragment extends Fragment implements CustomAdapter.SelectedM
             adapter.submitList(messages);
             /*get List of Message to show them onClick */
             adapter.getList(messages);
+            /*gives list of messages to EmailViewModel */
+            MainActivity.mEmailViewModel.setListAll(messages, "Sent");
         });
 
         return root;
@@ -78,5 +80,10 @@ public class GalleryFragment extends Fragment implements CustomAdapter.SelectedM
         DialogFragment dialog = MessageShowFragment.newInstance(messages, mEmailViewModel);
         dialog.show(activity.getSupportFragmentManager(), "tag");
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item, View headerView) {
+        return false;
     }
 }

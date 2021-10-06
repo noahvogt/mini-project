@@ -32,8 +32,8 @@ public abstract class EmailRoomDatabase extends RoomDatabase{
         }
     };
 
-    /* creating 4 threads */
-    private static final int NUMBER_OF_THREADS = 4;
+    /* creating n threads */
+    private static final int NUMBER_OF_THREADS = 6;
     static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
@@ -65,58 +65,6 @@ public abstract class EmailRoomDatabase extends RoomDatabase{
                 // Populate the database in the background.
                 // If you want to start with more words, just add them.
                 MessageDao dao = INSTANCE.messageDao();
-                dao.deleteAll();
-
-
-                Message word = new Message("Noah", null , null,
-                        "Samuel", "31.09.21", "inboxTest", "I Try my best", "Inbox",
-                        true);
-                dao.insert(word);
-
-                word = new Message("Pueblo", "my Man, your Girl", null,
-                        "Escobar", "31.02.21", "DateSortTest", "I hope the Sorting works", "Inbox",
-                        true);
-                dao.insert(word);
-
-                word = new Message("Pueblo", "my Man, your Girl", null,
-                        "Escobar", "31.02.21", "VariableTest", "I hope the Sorting works", "Inbox",
-                        true);
-                dao.insert(word);
-
-                word = new Message("Again", null, null, "Again", "31.09.21", "DateTest",
-                        "Does this Date work know?", "Inbox", true);
-                dao.insert(word);
-
-
-                word = new Message("Noah", null, null,
-                       "arldemeier", "bobo", "sentTest", "i could cry", "Sent",
-                       true);
-                dao.insert(word);
-
-
-
-               /*
-               for (int i = 1; i < 20; i++){
-                   word = new Message("Simon", null, null,
-                           "Hans", "tomorrow", "inbox20", "lets goo","Inbox",
-                           true);
-                   dao.insert(word);
-               }
-
-
-                word = new Message("Simon", null, null,
-                        "Maurice", "yesterday", "ArchiveTest", "lets goo","Archive",
-                        true);
-                dao.insert(word);
-
-                word = new Message("Simon", null, null,
-                        "Lenny", "tomorrow", "SpamTest", "lets goo","Spam",
-                        true);
-                dao.insert(word);
-
-
-                */
-
 
             });
         }

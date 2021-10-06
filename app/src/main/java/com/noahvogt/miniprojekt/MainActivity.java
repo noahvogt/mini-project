@@ -47,6 +47,7 @@ import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
 import com.google.android.material.snackbar.Snackbar;
 import com.noahvogt.miniprojekt.data.CustomAdapter;
+import com.noahvogt.miniprojekt.data.DeleteThread;
 import com.noahvogt.miniprojekt.data.EmailViewModel;
 import com.noahvogt.miniprojekt.data.MailFunctions;
 import com.noahvogt.miniprojekt.workers.DownloadWorker;
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String nameData = "Name";
     public static EmailViewModel mEmailViewModel;
     public static RecyclerView recyclerView;
+    private Boolean clicked = false;
 
     private AlertDialog dialog;
     private EditText newemail_name, newemail_email, newemail_password; /* may not be private */
@@ -109,10 +111,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /* define button listeners */
-
-
-
         /*creates account manager by clicking on profile */
         View accountView = findViewById(R.id.accountView);
         accountView.setOnClickListener(new View.OnClickListener() {
@@ -135,6 +133,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /* invoke toolbar */
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        SharedPreferences mailServerCredentials = getSharedPreferences("Credentials", Context.MODE_PRIVATE);
 
         /* invoke drawer */
         DrawerLayout drawer = findViewById(drawer_layout);
@@ -181,11 +181,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        final Boolean[] clicked = {false};
         Button add_email_button = (Button) findViewById(R.id.addEmailButton);
         add_email_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewEmailDialog(headerView);
+                if (!clicked[0]){
+                    createInformation(true, headerView);
+                    clicked[0] = true;
+                } else {
+                    createNewEmailDialog(headerView);
+                }
             }
         });
 
@@ -207,7 +213,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
     /* gets the data from the Email writer and adds it to the Database */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, MessageCreateFragment.replyIntent);
@@ -220,8 +225,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //   if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
         Message word = new Message(
                 MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_TO),
-                null,
-                null,
+                MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_CC),
+                MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_BCC),
                 MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_FROM),
                 ft.format(dNow),
                 MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_SUBJECT),
@@ -261,7 +266,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onCreateOptionsMenu(Menu menu) {
         /* Inflate the menu; this adds items to the action bar if it is present. */
         getMenuInflater().inflate(R.menu.main, menu);
-
         return true;
     }
 
@@ -343,13 +347,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialog.show();
     }
 
-    public static MailServerCredentials newMailServerCredentials;
-    public static SharedPreferences.Editor credentialsEditor;
+    public void createInformation(boolean button, View headerView){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+        final View emailPopupView = getLayoutInflater().inflate(R.layout.welcome, null);
+
+        /* init text field variables */
+        TextView shedText = emailPopupView.findViewById(R.id.backgroun);
+        Button okayButton = emailPopupView.findViewById(R.id.okay_button);
+
+        /* open View window */
+        dialogBuilder.setView(emailPopupView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        okayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                if (button){
+                    createNewEmailDialog(headerView);
+                }
+            }
+        });
+    }
+
+    String name;
+    String email;
+    String password;
+    Data.Builder builder = new Data.Builder();
 
     public void addNewAccountCredentials(String name, String email, String password, int imapPort,
                                          int smtpPort, String imapHost, String smtpHost, DialogInterface dialogContext,
                                          boolean wantConnectionFailedDialog, View headerView) {
-        credentialsEditor = mailServerCredentials.edit();
+
+
+        SharedPreferences.Editor credentialsEditor = mailServerCredentials.edit();
 
         /* connect to mail server */
         showToast("Probe Connection ...");
@@ -421,7 +453,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialog = dialogBuilder.create();
         dialog.show();
 
-        credentialsEditor = mailServerCredentials.edit();
+        SharedPreferences.Editor credentialsEditor = mailServerCredentials.edit();
 
         /* store user input */
         newemail_save_button.setOnClickListener(new View.OnClickListener() {
@@ -438,8 +470,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     return;
                 }
 
-                addNewAccountCredentials(name, email, password, 993, 587, MailFunctions.getImapHostFromEmail(email),
-                        MailFunctions.getSmtpHostFromEmail(email), dialog, true, headerView);
+                builder = new Data.Builder();
+                builder.putString(emailData, email)
+                        .putString(passwordData, password)
+                        .putString(nameData, name);
+
+                /* connect to mail server and print various debugging output */
+                showToast("Probe Connection ...");
+                if (MailFunctions.canConnect(MailFunctions.getImapHostFromEmail(email), email, password) == Boolean.TRUE) {
+                    showToast("was able to connect");
+
+                    addNewAccountCredentials(name, email, password, 993, 587, MailFunctions.getImapHostFromEmail(email),
+                            MailFunctions.getSmtpHostFromEmail(email), dialog, true, headerView);
+                    dialog.dismiss();
+                    /*makes request to worker and gives data to it*/
+                    mEmailViewModel.applyDownload(builder.build());
+
+                } else {
+                    askForChangeMailServerSettingsDialog(name, email, password, headerView);
+                }
         }});
 
         newemail_cancel_button.setOnClickListener(v -> dialog.dismiss());
@@ -465,12 +514,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item, View headerView) {
         switch (item.getItemId()){
+            case R.id.action_information:
+                createInformation(false, headerView);
+                return true;
             case R.id.action_refresh:
+                mEmailViewModel.applyDownload(builder.build());
+                return true;
+            case R.id.action_deletefolder:
+                showToast("clicked delete all");
+                mEmailViewModel.getAll(false);
+                for (int delete = 0; delete < mEmailViewModel.getAll(false).size(); delete++){
+                    mEmailViewModel.deleteMessage(mEmailViewModel.getAll(false).get(delete));
+                }
+                mEmailViewModel.getAll(true);
 
                 return true;
         }
+        return false;
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
         return false;
     }
 }

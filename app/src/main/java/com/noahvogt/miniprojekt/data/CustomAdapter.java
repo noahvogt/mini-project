@@ -2,6 +2,8 @@
 
 
 import android.os.Build;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 
 
@@ -39,11 +41,14 @@ public class CustomAdapter extends ListAdapter<Message, EmailViewHolder> {
 
     /*get List from adapter which is shown*/
     public void getList(List<Message> messageList){
+        System.out.println("GetList Adapter Loop");
         this.messageList = messageList;
     }
 
     public interface SelectedMessage{
         void selectedMessage(Message messages, EmailViewModel emailViewModel);
+
+        boolean onOptionsItemSelected(MenuItem item, View headerView);
     }
 
     public static class EmailDiff extends DiffUtil.ItemCallback<Message> {
