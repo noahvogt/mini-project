@@ -65,7 +65,12 @@ public class MailFunctions {
         }else if (topLevelHost.endsWith("yahoo.com")){
             return "imap.mail.yahoo.com";
 
-        } else {
+        } else if (topLevelHost.endsWith("gmx.ch")){
+            return "imap.gmx.net";
+        } else if (topLevelHost.endsWith("gmx.de")){
+            return "imap.gmx.net";
+        }
+        else {
             return "imap." + topLevelHost;
         }
     }
@@ -77,6 +82,10 @@ public class MailFunctions {
 
         } else if (topLevelHost.endsWith("yahoo.com")){
             return "smtp.mail.yahoo.com";
+        }else if (topLevelHost.endsWith("gmx.ch")){
+            return  "mail.gmx.net";
+        }else if (topLevelHost.endsWith("gmx.de")) {
+            return "mail.gmx.net";
         }
         else {
             return "smtp." + topLevelHost;

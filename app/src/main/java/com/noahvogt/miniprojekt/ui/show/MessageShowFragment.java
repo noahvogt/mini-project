@@ -145,6 +145,7 @@ public class MessageShowFragment extends DialogFragment implements PopupMenu.OnM
         switch (item.getItemId()) {
             case R.id.create_message_delete:
                 Toast.makeText(getActivity(), "item delete clicked", Toast.LENGTH_LONG).show();
+                //mEmailViewModel.deleteFolder("Inbox");
                 mEmailViewModel.deleteMessage(mCurrent);
                 return true;
             case R.id.create_message_spam:

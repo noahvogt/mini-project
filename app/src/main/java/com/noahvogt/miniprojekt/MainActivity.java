@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -44,6 +45,7 @@ import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
 import com.google.android.material.snackbar.Snackbar;
 import com.noahvogt.miniprojekt.data.CustomAdapter;
+import com.noahvogt.miniprojekt.data.DeleteThread;
 import com.noahvogt.miniprojekt.data.EmailViewModel;
 import com.noahvogt.miniprojekt.data.MailFunctions;
 import com.noahvogt.miniprojekt.workers.DownloadWorker;
@@ -62,7 +64,7 @@ import com.google.gson.Gson;
 
 import static com.noahvogt.miniprojekt.R.id.drawer_layout;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, CustomAdapter.SelectedMessage, PopupMenu.OnMenuItemClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, CustomAdapter.SelectedMessage {
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String nameData = "Name";
     public static EmailViewModel mEmailViewModel;
     public static RecyclerView recyclerView;
+    private Boolean clicked = false;
 
     private AlertDialog dialog;
     private EditText newemail_name, newemail_email, newemail_password; /* may not be private */
@@ -106,11 +109,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         /* define button listeners */
 
+        final Boolean[] clicked = {false};
         Button add_email_button = (Button) findViewById(R.id.addEmailButton);
         add_email_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewEmailDialog();
+                if (!clicked[0]){
+
+                    createInformation(true);
+                    clicked[0] = true;
+
+
+                } else {
+                    createNewEmailDialog();
+                }
             }
         });
 
@@ -291,8 +303,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialog.show();
     }
 
+    public void createInformation(boolean button){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+        final View emailPopupView = getLayoutInflater().inflate(R.layout.welcome, null);
+
+        /* init text field variables */
+        TextView shedText = emailPopupView.findViewById(R.id.backgroun);
+        Button okayButton = emailPopupView.findViewById(R.id.okay_button);
+
+        /* open View window */
+        dialogBuilder.setView(emailPopupView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        okayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                if (button){
+                    createNewEmailDialog();
+                }
+            }
+        });
+    }
+
     public static MailServerCredentials newMailServerCredentials;
     public static SharedPreferences.Editor credentialsEditor;
+    String name;
+    String email;
+    String password;
+    Data.Builder builder;
 
     public void createNewEmailDialog(){
         /* define View window */
@@ -328,11 +368,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
 
                 /* store user input (only needed for DEBUGGING) */
-                String name = newemail_name.getText().toString();
-                String email = newemail_email.getText().toString();
-                String password = newemail_password.getText().toString();
+                name = newemail_name.getText().toString();
+                email = newemail_email.getText().toString();
+                password = newemail_password.getText().toString();
 
-                Data.Builder builder = new Data.Builder();
+                builder = new Data.Builder();
                 builder.putString(emailData, email)
                         .putString(passwordData, password)
                         .putString(nameData, name);
@@ -345,96 +385,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (MailFunctions.canConnect(MailFunctions.getImapHostFromEmail(email), email, password) == Boolean.TRUE) {
                     showToast("was able to connect");
 
-
-                    /*
-                    Intent intent = new Intent(getBaseContext(), DownloadWorker.class);
-                    intent.putExtra("Email", email);
-                    intent.putExtra("Password", password);
-                    startActivity(intent);
-
-                     */
-                    //startActivityForResult(intent, MainActivity.NEW_WORD_ACTIVITY_REQUEST_CODE);
-
-
-                    /*
-                    List folders =  MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(MailFunctions.getImapHostFromEmail(email), email, password));
-                    for (int i = 0; i < folders.size(); i++) {
-                        showToast(folders.get(i).toString());
-                        // TODO: select right folder to store, Synchronization
-                        /*gives list of Message Objects/dictionaries */
-                       /* List p = MailFunctions.fetchMailsFromBox(
-                                MailFunctions.getIMAPConnection(
-                                        MailFunctions.getImapHostFromEmail(email), email, password),
-                                folders.get(i).toString(), "list");
-                        System.out.println(folders.get(i).toString());
-                        System.out.println(p);
-                    }
-=======
-                    // Intent intent = new Intent(getBaseContext(), ReadInMailsActivity.class);
-                    // intent.putExtra("Email", email);
-                    // intent.putExtra("Password", password);
-                    // startActivity(intent);
-                    // startActivityForResult(intent, MainActivity.NEW_WORD_ACTIVITY_REQUEST_CODE);
->>>>>>> 5f6a1c7705d3f893ac179bbc5641f5813f31fb08
-
-
-                    // List folders =  MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(MailFunctions.getImapHostFromEmail(email), email, password));
-                    // for (int i = 0; i < folders.size(); i++) {
-                    //     showToast(folders.get(i).toString());
-                    //     // TODO: select right folder to store, Synchronization
-                    //     /*gives list of Message Objects/dictionaries
-                    // List p = MailFunctions.fetchMailsFromBox(
-                    //             MailFunctions.getIMAPConnection(
-                    //                     MailFunctions.getImapHostFromEmail(email), email, password),
-                    //             folders.get(i).toString(), "list");
-                    //     System.out.println(folders.get(i).toString());
-                    //     System.out.println(p);
-                    // }
-
-
-
                     /* TODO: replace legacy strings down below completely with serialized settings json string */
                     preferencesEditor.putString("name", name);
                     preferencesEditor.putString("email", email);
                     preferencesEditor.putString("password", password);
                     preferencesEditor.apply();
 
-                    /* init custom gson with hook to parse booleans correctly */
-                    GsonBuilder gsonBuilder = new GsonBuilder();
-                    gsonBuilder.registerTypeAdapter(Boolean.class, new BooleanTypeAdapter());
-                    Gson gson = gsonBuilder.create();
-
-                    /* safe mail server login credentials */
-                    newMailServerCredentials = new MailServerCredentials(
-                            name, email, password, MailFunctions.getImapHostFromEmail(email), MailFunctions.getSmtpHostFromEmail(email), 993, 587, "");
-                    String newCredentialsJson = gson.toJson(newMailServerCredentials);
-                    System.out.println(newCredentialsJson);
-                    credentialsEditor.putString("data", newCredentialsJson);
-                    credentialsEditor.apply();
-
-                    /* download all messages from mail server */
-
-                    /* read login credentials from SharedPreferences */
-                    SharedPreferences credentialsReader = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
-                    String readJsonData = credentialsReader.getString("data", "");
-                    MailServerCredentials readMailServerCredentials = gson.fromJson(readJsonData, MailServerCredentials.class);
-
                     dialog.dismiss();
                     /*makes request to worker and gives data to it*/
                     mEmailViewModel.applyDownload(builder.build());
 
-                    /* fetch and print draft messages */
-                    String fetchedMails = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(newMailServerCredentials.getImapHost(),
-                            newMailServerCredentials.getUsername(), newMailServerCredentials.getPassword(), newMailServerCredentials.getImapPort()), "Drafts");
-                    System.out.println(fetchedMails);
-
-                    /* parse messages in arraylist of Message class and loop through it */
-                    Type messageType = new TypeToken<ArrayList<Message>>(){}.getType();
-                    ArrayList<Message> messages = gson.fromJson(fetchedMails, messageType);
-                    for (int i = 0; i < messages.size(); i++) {
-                        System.out.println("Message #" + i);
-                        System.out.println(messages.get(i).toString());
-                    }
                 } else {
                     askForChangeMailServerSettingsDialog(name, email, password);
                 }
@@ -467,9 +427,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
+            case R.id.action_information:
+                createInformation(false);
+                return true;
             case R.id.action_refresh:
+                mEmailViewModel.applyDownload(builder.build());
+                return true;
+            case R.id.action_deletefolder:
+                showToast("clicked delete all");
+                mEmailViewModel.getAll(false);
+                for (int delete = 0; delete < mEmailViewModel.getAll(false).size(); delete++){
+                    mEmailViewModel.deleteMessage(mEmailViewModel.getAll(false).get(delete));
+                }
+                mEmailViewModel.getAll(true);
 
                 return true;
         }

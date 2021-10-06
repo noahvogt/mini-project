@@ -6,8 +6,9 @@
     <string name="nav_header_subtitle">max@mustermann.com</string>
     <string name="nav_header_desc">Navigation header</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_deleteFolder">Delete all Folders</string>
     <string name="action_refresh">Refresh</string>
+    <string name="action_information">Information</string>
 
     <string name="drawer_inbox">Inbox</string>
     <string name="drawer_sent">Sent</string>
@@ -46,6 +47,25 @@
     <string name="text_save">Save</string>
     <string name="text_cancel">Cancel</string>
     <string name="text_create_message">Create Message</string>
+    <string name="text_ok">Okay</string>
+
+    <string name="text_welcome">
+        Hello friendly user. \n
+        When creating an account,
+        all your messages will be downloaded and
+        \n  you may experience slower performance of the app.
+        When you create a new account, \n
+        you need to open all your folders once \n
+        in order to not find any emails
+        from the old account
+        \n afterwards.
+        \n It is the same for the option "Delete All Folders".
+        \n This is a bug which could not be fixed yet.
+        We wish you a lot of fun with our app.
+        \n \n
+        This app is in alpha version and created as part of a school project.
+        Our app is fully available on Github.
+    </string>
 
     <!--  hint -->
     <string name="hint_email_from">From (Email)</string>
