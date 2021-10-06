@@ -19,7 +19,8 @@ public class MailServerCredentials {
     public String getName () {return this.mName;}
     public String getSignature () {return this.mSignature;}
 
-    public MailServerCredentials(String name, String username, String password, String imapHost, String smtpHost, int imapPort, int smtpPort, String signature) {
+    public MailServerCredentials(String name, String username, String password, String imapHost, String smtpHost, int imapPort,
+                                 int smtpPort, String signature) {
         this.mName = name;
         this.mUsername = username;
         this.mPassword = password;

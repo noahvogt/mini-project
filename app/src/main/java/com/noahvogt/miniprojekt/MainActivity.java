@@ -112,85 +112,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /* show account manager when clicking on profile */
-        View accountView = findViewById(R.id.accountView);
-        accountView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View onClickView) {
-                /* define dialog */
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                final View accountManagerView = getLayoutInflater().inflate(R.layout.account_manager, null);
-
-                AutoCompleteTextView accountSelectorObject =
-                        (AutoCompleteTextView) accountManagerView.findViewById(R.id.accountSelectorTextView);
-
-                /* get string data for drop down menu */
-                SharedPreferences credReader = getSharedPreferences("Credentials", Context.MODE_PRIVATE);
-                String currentUser = credReader.getString("currentUser", "");
-                SharedPreferences.Editor credEditor = credReader.edit();
-
-                TextView showCurrentUserObject = (TextView) accountManagerView.findViewById(R.id.showCurrentUser);
-                Button switchAccountObject = (Button) accountManagerView.findViewById(R.id.switchToAccountButton);
-                Button deleteAccountObject = (Button) accountManagerView.findViewById(R.id.deleteAccountButton);
-                Button changeServerSettingsObject = (Button) accountManagerView.findViewById(R.id.changeServerSettingsButton);
-                Button exit = (Button) accountManagerView.findViewById(R.id.exitButton);
-
-                showCurrentUserObject.setText(String.format("current user:\n%s", currentUser));
-
-
-                Gson gson = new Gson();
-
-                String jsonCredData = credReader.getString("data", "");
-                Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>() {
-                }.getType();
-                ArrayList<MailServerCredentials> currentUsersCredentials = gson.fromJson(jsonCredData, credentialsType);
-                String[] userArray = new String[0];
-                if (!currentUsersCredentials.isEmpty()) {
-                    userArray = new String[currentUsersCredentials.size()];
-                    for (int i = 0; i < currentUsersCredentials.size(); i++) {
-                        userArray[i] = currentUsersCredentials.get(i).getUsername();
-                    }
-                }
-
-                //String[] dummyMails = getResources().getStringArray(R.array.dummy_emails);
-                ArrayAdapter<String> dropDownAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.dropdown_item,
-                        R.id.textViewDropDownItem, userArray);
-                accountSelectorObject.setAdapter(dropDownAdapter);
-
-                /* open dialog */
-                dialogBuilder.setView(accountManagerView);
-                dialog = dialogBuilder.create();
-                dialog.show();
-
-                switchAccountObject.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Gson gson = new Gson();
-
-                        String userInput = accountSelectorObject.getText().toString();
-                        String jsonCredData = credReader.getString("data", "");
-                        Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>() {
-                        }.getType();
-                        ArrayList<MailServerCredentials> currentUsersCredentials = gson.fromJson(jsonCredData, credentialsType);
-
-                        System.out.println(userInput);
-                        for (int i = 0; i < currentUsersCredentials.size(); i++) {
-                            if (currentUsersCredentials.get(i).getUsername().equals(userInput)) {
-                                credEditor.putString("currentUser", userInput);
-                                showCurrentUserObject.setText(String.format("current user:\n%s", userInput));
-                                showToast("switched account");
-                                break;
-                            }
-                        }
-                    }
-                });
-
-                exit.setOnClickListener(v -> dialog.dismiss());
-            }
-        });
-
-
-
         /* invoke toolbar */
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -210,6 +131,151 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        /* show account manager when clicking on profile */
+        View accountView = findViewById(R.id.accountView);
+        accountView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View onClickView) {
+                /* define dialog */
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                final View accountManagerView = getLayoutInflater().inflate(R.layout.account_manager, null);
+
+                AutoCompleteTextView accountSelectorObject =
+                        (AutoCompleteTextView) accountManagerView.findViewById(R.id.accountSelectorTextView);
+
+                /* get string data for drop down menu */
+                SharedPreferences credReader = getSharedPreferences("Credentials", Context.MODE_PRIVATE);
+                String currentUser = credReader.getString("currentUser", "");
+
+                TextView showCurrentUserObject = (TextView) accountManagerView.findViewById(R.id.showCurrentUser);
+                Button switchAccountObject = (Button) accountManagerView.findViewById(R.id.switchToAccountButton);
+                Button deleteAccountObject = (Button) accountManagerView.findViewById(R.id.deleteAccountButton);
+                Button changeServerSettingsObject = (Button) accountManagerView.findViewById(R.id.changeServerSettingsButton);
+                Button exit = (Button) accountManagerView.findViewById(R.id.exitButton);
+
+                if (currentUser == null) {
+                    showCurrentUserObject.setText("current user:\nNone");
+                } else {
+                    showCurrentUserObject.setText(String.format("current user:\n%s", currentUser));
+                }
+
+                SharedPreferences.Editor credEditor = credReader.edit();
+
+                Gson gson = new Gson();
+
+                String jsonCredData = credReader.getString("data", "");
+                Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>() {
+                }.getType();
+                ArrayList<MailServerCredentials> currentUsersCredentials = gson.fromJson(jsonCredData, credentialsType);
+                String[] userArray = new String[0];
+                try {
+                    if (!currentUsersCredentials.isEmpty()) {
+                        userArray = new String[currentUsersCredentials.size()];
+                        for (int i = 0; i < currentUsersCredentials.size(); i++) {
+                            userArray[i] = currentUsersCredentials.get(i).getUsername();
+                        }
+                    }
+                } catch (NullPointerException ignored) {}
+
+                ArrayAdapter<String> dropDownAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.dropdown_item,
+                        R.id.textViewDropDownItem, userArray);
+                accountSelectorObject.setAdapter(dropDownAdapter);
+
+                /* open dialog */
+                dialogBuilder.setView(accountManagerView);
+                AlertDialog rootAccountManagerDialog = dialogBuilder.create();
+                rootAccountManagerDialog.show();
+
+                switchAccountObject.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String userInput = accountSelectorObject.getText().toString();
+                        String jsonCredData = credReader.getString("data", "");
+                        Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>(){}.getType();
+                        ArrayList<MailServerCredentials> currentUsersCredentials = gson.fromJson(jsonCredData, credentialsType);
+
+                        try {
+                            for (int i = 0; i < currentUsersCredentials.size(); i++) {
+                                if (currentUsersCredentials.get(i).getUsername().equals(userInput)) {
+                                    credEditor.putString("currentUser", userInput).apply();
+                                    showCurrentUserObject.setText(String.format("current user:\n%s", userInput));
+                                    showToast("switched account");
+                                    updateNavHeaderText(headerView);
+                                    break;
+                                }
+                            }
+                        } catch (NullPointerException ignored) {}
+                    }
+                });
+
+                deleteAccountObject.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String userInput = accountSelectorObject.getText().toString();
+                        String jsonCredData = credReader.getString("data", "");
+                        Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>(){}.getType();
+                        ArrayList<MailServerCredentials> currentUserCredentials = gson.fromJson(jsonCredData, credentialsType);
+
+                        try {
+                            for (int i = 0; i < currentUserCredentials.size(); i++) {
+                                if (currentUserCredentials.get(i).getUsername().equals(userInput)) {
+                                    currentUserCredentials.remove(i);
+                                    credEditor.putString("data", gson.toJson(currentUserCredentials, credentialsType)).apply();
+                                    if (!currentUserCredentials.isEmpty()) {
+                                        String usernameZero = currentUserCredentials.get(0).getUsername();
+                                        credEditor.putString("currentUser", usernameZero).apply();
+                                        showCurrentUserObject.setText(String.format("current user:\n%s", usernameZero));
+                                    } else {
+                                        credEditor.putString("currentUser", "").apply();
+                                        showCurrentUserObject.setText("current user:\n None");
+                                    }
+                                    showToast("account removed");
+                                    updateNavHeaderText(headerView);
+                                    break;
+                                }
+                            }
+                        } catch (NullPointerException ignored) {}
+                    }
+                });
+
+                changeServerSettingsObject.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String userInput = accountSelectorObject.getText().toString();
+                        String jsonCredData = credReader.getString("data", "");
+                        Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>() {
+                        }.getType();
+                        ArrayList<MailServerCredentials> currentUserCredentials = gson.fromJson(jsonCredData, credentialsType);
+
+                        String email, name, password, smtpHost, imapHost = null;
+                        int smtpPort, imapPort = 0;
+                        try {
+                            for (int i = 0; i < currentUserCredentials.size(); i++) {
+                                if (currentUserCredentials.get(i).getUsername().equals(userInput)) {
+                                    email = currentUserCredentials.get(i).getUsername();
+                                    name = currentUserCredentials.get(i).getName();
+                                    password = currentUserCredentials.get(i).getPassword();
+                                    smtpHost = currentUserCredentials.get(i).getSmtpHost();
+                                    imapHost = currentUserCredentials.get(i).getImapHost();
+                                    smtpPort = currentUserCredentials.get(i).getSmtpPort();
+                                    imapPort = currentUserCredentials.get(i).getImapPort();
+                                    changeMailServerSettingsDialog(name, email, password, headerView, imapHost, smtpHost, imapPort,
+                                            smtpPort, false);
+                                    break;
+                                }
+                            }
+                        } catch (NullPointerException ignored) {}
+                    }
+                });
+
+                exit.setOnClickListener(v -> rootAccountManagerDialog.dismiss());
+            }
+        });
+
+
+
+
 
         /* Lookup the recyclerview in activity layout */
         recyclerView = findViewById(R.id.recyclerView);
@@ -253,10 +319,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         message_create_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 DialogFragment dialog = MessageCreateFragment.newInstance();
                 dialog.show(getSupportFragmentManager(), "tag");
-
             }
         });
 
@@ -312,6 +376,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 }
             }
+        } else {
+            navHeaderEmailObject.setText(R.string.noAccountsAddedNavHeaderMessageEmail);
+            navHeaderNameObject.setText(R.string.noAccountsAddedNavHeaderMessageName);
         }
     }
 
@@ -333,9 +400,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     /* better leave empty to avoid any listener disambiguity */
-    public void onClick(View view) { }
+    public void onClick(View view) {}
 
-    public void changeMailServerSettingsDialog(String name, String email, String password, View headerView) {
+    public void changeMailServerSettingsDialog(String name, String email, String password, View headerView, String imapHost,
+                                               String smtpHost, int imapPort, int smtpPort, boolean wantToAddNew) {
         /* define View window */
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         final View changeMailServerSettingsView = getLayoutInflater().inflate(R.layout.mail_credentials_customizer, null);
@@ -351,14 +419,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button cancelButton = (Button) changeMailServerSettingsView.findViewById(R.id.cancelCustomizeButton);
 
         /* set assumed input in corresponding fields */
-        incomingServerObject.setText(MailFunctions.getImapHostFromEmail(email));
-        outgoingServerObject.setText(MailFunctions.getSmtpHostFromEmail(email));
-        incomingPortObject.setText("993");
-        outgoingPortObject.setText("587");
+        incomingServerObject.setText(imapHost);
+        outgoingServerObject.setText(smtpHost);
+        incomingPortObject.setText(String.valueOf(imapPort));
+        outgoingPortObject.setText(String.valueOf(smtpPort));
         serverUsernameObject.setText(email);
         passwordObject.setText(password);
-
-        /* TODO: add save and cancel button functionality */
 
         /* open View window */
         dialogBuilder.setView(changeMailServerSettingsView);
@@ -368,10 +434,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addNewAccountCredentials(name, serverUsernameObject.getText().toString(), passwordObject.getText().toString(),
-                        Integer.parseInt(incomingPortObject.getText().toString()), Integer.parseInt(outgoingPortObject.getText().toString()),
-                        incomingServerObject.getText().toString(), outgoingServerObject.getText().toString(), dialog, false,
-                        headerView);
+                if (wantToAddNew) {
+                    addNewAccountCredentials(name, serverUsernameObject.getText().toString(), passwordObject.getText().toString(),
+                            Integer.parseInt(incomingPortObject.getText().toString()), Integer.parseInt(outgoingPortObject.getText().toString()),
+                            incomingServerObject.getText().toString(), outgoingServerObject.getText().toString(), dialog, false,
+                            headerView);
+                } else {
+                    changeAccountCredentials(name, serverUsernameObject.getText().toString(),
+                            passwordObject.getText().toString(), Integer.parseInt(incomingPortObject.getText().toString()),
+                            Integer.parseInt(outgoingPortObject.getText().toString()), incomingServerObject.getText().toString(),
+                            outgoingServerObject.getText().toString(), dialog, headerView, email);
+                }
             }
         });
 
@@ -389,7 +462,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         /*if this button is clicked, close the whole fragment */
-                        changeMailServerSettingsDialog(name, email, password, headerView);
+                        changeMailServerSettingsDialog(name, email, password, headerView,
+                                MailFunctions.getImapHostFromEmail(email), MailFunctions.getSmtpHostFromEmail(email), 993, 587,
+                                true);
                     }
                 })
                 .setNegativeButton("No",new DialogInterface.OnClickListener() {
@@ -412,7 +487,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         /* connect to mail server */
         showToast("Probe Connection ...");
-        if (MailFunctions.canConnect(MailFunctions.getImapHostFromEmail(email), email, password) == Boolean.TRUE) {
+        if (MailFunctions.canConnect(imapHost, email, password) == Boolean.TRUE) {
             showToast("was able to connect");
 
             Gson gson = new Gson();
@@ -455,6 +530,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (wantConnectionFailedDialog)
                 askForChangeMailServerSettingsDialog(name, email, password, headerView);
             else
+                showToast("Error: failed to get connection");
+        }
+    }
+
+    /* use 'initialMail' variable so that the program knows which email entry is has to change */
+    public void changeAccountCredentials(String name, String email, String password, int imapPort,
+                                         int smtpPort, String imapHost, String smtpHost, DialogInterface dialogContext,
+                                         View headerView, String initialEmail) {
+        credentialsEditor = mailServerCredentials.edit();
+
+        /* connect to mail server */
+        showToast("Probe Connection ...");
+        if (MailFunctions.canConnect(imapHost, email, password) == Boolean.TRUE) {
+            showToast("was able to connect");
+
+            Gson gson = new Gson();
+
+            /* read login credentials from SharedPreferences */
+            SharedPreferences initialCredentialsReader = getSharedPreferences(
+                    "Credentials", Context.MODE_PRIVATE);
+            String initialReadJsonData = initialCredentialsReader.getString("data", "");
+            Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>(){}.getType();
+            ArrayList<MailServerCredentials> allUsersCredentials = gson.fromJson(initialReadJsonData, credentialsType);
+
+            for (int i = 0; i < allUsersCredentials.size(); i++) {
+                if (allUsersCredentials.get(i).getUsername().equals(initialEmail)) {
+                    String signature = allUsersCredentials.get(i).getSignature();
+                    allUsersCredentials.set(i, new MailServerCredentials(name, email, password, imapHost, smtpHost, imapPort,
+                            smtpPort, signature));
+                    credentialsEditor.putString("data", gson.toJson(allUsersCredentials, credentialsType)).apply();
+                    showToast("changed account credentials");
+                    dialogContext.dismiss();
+                    break;
+                }
+            }
+        } else {
                 showToast("Error: failed to get connection");
         }
     }
