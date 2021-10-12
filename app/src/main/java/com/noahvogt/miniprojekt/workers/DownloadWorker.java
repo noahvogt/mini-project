@@ -3,6 +3,7 @@ package com.noahvogt.miniprojekt.workers;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -20,6 +21,7 @@ import com.noahvogt.miniprojekt.data.MailFunctions;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -113,7 +115,7 @@ public class DownloadWorker extends Worker {
                     String fetchedMails = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(newMailServerCredentials.getImapHost(),
                             newMailServerCredentials.getUsername(), newMailServerCredentials.getPassword(), newMailServerCredentials.getImapPort()),
                             folders.get(i).toString(), folderName);
-                    //System.out.println("Folder: " + folders.get(i).toString()+ "\n Foldersize: " + folders.size());
+                    System.out.println("Folder: " + folders.get(i).toString()+ "\n Foldersize: " + folders.size());
                     //System.out.println("Fetched Mails from Folder " + folders.get(i).toString() + ": \n"+ fetchedMails + "\n MAANCBJC");
 
                     /* parse messages in arraylist of Message class and loop through it */
@@ -122,13 +124,14 @@ public class DownloadWorker extends Worker {
                     ArrayList<Message> messages = gson.fromJson(fetchedMails, messageType);
                     for (int k = 0; k < messages.size(); k++) {
                         Message message = messages.get(k);
-                        //System.out.println("oldDate: " + message.getDate());
+                        System.out.println("rawDate: " + message.getDate());
+                        System.out.println("Date typ: " + message.getDate().getClass());
                         SimpleDateFormat rawDate = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
                         SimpleDateFormat date = new SimpleDateFormat("dd.MM.yy");
                         Date middleDate = rawDate.parse(message.getDate());
                         String newDate = date.format(middleDate);
-                        //System.out.println("middle Date: " + middleDate);
-                        //System.out.println("New Date: " + newDate);
+                        System.out.println("middle Date: " + middleDate);
+                        System.out.println("New Date: " + newDate);
 
                         mEmailViewModel.insert(message);
                         //TODO: make it work
@@ -147,6 +150,7 @@ public class DownloadWorker extends Worker {
                 return Result.success();
             } catch (Throwable throwable){
                 Log.e(TAG, "Error, downloading Messages", throwable);
+                Toast.makeText(getApplicationContext(), "Error downloading your Messages", Toast.LENGTH_SHORT).show();
                 return Result.failure();
             }
 

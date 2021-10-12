@@ -66,6 +66,11 @@ public abstract class EmailRoomDatabase extends RoomDatabase{
                 // If you want to start with more words, just add them.
                 MessageDao dao = INSTANCE.messageDao();
 
+                Message message = new Message("Nobody", null, "My friend", "Not my friend",
+                        "Thu, 12 Aug 2021 19:21:13 +0000", "Date test", "Ahh jiaaa de text",
+                        "Inbox", true);
+                dao.insert(message);
+
             });
         }
     };
