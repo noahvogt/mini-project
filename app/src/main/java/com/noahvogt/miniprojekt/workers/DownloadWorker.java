@@ -26,11 +26,11 @@ import java.util.Date;
 import java.util.List;
 
 import static com.noahvogt.miniprojekt.MainActivity.mEmailViewModel;
-import static com.noahvogt.miniprojekt.MainActivity.newMailServerCredentials;
 
 public class DownloadWorker extends Worker {
 
     //TODO: upload every data to server
+
 
     public DownloadWorker(
             @NonNull Context appContext,
@@ -46,34 +46,46 @@ public class DownloadWorker extends Worker {
     @Override
     public Result doWork() {
             try {
-                String mEmail = getInputData().getString(MainActivity.emailData);
-                String mPassword = getInputData().getString(MainActivity.passwordData);
-                String mName = getInputData().getString(MainActivity.nameData);
+                String mUser = null;
+                String mPassword = null;
+                String mImapHost = null;
+                int mImapPort = 0;
 
                 /* init custom gson with hook to parse booleans correctly */
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 gsonBuilder.registerTypeAdapter(Boolean.class, new BooleanTypeAdapter());
                 Gson gson = gsonBuilder.create();
 
-                /* safe mail server login credentials */
-                newMailServerCredentials = new MailServerCredentials(
-                        mName, mEmail, mPassword, MailFunctions.getImapHostFromEmail(mEmail), MailFunctions.getSmtpHostFromEmail(mEmail), 993, 587, "");
-                String newCredentialsJson = gson.toJson(newMailServerCredentials);
-                System.out.println(newCredentialsJson);
-                MainActivity.credentialsEditor.putString("data", newCredentialsJson);
-                MainActivity.credentialsEditor.apply();
+                /* read login credentials from SharedPreferences */
+                SharedPreferences credentialsReader = getApplicationContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE);
+                String readJsonData = credentialsReader.getString("data", "");
+                String currentUser = credentialsReader.getString("currentUser", "");
+
+                Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>() {
+                }.getType();
+                ArrayList<MailServerCredentials> currentUsersCredentials = gson.fromJson(readJsonData, credentialsType);
+                boolean gotCurrentUserCredentials = false;
+                try {
+                    if (!currentUsersCredentials.isEmpty()) {
+                        for (int i = 0; i < currentUsersCredentials.size(); i++) {
+                            if (currentUsersCredentials.get(i).getUsername().equals(currentUser)){
+                                mPassword = currentUsersCredentials.get(i).getPassword();
+                                mUser = currentUsersCredentials.get(i).getUsername();
+                                mImapPort = currentUsersCredentials.get(i).getImapPort();
+                                mImapHost = currentUsersCredentials.get(i).getImapHost();
+                                gotCurrentUserCredentials = true;
+                                break;
+                            }
+                        }
+                    }
+                } catch (NullPointerException ignored) {}
+
 
                 /* download all messages from mail server */
+                List folders =  MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(mImapHost,
+                        mUser, mPassword, mImapPort));
 
-                /* read login credentials from SharedPreferences */
-                SharedPreferences credentialsReader = getApplicationContext().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
-                String readJsonData = credentialsReader.getString("data", "");
-                MailServerCredentials readMailServerCredentials = gson.fromJson(readJsonData, MailServerCredentials.class);
-
-
-                List folders =  MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(newMailServerCredentials.getImapHost(),
-                        newMailServerCredentials.getUsername(), newMailServerCredentials.getPassword(), newMailServerCredentials.getImapPort()));
-
+                /*deletes all folders that were clicked*/
                 if (mEmailViewModel.getAll(false).size() > 0) {
                     for (int delete = 0; delete < mEmailViewModel.getAll(false).size(); delete++) {
                         mEmailViewModel.deleteMessage(mEmailViewModel.getAll(false).get(delete));
@@ -86,7 +98,7 @@ public class DownloadWorker extends Worker {
                     String folderNow = folders.get(i).toString();
                     System.out.println("ALL Folders: " + folders);
 
-                    if (folderNow.equals("Inbox") || folderNow.equals("IBOX") || folderNow.equals("inbox")){
+                    if (folderNow.equals("Inbox") || folderNow.equals("INBOX") || folderNow.equals("inbox")){
                         folderName = "Inbox";
                     }else if (folderNow.equals("Trash") || folderNow.equals("TRASH") ||
                             folderNow.equals("Delete") || folderNow.equals("DELETE") || folderNow.equals("Papierkorb")){
@@ -100,7 +112,7 @@ public class DownloadWorker extends Worker {
                             folderNow.equals("DRAFTS") || folderNow.equals("Entw&APw-rfe")  )  {
                         folderName = "Draft";
                     } else if (folderNow.equals("Spam") || folderNow.equals("SPAM") || folderNow.equals("Bulk Mail")  ||
-                            folderNow.equals("DRAFTS")){
+                            folderNow.equals("bulk mail")){
                         folderName = "Spam";
                     }
                     else {
@@ -109,8 +121,8 @@ public class DownloadWorker extends Worker {
 
                     //mEmailViewModel.deleteFolder(folders.get(i).toString());
                     /* fetch and print draft messages */
-                    String fetchedMails = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(newMailServerCredentials.getImapHost(),
-                            newMailServerCredentials.getUsername(), newMailServerCredentials.getPassword(), newMailServerCredentials.getImapPort()),
+                    String fetchedMails = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(mImapHost,
+                            mUser, mPassword, mImapPort),
                             folders.get(i).toString(), folderName);
                     //System.out.println("Folder: " + folders.get(i).toString()+ "\n Foldersize: " + folders.size());
                     //System.out.println("Fetched Mails from Folder " + folders.get(i).toString() + ": \n"+ fetchedMails + "\n MAANCBJC");
@@ -138,10 +150,6 @@ public class DownloadWorker extends Worker {
                     }
 
                 }
-
-
-
-
 
                 return Result.success();
             } catch (Throwable throwable){

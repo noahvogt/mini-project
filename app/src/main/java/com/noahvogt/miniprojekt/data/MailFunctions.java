@@ -16,10 +16,12 @@ public class MailFunctions {
         return pythonMailFunctions.callAttr("checkConnection", host, email, password, 993).toBoolean();
     }
 
-    public static void sendStarttlsMail(String host, String sendingMail, String receivingMail, String password, String message, String subject, String cc, String bcc) {
+    public static void sendStarttlsMail(String host, String sendingMail, String receivingMail, String password, String message,
+                                        String subject, String cc, String bcc, int port) {
         Python python = Python.getInstance();
         PyObject pythonMailFunctions = python.getModule("mailFunctions");
-        pythonMailFunctions.callAttr("sendStarttls", host, sendingMail, receivingMail, password, message, subject, 587, cc, bcc);
+        pythonMailFunctions.callAttr("sendStarttls", host, sendingMail, receivingMail, password,
+                message, subject, port, cc, bcc);
     }
 
     public static PyObject getIMAPConnection(String host, String email, String password, int port) {
@@ -58,16 +60,17 @@ public class MailFunctions {
         if (topLevelHost.endsWith("edubs.ch")) {
             return "teamwork.edubs.ch";
 
-        }else if (topLevelHost.endsWith("yahoo.com")){
+        } else if (topLevelHost.endsWith("yahoo.com")){
             return "imap.mail.yahoo.com";
 
         } else if (topLevelHost.endsWith("gmx.ch")){
             return "imap.gmx.net";
         } else if (topLevelHost.endsWith("gmx.de")){
             return "imap.gmx.net";
-        }
-        else {
-            return "imap." + topLevelHost;
+        } else if (topLevelHost.equals("noahvogt.com")) {
+            return "mail.noahvogt.com";
+        } else {
+                return "imap." + topLevelHost;
         }
     }
 
@@ -82,8 +85,9 @@ public class MailFunctions {
             return  "mail.gmx.net";
         }else if (topLevelHost.endsWith("gmx.de")) {
             return "mail.gmx.net";
-        }
-        else {
+        } else if (topLevelHost.endsWith("edubs.ch")) {
+            return "smtp.edubs.ch";
+        } else {
             return "smtp." + topLevelHost;
         }
     }

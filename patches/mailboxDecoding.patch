@@ -1,0 +1,17 @@
+--- mailFunctions.py	2021-10-06 12:34:01.556316453 +0200
++++ mailFunctions2.py	2021-10-06 12:33:47.493424755 +0200
+@@ -1,4 +1,4 @@
+-import imaplib, smtplib, ssl, email, os, json
++import imaplib, smtplib, ssl, email, os, json, imapclient
+ from itertools import chain
+ 
+ # format raw string you get from fetching mails
+@@ -66,6 +66,8 @@
+     for items in mailboxes:
+         if type(items) == list:
+             for raw_box_string in items:
++                print(raw_box_string)
++                print(imapclient.imap_utf7.decode(raw_box_string))
+                 box_string = str(raw_box_string)
+                 # TODO: handle cases when folder contains subfolders
+                 modified_box_string = (box_string[box_string.find('"/" ')+4:-1])

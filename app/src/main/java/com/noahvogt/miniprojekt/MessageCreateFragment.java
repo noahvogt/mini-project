@@ -21,10 +21,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.noahvogt.miniprojekt.DataBase.Message;
 import com.noahvogt.miniprojekt.data.EmailViewModel;
 import com.noahvogt.miniprojekt.data.MailFunctions;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -65,22 +69,17 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
     }
 
     private AlertDialog dialog;
-    SharedPreferences preferences;
-
 
     private static final int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
-
 
     /* set theming style */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.messageCreateTheme);
-        preferences = getActivity().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
     }
-
 
     @Nullable
     @Override
@@ -101,9 +100,11 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
          subjectObject = (EditText) view.findViewById(R.id.create_message_subject_text);
          messageBodyObject = (EditText) view.findViewById(R.id.create_message_body_text);
 
+        SharedPreferences mailServerCredentials = getContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE);
+        
         /* set logged in email address as sending address */
-        String loginEmail = preferences.getString("email","");
-        sendingAddressObject.setText(loginEmail);
+        String currentMailUser = mailServerCredentials.getString("currentUser", "");
+        sendingAddressObject.setText(currentMailUser);
 
         /* get string vars, MAYBE NOT HERE */
         if (mMessage != null) {
@@ -217,11 +218,30 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
                 String ccStr = ccObject.getText().toString();
                 String bccStr = bccObject.getText().toString();
 
+                Gson gson = new Gson();
+
+                /* get string vars, MAYBE NOT HERE */
+                String jsonData = mailServerCredentials.getString("data", "");
+                Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>(){}.getType();
+                ArrayList<MailServerCredentials> allUsersCredentials = gson.fromJson(jsonData, credentialsType);
+                
+                String smtpHost = null, password = null; int smtpPort = 587;
+
+                for (int i = 0; i < allUsersCredentials.size(); i++) {
+                    if (allUsersCredentials.get(i).getUsername().equals(currentMailUser)) {
+                        smtpHost = allUsersCredentials.get(i).getSmtpHost();
+                        smtpPort = allUsersCredentials.get(i).getSmtpPort();
+                        password = allUsersCredentials.get(i).getPassword();
+                        break;
+                    }
+                }
+                
                 /* check for valid input */
                 if (MailFunctions.validateMessageBody(messageBodyObject) && MailFunctions.validateSubject(subjectObject) &&
-                MailFunctions.validateEmail(receivingAddressObject) && MailFunctions.validateEmail(sendingAddressObject)) {
-                    String password = preferences.getString("password","");
-                    MailFunctions.sendStarttlsMail("smtp.edubs.ch", sendingAddress, receivingAddress, password, messageBody, subject, ccStr, bccStr);
+                MailFunctions.validateEmail(receivingAddressObject) && MailFunctions.validateEmail(sendingAddressObject) &&
+                !MailFunctions.checkForSameEmail(sendingAddressObject, receivingAddressObject)) {
+                    MailFunctions.sendStarttlsMail(smtpHost, sendingAddress, receivingAddress, password, messageBody,
+                            subject, ccStr, bccStr, smtpPort);
                     Toast.makeText(getActivity(), "sending ... ", Toast.LENGTH_SHORT).show();
                     dismiss();
                 } else {

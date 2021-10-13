@@ -47,7 +47,13 @@ def checkConnection(host, username, password, port):
         connection.logout()
         return True
     except Exception as e:
-        #print(str(e))
+
+        print("host: " + host)
+        print("username: " + username)
+        print("password: " + password)
+        print("port: " + str(port))
+        print(str(e))
+
         return False
 
 def connect(host, username, password, port):
@@ -157,12 +163,13 @@ def fetchMails(connection, inbox, folderLocal):
             # set subject to an empty string when not found
             try:
                 if raw_string[1] == 'utf-8':
-                    subject = raw_string[0].raw_string('utf-8')
+                    subject = raw_string[0].decode('utf-8')
+                elif raw_string[1] == 'iso-8859-1':
+                    subject = raw_string[0].decode('iso-8859-1')
                 else:
-                    subject = raw_string[0].decode("iso-8859-1")
-                            #nonNoneList.append(str(item.decode("iso-8859-1")))
+                    subject = str(raw_string[0])
             except AttributeError:
-                subject=""
+                 subject = str(raw_string[0])
 
             output_dict['subject'] = subject
             output_dict['from'] = stringCompiling(raw_from)
