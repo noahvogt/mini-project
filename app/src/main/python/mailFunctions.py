@@ -1,8 +1,13 @@
-import imaplib, smtplib, ssl, email, os, json
+import imaplib
+import smtplib
+import ssl
+import email
+import json
 from itertools import chain
 
-# format raw string you get from fetching mails
+
 def stringCompiling(inputIterable):
+    # format raw string you get from fetching mails
     # remove first nested iterables
     try:
         unitered = list(chain.from_iterable(inputIterable))
@@ -37,8 +42,10 @@ def stringCompiling(inputIterable):
     else:
         return ""
 
+
 def errorMsgExit(error_msg):
     print("Error: " + error_msg)
+
 
 def checkConnection(host, username, password, port):
     try:
@@ -54,6 +61,7 @@ def checkConnection(host, username, password, port):
         print(str(e))
         return False
 
+
 def connect(host, username, password, port):
     connect = imaplib.IMAP4_SSL(host, port)
     connect.login(username, password)
@@ -62,6 +70,7 @@ def connect(host, username, password, port):
     except:
         pass
     return connect
+
 
 def listMailboxes(connection):
     mailboxes = connection.list()
@@ -72,20 +81,20 @@ def listMailboxes(connection):
             for raw_box_string in items:
                 box_string = str(raw_box_string)
                 # TODO: handle cases when folder contains subfolders
-                modified_box_string = (box_string[box_string.find('"/" ')+4:-1])
+                modified_box = (box_string[box_string.find('"/" ')+4:-1])
 
                 # strip unneeded "'s surrounding the folder name
-                if modified_box_string.startswith('"') and modified_box_string.endswith('"'):
-                    modified_box_string = modified_box_string[1:-1]
+                if modified_box.startswith('"') and modified_box.endswith('"'):
+                    modified_box = modified_box[1:-1]
 
-                formatted_mailbox_list.append(modified_box_string)
+                formatted_mailbox_list.append(modified_box)
 
     connection.logout()
     return formatted_mailbox_list
 
 
-    # check that there are no bytes anymore that cannot be dumped into a json
 def verifyNoBytes(messages, output_list):
+    # check that there are no bytes anymore that cannot be dumped into a json
     for messages in output_list:
         for item in messages:
             print(type(item))
@@ -101,6 +110,7 @@ def verifyNoBytes(messages, output_list):
                 print("ERROREXIT")
                 exit()
 
+
 def fetchMails(connection, inbox):
     #print("###" + inbox + "###")
     #print(type(inbox))
@@ -111,8 +121,6 @@ def fetchMails(connection, inbox):
 
     #print("status-------\n" + status)
     #print("messages-------\n" + str(messages))
-    # number of top emails to fetch
-    #N = 3
     # total number of emails
     messages_int = int(messages[0])
     print("message_int------\n" + str(messages_int))
@@ -183,52 +191,27 @@ def fetchMails(connection, inbox):
 
             output_list.append(output_dict)
 
-
     connection.close()
     connection.logout()
 
     verifyNoBytes(messages, output_list)
 
-    print("Finstep")
-
     return json.dumps(output_list)
 
 
-def sendStarttls(host, sendingMail, receivingMail, password, message="", subject="", port=587, cc=[], bcc=[]):
+def sendStarttls(host, sendingMail, receivingMail, password, message="",
+                 subject="", port=587, cc=[], bcc=[]):
     context = ssl.create_default_context()
 
     if type(cc) is not str:
         cc = ",".join(cc)
     if type(bcc) is not str:
         bcc = ",".join(bcc)
-    utf8Message = "Subject: " + subject + "\nCC: " + cc + "\nBCC: " + bcc + "\n\n" + message
-    decoded=utf8Message.encode('cp1252').decode('utf-8')
+    utf8Message = ("Subject: " + subject + "\nCC: " + cc + "\nBCC: " + bcc +
+                   "\n\n" + message)
+    decoded = utf8Message.encode('cp1252').decode('utf-8')
 
     with smtplib.SMTP(host, port) as serverConnection:
         serverConnection.starttls(context=context)
         serverConnection.login(sendingMail, password)
         serverConnection.sendmail(sendingMail, receivingMail, decoded)
-
-def afetchMails(con):
-    con.select("Sent")
-    status, email_ids = con.search(None, "ALL")
-    if status != 'OK':
-        raise Exception("Error running imap search for spinvox messages: "
-                        "%s" % status)
-
-    print(email_ids[0])
-    fetch_ids = ','.join(str(email_ids[0]).split())
-    status, data = con.fetch(3, '(RFC822)')
-    if status != 'OK':
-        raise Exception("Error running imap fetch for spinvox message: "
-                        "%s" % status)
-    for i in range(3,4):
-        header_msg = email.message_from_string(data[i * 3 + 0][1])
-        subject = header_msg['Subject'],
-        print(subject)
-        date = header_msg['Date'],
-        print(date)
-        body = data[i * 3 + 1][1]
-        print(body)
-    connection.close()
-    connection.logout()
