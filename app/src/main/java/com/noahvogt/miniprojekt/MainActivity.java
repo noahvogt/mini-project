@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,6 +54,7 @@ import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
 import com.noahvogt.miniprojekt.data.BooleanTypeAdapter;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -426,10 +428,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    private static final String TAG = DownloadWorker.class.getSimpleName();
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_information:
+                try {
+                    SimpleDateFormat rawDate = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
+                    SimpleDateFormat date = new SimpleDateFormat("dd.MM.yy");
+                    Date middleDate = rawDate.parse("Thu, 12 Aug 2021 19:21:13 +0000 (UTC)");
+                    String newDate = date.format(middleDate);
+                } catch (Throwable throwable) {
+                    Log.e(TAG, "Error formating date", throwable );
+                }
+
                 createInformation(false);
                 return true;
             case R.id.action_refresh:
