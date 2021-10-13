@@ -117,7 +117,7 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
 
         /* TODO: add cc + bcc functionality */
 
-        /* dosen't wotk cause Activity is not extendet and used as variable */
+        /* doesn't work cause Activity is not extended and used as variable */
 
 
 
@@ -138,7 +138,7 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
                     dismiss();
                 }
                 else {
-                    /* setup dialog */
+                    /* setup dialog for saving draft message */
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                     alertDialogBuilder.setTitle("Warning");
                     alertDialogBuilder
@@ -171,7 +171,7 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
                                     Intent intent = new Intent(getContext(), NewDraftMessageActivity.class);
                                     startActivityForResult(intent, MainActivity.NEW_WORD_ACTIVITY_REQUEST_CODE);
 
-                                    /*if this button is clicked, close the whole fragment */
+                                    /* close the whole fragment */
                                     dismiss();
                                 }
                             })
@@ -219,8 +219,7 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
 
                 /* check for valid input */
                 if (MailFunctions.validateMessageBody(messageBodyObject) && MailFunctions.validateSubject(subjectObject) &&
-                MailFunctions.validateEmail(receivingAddressObject) && MailFunctions.validateEmail(sendingAddressObject) &&
-                !MailFunctions.checkForSameEmail(sendingAddressObject, receivingAddressObject)) {
+                MailFunctions.validateEmail(receivingAddressObject) && MailFunctions.validateEmail(sendingAddressObject)) {
                     String password = preferences.getString("password","");
                     MailFunctions.sendStarttlsMail("smtp.edubs.ch", sendingAddress, receivingAddress, password, messageBody, subject, ccStr, bccStr);
                     Toast.makeText(getActivity(), "sending ... ", Toast.LENGTH_SHORT).show();
@@ -228,8 +227,6 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
                 } else {
                     Toast.makeText(getActivity(), "Please check your input", Toast.LENGTH_SHORT).show();
                 }
-
-                /* TODO: implement actual sending functionality */
             }
         });
 

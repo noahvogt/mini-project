@@ -22,10 +22,10 @@ public class MailFunctions {
         pythonMailFunctions.callAttr("sendStarttls", host, sendingMail, receivingMail, password, message, subject, 587, cc, bcc);
     }
 
-    public static PyObject getIMAPConnection(String host, String email, String password) {
+    public static PyObject getIMAPConnection(String host, String email, String password, int port) {
         Python python = Python.getInstance();
         PyObject pythonMailFunctions = python.getModule("mailFunctions");
-        return pythonMailFunctions.callAttr("connect", host, email, password, 993);
+        return pythonMailFunctions.callAttr("connect", host, email, password, port);
     }
 
     public static List listMailboxes(PyObject IMAPConnection) {
@@ -33,51 +33,11 @@ public class MailFunctions {
         PyObject pythonMailFunctions = python.getModule("mailFunctions");
         return pythonMailFunctions.callAttr("listMailboxes", IMAPConnection).asList();
     }
-
-    public static List fetchMailsFromBox(PyObject IMAPConnection, String Folder, String InputType) {
+    public static String fetchMailsFromBox(PyObject IMAPConnection, String FolderServer, String FolderLocal) {
         Python python = Python.getInstance();
         PyObject pythonMailFunctions = python.getModule("mailFunctions");
-        return pythonMailFunctions.callAttr("fetchMails", IMAPConnection, Folder, InputType).asList();
+        return pythonMailFunctions.callAttr("fetchMails", IMAPConnection, FolderServer, FolderLocal).toString();
     }
-/*
-    public static String fetchSubject(int messageIndex){
-        Python python = Python.getInstance();
-        PyObject pythonMailFunction = python.getModule("mailFunctions");
-        return pythonMailFunction.callAttr("printSubject", messageIndex).toString();
-    }
-
-    public static String fetchFrom(int messageIndex){
-        Python python = Python.getInstance();
-        PyObject pythonMailFunction = python.getModule("mailFunctions");
-        return pythonMailFunction.callAttr("printFrom", messageIndex).toString();
-    }
-    public static String fetchTo(int messageIndex){
-        Python python = Python.getInstance();
-        PyObject pythonMailFunction = python.getModule("mailFunctions");
-        return pythonMailFunction.callAttr("printTo", messageIndex).toString();
-    }
-    public static String fetchBcc(int messageIndex){
-        Python python = Python.getInstance();
-        PyObject pythonMailFunction = python.getModule("mailFunctions");
-        return pythonMailFunction.callAttr("printBcc", messageIndex).toString();
-    }
-    public static String fetchCC(int messageIndex){
-        Python python = Python.getInstance();
-        PyObject pythonMailFunction = python.getModule("mailFunctions");
-        return pythonMailFunction.callAttr("printCc", messageIndex).toString();
-    }
-    public static String fetchDate(int meassageIndex){
-        Python python = Python.getInstance();
-        PyObject pythonMailFunction = python.getModule("mailFunctions");
-        return pythonMailFunction.callAttr("printDate", meassageIndex).toString();
-    }
-    public static String fetchContent(int messageIndex){
-        Python python = Python.getInstance();
-        PyObject pythonMailFunction = python.getModule("mailFunctions");
-        return pythonMailFunction.callAttr("printContent", messageIndex).toString();
-
- */
-
     public static boolean validateName(EditText emailName) {
         String name = emailName.getText().toString().trim();
 
@@ -92,6 +52,42 @@ public class MailFunctions {
             return true;
         }
     }
+
+    public static String getImapHostFromEmail(String email) {
+        String topLevelHost = email.substring(email.lastIndexOf("@") + 1);
+        if (topLevelHost.endsWith("edubs.ch")) {
+            return "teamwork.edubs.ch";
+
+        }else if (topLevelHost.endsWith("yahoo.com")){
+            return "imap.mail.yahoo.com";
+
+        } else if (topLevelHost.endsWith("gmx.ch")){
+            return "imap.gmx.net";
+        } else if (topLevelHost.endsWith("gmx.de")){
+            return "imap.gmx.net";
+        }
+        else {
+            return "imap." + topLevelHost;
+        }
+    }
+
+    public static String getSmtpHostFromEmail(String email) {
+        String topLevelHost = email.substring(email.lastIndexOf("@") + 1);
+        if (topLevelHost.equals("noahvogt.com")) {
+            return "mail.noahvogt.com";
+
+        } else if (topLevelHost.endsWith("yahoo.com")){
+            return "smtp.mail.yahoo.com";
+        }else if (topLevelHost.endsWith("gmx.ch")){
+            return  "mail.gmx.net";
+        }else if (topLevelHost.endsWith("gmx.de")) {
+            return "mail.gmx.net";
+        }
+        else {
+            return "smtp." + topLevelHost;
+        }
+    }
+
 
     public static boolean validateEmail(EditText emailAddress) {
         String email = emailAddress.getText().toString().trim();
