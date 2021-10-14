@@ -2,16 +2,22 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "217605d4a5ec0067e9003ad5b099a303",
+    "identityHash": "22874ef127ac5669572671e40c064f64",
     "entities": [
       {
         "tableName": "message_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `to` TEXT NOT NULL, `cc` TEXT, `bcc` TEXT, `fromEmail` TEXT NOT NULL, `date` TEXT NOT NULL, `subject` TEXT, `textContent` TEXT, `folder` TEXT NOT NULL, `seen` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `user` TEXT NOT NULL, `to` TEXT NOT NULL, `cc` TEXT, `bcc` TEXT, `fromEmail` TEXT NOT NULL, `date` TEXT NOT NULL, `subject` TEXT, `textContent` TEXT, `folder` TEXT NOT NULL, `seen` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mUser",
+            "columnName": "user",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -82,7 +88,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '217605d4a5ec0067e9003ad5b099a303')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '22874ef127ac5669572671e40c064f64')"
     ]
   }
 }

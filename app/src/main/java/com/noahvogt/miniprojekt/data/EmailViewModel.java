@@ -26,6 +26,7 @@ public class EmailViewModel extends AndroidViewModel {
     private LiveData<List<Message>> mSentMessage;
     private LiveData<List<Message>> mArchiveMessage;
     private LiveData<List<Message>> mSpamMessage;
+    private List<Message> mAllMessages;
 
     String sent;
     String spam;
@@ -42,13 +43,13 @@ public class EmailViewModel extends AndroidViewModel {
         mSentMessage = mEmailRepository.getSentMessages();
         mArchiveMessage = mEmailRepository.getArchiveMessages();
         mSpamMessage = mEmailRepository.getSpamMessage();
+        //mAllMessages = mEmailRepository.getAllMessages();
     }
 
     /*requests Worker and applies password, email to it */
-    public void applyDownload(Data data){
+    public void applyDownload(){
         OneTimeWorkRequest downloadRequest =
                 new OneTimeWorkRequest.Builder(DownloadWorker.class)
-                        .setInputData(data)
                         .build();
 
         mWorkManager.enqueue(downloadRequest);
@@ -117,7 +118,9 @@ public class EmailViewModel extends AndroidViewModel {
 
     public LiveData<List<Message>> getArchiveMessage(){ return mArchiveMessage;}
 
-    //public List<Message> getAllMessages(){return mAllMessages;}
+    public List<Message> getAllMessages(){
+        mAllMessages = mEmailRepository.getAllMessages();
+        return mAllMessages;}
 
     public void insert(Message message){mEmailRepository.insert(message);}
 

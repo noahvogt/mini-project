@@ -6,16 +6,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +24,6 @@ import androidx.fragment.app.DialogFragment;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.noahvogt.miniprojekt.DataBase.Message;
 
@@ -44,21 +40,16 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.work.Data;
 
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
-import com.google.android.material.snackbar.Snackbar;
 import com.noahvogt.miniprojekt.data.CustomAdapter;
-import com.noahvogt.miniprojekt.data.DeleteThread;
 import com.noahvogt.miniprojekt.data.EmailViewModel;
 import com.noahvogt.miniprojekt.data.MailFunctions;
 import com.noahvogt.miniprojekt.workers.DownloadWorker;
 import com.noahvogt.miniprojekt.ui.show.MessageShowFragment;
-import com.noahvogt.miniprojekt.data.BooleanTypeAdapter;
 
 import java.lang.reflect.Type;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,9 +60,6 @@ import com.google.gson.Gson;
 
 
 import static com.noahvogt.miniprojekt.R.id.drawer_layout;
-import static com.noahvogt.miniprojekt.R.id.exitButton;
-
-import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, CustomAdapter.SelectedMessage {
 
@@ -84,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static EmailViewModel mEmailViewModel;
     public static RecyclerView recyclerView;
     private Boolean clicked = false;
+
+    public static String userGlobal;
 
     private AlertDialog dialog;
     private EditText newemail_name, newemail_email, newemail_password; /* may not be private */
@@ -110,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return null;
 
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     showCurrentUserObject.setText("current user:\nNone");
                 } else {
                     showCurrentUserObject.setText(String.format("current user:\n%s", currentUser));
+                    userGlobal = currentUser;
                 }
 
                 SharedPreferences.Editor credEditor = credReader.edit();
@@ -200,11 +192,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         String jsonCredData = credReader.getString("data", "");
                         Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>(){}.getType();
                         ArrayList<MailServerCredentials> currentUsersCredentials = gson.fromJson(jsonCredData, credentialsType);
+                        showToast("clicked switch");
 
                         try {
                             for (int i = 0; i < currentUsersCredentials.size(); i++) {
+                                showToast("Credentials: "+ currentUsersCredentials.get(i).getUsername());
+                                showToast("userInput: " + userInput);
                                 if (currentUsersCredentials.get(i).getUsername().equals(userInput)) {
                                     credEditor.putString("currentUser", userInput).apply();
+                                    userGlobal = userInput;
                                     showCurrentUserObject.setText(String.format("current user:\n%s", userInput));
                                     showToast("switched account");
                                     updateNavHeaderText(headerView);
@@ -225,6 +221,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         String jsonCredData = credReader.getString("data", "");
                         Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>(){}.getType();
                         ArrayList<MailServerCredentials> currentUserCredentials = gson.fromJson(jsonCredData, credentialsType);
+                        showToast("clicked delete account");
 
                         try {
                             for (int i = 0; i < currentUserCredentials.size(); i++) {
@@ -232,7 +229,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     currentUserCredentials.remove(i);
 
                                     /* live update adapter for dropdown menu */
-
                                     int k = 0;
                                     String[] newUserArray = new String[finalUserArray.length - 1];
                                     for (String s : finalUserArray) {
@@ -254,9 +250,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         String usernameZero = currentUserCredentials.get(0).getUsername();
                                         credEditor.putString("currentUser", usernameZero).apply();
                                         showCurrentUserObject.setText(String.format("current user:\n%s", usernameZero));
+                                        userGlobal = usernameZero;
                                     } else {
                                         credEditor.putString("currentUser", "").apply();
                                         showCurrentUserObject.setText("current user:\n None");
+                                        userGlobal = null;
                                     }
                                     showToast("account removed");
                                     updateNavHeaderText(headerView);
@@ -374,7 +372,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             System.out.println(dNow);
 
          //   if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-                Message word = new Message(
+                Message word = new Message(userGlobal,
                         MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_TO),
                         MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_CC),
                         MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_BCC),
@@ -538,10 +536,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public static MailServerCredentials newMailServerCredentials;
     public static SharedPreferences.Editor credentialsEditor;
-    String name;
-    String email;
-    String password;
-    Data.Builder builder = new Data.Builder();
 
     public void addNewAccountCredentials(String name, String email, String password, int imapPort,
                                          int smtpPort, String imapHost, String smtpHost, DialogInterface dialogContext,
@@ -665,19 +659,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String email = newemail_email.getText().toString();
                 String password = newemail_password.getText().toString();
 
-                builder = new Data.Builder();
-                builder.putString(emailData, email)
-                        .putString(passwordData, password)
-                        .putString(nameData, name);
-
-
                 if (!MailFunctions.validateEmail(newemail_email) | !MailFunctions.validateName(newemail_name) | !MailFunctions.validatePassword(newemail_password)) {
                     return;
                 }
 
                 addNewAccountCredentials(name, email, password, 993, 587, MailFunctions.getImapHostFromEmail(email),
                         MailFunctions.getSmtpHostFromEmail(email), rootCreateNewEmailPopupDialog, true, headerView);
-                mEmailViewModel.applyDownload(builder.build());
+                mEmailViewModel.applyDownload();
+                userGlobal = email;
                 dialog.dismiss();
         }});
 
@@ -714,7 +703,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 createInformation(false,null);
                 return true;
             case R.id.action_refresh:
-                mEmailViewModel.applyDownload(builder.build());
+                mEmailViewModel.applyDownload();
                 return true;
             case R.id.action_deletefolder:
                 showToast("clicked delete all");

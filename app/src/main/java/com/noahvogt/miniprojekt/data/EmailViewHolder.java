@@ -3,6 +3,7 @@ package com.noahvogt.miniprojekt.data;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
     private final TextView subjectItemView;
     private final TextView dateItemView;
     private final TextView messageItemView;
+    private final String TAG = EmailViewHolder.class.getSimpleName();
 
 
     private EmailViewHolder(View itemView,
@@ -40,9 +42,15 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
         System.out.println("Called EmailViewHolder");
         
         itemView.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                selectedMessage.selectedMessage(messageList.get(getBindingAdapterPosition()), null );
+                try {
+                    selectedMessage.selectedMessage(messageList.get(getBindingAdapterPosition()), null);
+                } catch (Throwable throwable){
+                    Toast.makeText(itemView.getContext(), "Could not open this Message", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Error by opening Message", throwable);
+                }
             }
         });
     }

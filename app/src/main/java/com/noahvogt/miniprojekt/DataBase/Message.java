@@ -16,6 +16,10 @@ public class Message {
 
     @PrimaryKey (autoGenerate = true)
     public int id;
+    
+    @NonNull
+    @ColumnInfo(name = "user")
+    private String mUser;
 
     /* name of Columm */
     @NonNull
@@ -58,6 +62,8 @@ public class Message {
     @SerializedName("seen")
     private boolean mSeen;
 
+    public String getUser(){return this.mUser;}
+
     public String getTo(){return this.mTo;}
 
     public String getFrom(){return this.mFrom;}
@@ -78,7 +84,12 @@ public class Message {
 
     public boolean isSeen() {return this.mSeen;}
 
+    public void putUser(String user){ this.mUser = user;}
+
+    public void putDate(String date){this.mDate = date;}
+
     public Message(
+            @NonNull String user,
             @NonNull String to,
             String cc,
             String bcc,
@@ -97,6 +108,7 @@ public class Message {
         this.mTextContent = textContent;
         this.mFolder = folder;
         this.mSeen = seen;
+        this.mUser = user;
     }
 
 }

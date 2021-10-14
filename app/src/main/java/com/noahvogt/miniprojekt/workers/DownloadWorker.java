@@ -85,13 +85,8 @@ public class DownloadWorker extends Worker {
                 List folders =  MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(mImapHost,
                         mUser, mPassword, mImapPort));
 
-                /*deletes all folders that were clicked*/
-                if (mEmailViewModel.getAll(false).size() > 0) {
-                    for (int delete = 0; delete < mEmailViewModel.getAll(false).size(); delete++) {
-                        mEmailViewModel.deleteMessage(mEmailViewModel.getAll(false).get(delete));
-                    }
-                }
-                mEmailViewModel.getAll(true);
+
+                //mEmailViewModel.getAll(true);
 
                 for (int i = 0; i < folders.size(); i++) {
                     String folderName;
@@ -112,7 +107,7 @@ public class DownloadWorker extends Worker {
                             folderNow.equals("DRAFTS") || folderNow.equals("Entw&APw-rfe")  )  {
                         folderName = "Draft";
                     } else if (folderNow.equals("Spam") || folderNow.equals("SPAM") || folderNow.equals("Bulk Mail")  ||
-                            folderNow.equals("bulk mail")){
+                            folderNow.equals("bulk mail") || folderNow.equals("Spamverdacht")){
                         folderName = "Spam";
                     }
                     else {
@@ -133,7 +128,8 @@ public class DownloadWorker extends Worker {
                     ArrayList<Message> messages = gson.fromJson(fetchedMails, messageType);
                     for (int k = 0; k < messages.size(); k++) {
                         Message message = messages.get(k);
-                        //System.out.println("oldDate: " + message.getDate());
+                        message.putUser(currentUser);
+                        System.out.println("oldDate: " + message.getDate());
                         //SimpleDateFormat rawDate = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
                         //SimpleDateFormat date = new SimpleDateFormat("dd.MM.yy");
                         //Date middleDate = rawDate.parse(message.getDate());

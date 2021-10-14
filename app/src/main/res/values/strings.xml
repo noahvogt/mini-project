@@ -49,6 +49,9 @@
     <string name="text_create_message">Create Message</string>
     <string name="text_ok">Okay</string>
 
+    <string name="text_delete_account">Delete selected account</string>
+    <string name="text_switch_account">Switch to selected account</string>
+
     <string name="text_welcome">
         Hello friendly user. \n
         When creating an account,
