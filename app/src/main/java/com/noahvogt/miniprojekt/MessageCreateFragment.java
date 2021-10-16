@@ -168,7 +168,6 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
 
                                     activity.finish();
 
-
                                     Intent intent = new Intent(getContext(), NewDraftMessageActivity.class);
                                     startActivityForResult(intent, MainActivity.NEW_WORD_ACTIVITY_REQUEST_CODE);
 

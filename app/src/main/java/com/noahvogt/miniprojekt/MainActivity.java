@@ -371,7 +371,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     new SimpleDateFormat("dd.MM.yy");
             System.out.println(dNow);
 
-         //   if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
                 Message word = new Message(userGlobal,
                         MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_TO),
                         MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_CC),
