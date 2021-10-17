@@ -16,9 +16,6 @@ import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
-/* @Embedded to express entitys together
- *  https://developer.android.com/training/data-storage/room/relationships
- * to learn more */
 
 @Entity(tableName = "message_table")
 public class Message {

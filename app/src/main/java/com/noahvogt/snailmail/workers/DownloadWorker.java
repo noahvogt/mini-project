@@ -31,8 +31,6 @@ import static com.noahvogt.snailmail.MainActivity.mEmailViewModel;
 public class DownloadWorker extends Worker {
 
     //TODO: upload every data to server
-
-
     public DownloadWorker(
             @NonNull Context appContext,
             @NonNull WorkerParameters workerParameters){
@@ -90,7 +88,7 @@ public class DownloadWorker extends Worker {
                 for (int i = 0; i < folders.size(); i++) {
                     String folderName;
                     String folderNow = folders.get(i).toString();
-                    System.out.println("ALL Folders: " + folders);
+
 
                     if (folderNow.equals("Inbox") || folderNow.equals("INBOX") || folderNow.equals("inbox")){
                         folderName = "Inbox";

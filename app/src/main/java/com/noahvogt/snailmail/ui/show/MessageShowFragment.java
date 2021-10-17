@@ -56,10 +56,8 @@ public class MessageShowFragment extends DialogFragment implements PopupMenu.OnM
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // set and inflate layout
+        /* set and inflate layout */
         View view = inflater.inflate(R.layout.message_show_fragment, container, false);
-
-        // init vars
 
         MessageShowViewModel messageShowViewModel =
                 new ViewModelProvider(this).get(MessageShowViewModel.class);
@@ -95,8 +93,6 @@ public class MessageShowFragment extends DialogFragment implements PopupMenu.OnM
 
 
         // TODO: add cc + bcc functionality
-
-        // button listeners
         showBccButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,10 +125,6 @@ public class MessageShowFragment extends DialogFragment implements PopupMenu.OnM
         dotButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(getActivity(), v);
-                popupMenu.setOnMenuItemClickListener(MessageShowFragment.this::onMenuItemClick);
-                popupMenu.inflate(R.menu.create_message_options_menu);
-                popupMenu.show();
             }
         });
 
@@ -144,20 +136,19 @@ public class MessageShowFragment extends DialogFragment implements PopupMenu.OnM
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.create_message_delete:
-                Toast.makeText(getActivity(), "item delete clicked", Toast.LENGTH_LONG).show();
-                //mEmailViewModel.deleteFolder("Inbox");
+                Toast.makeText(getActivity(), "Deleting message", Toast.LENGTH_LONG).show();
                 mEmailViewModel.deleteMessage(mCurrent);
                 return true;
             case R.id.create_message_spam:
-                Toast.makeText(getActivity(), "item spam clicked", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Moving message to spam", Toast.LENGTH_LONG).show();
                 mEmailViewModel.updateFolder(mCurrent.getId(), "Spam");
                 return true;
             case R.id.create_message_move_archive:
-                Toast.makeText(getActivity(), "item archive clicked", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Moving message to archive", Toast.LENGTH_LONG).show();
                 mEmailViewModel.updateFolder(mCurrent.getId(), "Archive");
 
 
-            default: // this case should never occur
+            default: /* this case should never occur */
                 return false;
         }
     }

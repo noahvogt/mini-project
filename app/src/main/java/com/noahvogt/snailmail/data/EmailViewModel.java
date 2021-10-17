@@ -54,7 +54,6 @@ public class EmailViewModel extends AndroidViewModel {
         mSentMessage = mEmailRepository.getSentMessages();
         mArchiveMessage = mEmailRepository.getArchiveMessages();
         mSpamMessage = mEmailRepository.getSpamMessage();
-        //mAllMessages = mEmailRepository.getAllMessages();
     }
 
     /*requests Worker and applies password, email to it */
@@ -70,13 +69,6 @@ public class EmailViewModel extends AndroidViewModel {
         /*if Messages being downloaded*/
         if (isDownloading){return;}
         if (userGlobal == null){return;}
-        System.out.println("setListAll: size messageListAll input: " + messageListAll.size());
-        System.out.println("setListAll: fragment: " + fragment);
-        System.out.println("setListAll: variable inbox: " + inbox);
-        System.out.println("setListAll: variable sent: " + sent);
-        System.out.println("setListAll: variable drafts: " + drafts);
-        System.out.println("setListAll: variable archive: " + archive);
-        System.out.println("setListAll: variable spam: " + spam);
         if (sent == null && fragment.equals("Sent")){
             for (int i = 0; i < messageListAll.size(); i++) {
                 this.all.add(messageListAll.get(i));
@@ -109,13 +101,10 @@ public class EmailViewModel extends AndroidViewModel {
             }
             spam = fragment;
         }
-        System.out.println("setListAll: size all output: " + all.size());
     }
 
     public List<Message> getAll(boolean status){
-        System.out.println("getAll: Size of all Lists " + all.size());
         for (int i = 0; i < all.size(); i++) {
-            System.out.println("EmailModel all list " + all.get(i) + "\n Size: " + all.size());
         }
         if (status){
             List<Message> emptyAll;
@@ -126,7 +115,7 @@ public class EmailViewModel extends AndroidViewModel {
             archive = null;
             inbox = null;
             drafts = null;
-            System.out.println("Size cleared list:" + all.size());
+
             return emptyAll;
         }
         return all;

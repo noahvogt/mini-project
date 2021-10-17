@@ -31,7 +31,7 @@ public abstract class EmailRoomDatabase extends RoomDatabase{
     /* the INSTANCE can be used by different threads at the same time */
     private static volatile EmailRoomDatabase INSTANCE;
 
-    /* tells room the schema is changed from the version tha is istallend in device
+    /* tells room the schema is changed from the version that is installed in device
      * is not used */
     static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override

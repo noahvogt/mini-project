@@ -2,14 +2,12 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <SwitchPreferenceCompat
-        android:key="@string/key_notification"
-        android:title="@string/enable_message_notification"/>
-
-
     <PreferenceCategory android:title="General">
 
-    <ListPreference
+        <SwitchPreferenceCompat
+            android:key="@string/key_notification"
+            android:title="@string/enable_message_notification"/>
+    <!--ListPreference
         android:defaultValue="3"
         android:dialogTitle="@string/remind_to_take_a_break"
         android:entries="@array/pref_remind_me_to_take_a_break"
@@ -57,7 +55,7 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/prefs_enable_stats"
-            android:title="@string/enable_stats" />
+            android:title="@string/enable_stats" / -->
 
     </PreferenceCategory>
 

@@ -48,7 +48,6 @@ public class CustomAdapter extends ListAdapter<Message, EmailViewHolder> {
 
     /*get List from adapter which is shown*/
     public void getList(List<Message> messageList){
-        System.out.println("GetList Adapter Loop");
         this.messageList = messageList;
     }
 

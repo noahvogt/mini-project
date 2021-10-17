@@ -173,17 +173,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         String jsonCredData = credReader.getString("data", "");
                         Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>(){}.getType();
                         ArrayList<MailServerCredentials> currentUsersCredentials = gson.fromJson(jsonCredData, credentialsType);
-                        showToast("clicked switch");
+
 
                         try {
                             for (int i = 0; i < currentUsersCredentials.size(); i++) {
-                                showToast("Credentials: "+ currentUsersCredentials.get(i).getUsername());
-                                showToast("userInput: " + userInput);
                                 if (currentUsersCredentials.get(i).getUsername().equals(userInput)) {
                                     credEditor.putString("currentUser", userInput).apply();
                                     userGlobal = userInput;
                                     showCurrentUserObject.setText(String.format("current user:\n%s", userInput));
-                                    showToast("switched account");
+                                    showToast("Switched account");
                                     updateNavHeaderText(headerView);
                                     break;
                                 }
@@ -202,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         String jsonCredData = credReader.getString("data", "");
                         Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>(){}.getType();
                         ArrayList<MailServerCredentials> currentUserCredentials = gson.fromJson(jsonCredData, credentialsType);
-                        showToast("clicked delete account");
+
 
                         try {
                             for (int i = 0; i < currentUserCredentials.size(); i++) {
@@ -237,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         showCurrentUserObject.setText("current user:\n None");
                                         userGlobal = null;
                                     }
-                                    showToast("account removed");
+                                    showToast("Account removed");
                                     updateNavHeaderText(headerView);
                                     break;
                                 }
@@ -350,7 +348,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Date dNow = new Date();
             SimpleDateFormat ft =
                     new SimpleDateFormat("dd.MM.yy");
-            System.out.println(dNow);
 
                 Message word = new Message(userGlobal,
                         MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_TO),
@@ -557,19 +554,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 credentialsEditor.putString("data", gson.toJson(allUsersCredentials, credentialsType));
                 credentialsEditor.putString("currentUser", email);
                 credentialsEditor.apply();
-                showToast("Success: added new email account");
                 updateNavHeaderText(headerView);
                 dialogContext.dismiss();
                 return true;
             } else {
-                showToast("Error: cannot add the same email twice");
+                showToast("You cannot add the same email twice");
                 return false;
             }
         } else {
             if (wantConnectionFailedDialog) {
                 askForChangeMailServerSettingsDialog(name, email, password, headerView);
             } else {
-                showToast("Error: failed to get connection");
+                showToast("Failed to get connection");
                 return false;
             }
         }
@@ -585,7 +581,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /* connect to mail server */
         showToast("Probe Connection ...");
         if (MailFunctions.canConnect(imapHost, email, password) == Boolean.TRUE) {
-            showToast("was able to connect");
+            showToast("Was able to connect");
 
             Gson gson = new Gson();
 
@@ -602,13 +598,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     allUsersCredentials.set(i, new MailServerCredentials(name, email, password, imapHost, smtpHost, imapPort,
                             smtpPort, signature));
                     credentialsEditor.putString("data", gson.toJson(allUsersCredentials, credentialsType)).apply();
-                    showToast("changed account credentials");
                     dialogContext.dismiss();
                     break;
                 }
             }
         } else {
-                showToast("Error: failed to get connection");
+                showToast("Failed to get connection");
         }
     }
 
@@ -651,7 +646,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 boolean connection = addNewAccountCredentials(name, email, password, 993, 587, MailFunctions.getImapHostFromEmail(email),
                         MailFunctions.getSmtpHostFromEmail(email), rootCreateNewEmailPopupDialog, true, headerView);
                 if (connection) {
-                    showToast("Downloading Messages");
+                    showToast("Downloading messages");
                     mEmailViewModel.applyDownload();
                     userGlobal = email;
                 }

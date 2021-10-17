@@ -8,11 +8,6 @@ public class DeleteThread extends AsyncTask<Boolean, Void, Void> implements Runn
 
     @Override
     public void run() {
-       /* for (int delete = 0; delete <= mEmailViewModel.getAllMessages().size(); delete++){
-            mEmailViewModel.deleteMessage(mEmailViewModel.getAllMessages().get(delete));
-        }
-
-        */
     }
 
     @Override

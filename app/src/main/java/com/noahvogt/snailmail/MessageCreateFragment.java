@@ -118,13 +118,6 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
 
         /* TODO: add cc + bcc functionality */
 
-        /* doesn't work cause Activity is not extended and used as variable */
-
-
-
-
-
-
         /* button listeners */
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,7 +126,6 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
                 String messageBody = messageBodyObject.getText().toString();
 
                 /* give alert dialog box to user in case input fields are not empty */
-
                 if (subject.isEmpty() && messageBody.isEmpty()) {
                     dismiss();
                 }
@@ -245,7 +237,7 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
                         Toast.makeText(getActivity(), "Sending ... ", Toast.LENGTH_SHORT).show();
                         dismiss();
                     }catch (com.chaquo.python.PyException pyException){
-                        Toast.makeText(getActivity(), "Couldn't send message", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Could not send message", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(getActivity(), "Please check your input", Toast.LENGTH_SHORT).show();
@@ -260,7 +252,6 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
     /* TODO: add useful functionality to the menu + consider not using Resource ID's in switch statement
 
         IDEAS:
-        - safe to draft
         - clear all user input
         - change / check email signature
         - some email header hacking / options / customization
@@ -271,10 +262,10 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.create_message_delete:
-                Toast.makeText(getActivity(), "item 1 clicked", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Nothing will happen", Toast.LENGTH_LONG).show();
                 return true;
             case R.id.create_message_spam:
-                Toast.makeText(getActivity(), "item 2 clicked", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Nothing wil happen", Toast.LENGTH_LONG).show();
                 return true;
             default: /* this case should never occur */
                 return false;

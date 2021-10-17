@@ -74,14 +74,6 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
         if (message.length() > 30){
             message = message.substring(0,30) + "...";
         }
-        /*if (date.length() > 9){
-            date = "INVALID";
-        }
-        if (!isDate(date)){
-            date = "INVALID";
-        }
-
-         */
 
         fromItemView.setText(from);
         subjectItemView.setText(subject);

@@ -29,7 +29,7 @@
                 android:layout_marginStart="0dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
-                android:src="@mipmap/ic_close_purple" />
+                android:src="@drawable/ic_baseline_close_24" />
 
             <ImageButton
                 android:id="@+id/show_message_dots_button"
@@ -40,7 +40,7 @@
                 android:layout_marginLeft="320dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
-                android:src="@mipmap/ic_more_vert_dots_purple" />
+                android:src="@drawable/ic_round_pending_24" />
 
             <ImageButton
                 android:id="@+id/show_message_attach_button"
@@ -54,7 +54,7 @@
                 android:layout_toRightOf="@id/show_message_dots_button"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
-                android:src="@mipmap/ic_attach_purple" />
+                android:src="@drawable/ic_baseline_attachment_24" />
 
 
         </RelativeLayout>

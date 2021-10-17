@@ -68,7 +68,6 @@ public class GalleryFragment extends Fragment implements CustomAdapter.SelectedM
             adapter.getList(messages);
             /*gives list of messages to EmailViewModel */
             MainActivity.mEmailViewModel.setListAll(messages, "Sent", isDownloading);
-            System.out.println("Gallery started");
         });
 
         return root;
