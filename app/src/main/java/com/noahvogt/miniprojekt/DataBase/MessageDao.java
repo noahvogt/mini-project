@@ -19,14 +19,8 @@ public interface MessageDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Message message);
 
-    @Query("DELETE FROM message_table WHERE folder = :folder")
-    void deleteFolder(String folder);
-
     @Delete(entity = Message.class)
     void delete(Message message);
-
-    @Delete(entity = Message.class)
-    void deleteAll(String folder);
 
     @Query("UPDATE message_table SET folder = :folder WHERE id = :id")
     void updateFolder(int id, String folder);
@@ -34,47 +28,28 @@ public interface MessageDao {
     @Query("UPDATE message_table SET date = :date WHERE id = :id")
     void updateDate(int id, String date);
 
-    @Query("SELECT * FROM message_table ORDER BY id ASC")
-    List<Message> getAllMessages();
-
-    /*gets messages all messages ordered by date */
-    @Query("SELECT * FROM message_table ORDER BY date ASC")
-    LiveData<List<Message>> getDateMessages();
-
     /* get Draft messages*/
     @Query("SELECT * FROM message_table WHERE user = :user AND folder LIKE 'Draft' ORDER BY date DESC")
     LiveData<List<Message>> getLiveDraftMessages(String user);
-
-    @Query("SELECT * FROM message_table WHERE folder LIKE 'Draft' ORDER BY date DESC")
-    List<Message> getDraftMessages();
 
     /* get Inbox messages*/
     @Query("SELECT * FROM message_table WHERE user = :user AND folder LIKE 'Inbox' ORDER BY date DESC")
     LiveData<List<Message>> getLiveInboxMessages(String user);
 
-    @Query("SELECT * FROM message_table WHERE folder LIKE 'Inbox' ORDER BY date DESC")
-    List<Message> getInboxMessages();
 
     /* get Sent messages*/
     @Query("SELECT * FROM message_table WHERE user = :user AND folder LIKE 'Sent' ORDER BY date DESC")
     LiveData<List<Message>> getLiveSentMessages(String user);
 
-    @Query("SELECT * FROM message_table WHERE folder LIKE 'Sent' ORDER BY date DESC")
-    List<Message> getSentMessages();
-
     /* get Archive messages*/
     @Query("SELECT * FROM message_table WHERE user = :user AND folder LIKE 'Archive' ORDER BY date DESC")
     LiveData<List<Message>> getLiveArchiveMessages(String user);
-
-    @Query("SELECT * FROM message_table WHERE folder LIKE 'Archive' ORDER BY date DESC")
-    List<Message> getArchiveMessages();
 
     /* get Spam messages*/
     @Query("SELECT * FROM message_table WHERE user = :user AND folder LIKE 'Spam' ORDER BY date DESC")
     LiveData<List<Message>> getLiveSpamMessages(String user);
 
-    @Query("SELECT * FROM message_table WHERE folder LIKE 'Spam' ORDER BY date DESC")
-    List<Message> getSpamMessages();
+
 
 
 }

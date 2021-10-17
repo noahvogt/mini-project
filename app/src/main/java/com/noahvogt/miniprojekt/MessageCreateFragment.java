@@ -126,7 +126,6 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
 
 
         /* button listeners */
-
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -237,8 +236,7 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
                 
                 /* check for valid input */
                 if (MailFunctions.validateMessageBody(messageBodyObject) && MailFunctions.validateSubject(subjectObject) &&
-                MailFunctions.validateEmail(receivingAddressObject) && MailFunctions.validateEmail(sendingAddressObject) &&
-                !MailFunctions.checkForSameEmail(sendingAddressObject, receivingAddressObject)) {
+                MailFunctions.validateEmail(receivingAddressObject) && MailFunctions.validateEmail(sendingAddressObject)) {
                     MailFunctions.sendStarttlsMail(smtpHost, sendingAddress, receivingAddress, password, messageBody,
                             subject, ccStr, bccStr, smtpPort);
                     Toast.makeText(getActivity(), "sending ... ", Toast.LENGTH_SHORT).show();

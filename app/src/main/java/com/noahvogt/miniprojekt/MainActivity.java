@@ -512,7 +512,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final View emailPopupView = getLayoutInflater().inflate(R.layout.welcome, null);
 
         /* init text field variables */
-        TextView shedText = emailPopupView.findViewById(R.id.backgroun);
+        TextView shedText = emailPopupView.findViewById(R.id.background);
         Button okayButton = emailPopupView.findViewById(R.id.okay_button);
 
         /* open View window */

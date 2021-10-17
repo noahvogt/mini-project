@@ -27,7 +27,7 @@
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
-            android:src="@mipmap/ic_close_purple" />
+            android:src="@drawable/ic_baseline_close_24" />
 
         <TextView
             android:id="@+id/create_message_text_text"
@@ -48,7 +48,6 @@
             android:layout_width="56dp"
             android:layout_height="match_parent"
 
-
             android:layout_marginStart="0dp"
             android:layout_marginLeft="0dp"
             android:layout_marginEnd="40dp"
@@ -59,7 +58,7 @@
             android:layout_toRightOf="@+id/create_message_text_text"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
-            android:src="@mipmap/ic_attach_purple" />
+            android:src="@drawable/ic_baseline_attachment_24" />
 
         <ImageButton
         android:id="@+id/create_message_dots_button"
@@ -76,7 +75,7 @@
         android:layout_toRightOf="@+id/create_message_text_text"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="8dp"
-        android:src="@mipmap/ic_more_vert_dots_purple" />
+        android:src="@drawable/ic_round_pending_24" />
 
         <ImageButton
             android:id="@+id/create_message_send_button"
@@ -89,7 +88,7 @@
             android:layout_marginEnd="8dp"
             android:background="?attr/selectableItemBackground"
             android:padding="8dp"
-            android:src="@mipmap/ic_send_purple"
+            android:src="@drawable/ic_baseline_arrow_forward_ios_24"
             android:textColor="@android:color/white" />
 
     </RelativeLayout>

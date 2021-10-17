@@ -129,13 +129,16 @@ public class DownloadWorker extends Worker {
                     for (int k = 0; k < messages.size(); k++) {
                         Message message = messages.get(k);
                         message.putUser(currentUser);
+                        /*
                         System.out.println("oldDate: " + message.getDate());
-                        //SimpleDateFormat rawDate = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
-                        //SimpleDateFormat date = new SimpleDateFormat("dd.MM.yy");
-                        //Date middleDate = rawDate.parse(message.getDate());
-                        //String newDate = date.format(middleDate);
-                        //System.out.println("middle Date: " + middleDate);
-                        //System.out.println("New Date: " + newDate);
+                        SimpleDateFormat rawDate = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
+                        SimpleDateFormat date = new SimpleDateFormat("dd.MM.yy");
+                        Date middleDate = rawDate.parse(message.getDate());
+                        String newDate = date.format(middleDate);
+                        System.out.println("middle Date: " + middleDate);
+                        System.out.println("New Date: " + newDate);
+
+                         */
 
                         mEmailViewModel.insert(message);
                         //TODO: make it work
