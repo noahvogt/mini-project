@@ -54,6 +54,7 @@ public class HomeFragment extends Fragment implements CustomAdapter.SelectedMess
             /*get List of Message to show them onClick */
             adapter.getList(messages);
             /*gives list of messages to EmailViewModel */
+            System.out.println("HomeFragment List: "+messages);
             MainActivity.mEmailViewModel.setListAll(messages, "Inbox");
             //mEmailViewModel.getAllMessages();
         });

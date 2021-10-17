@@ -544,7 +544,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /* connect to mail server */
         showToast("Probe Connection ...");
         if (MailFunctions.canConnect(imapHost, email, password) == Boolean.TRUE) {
-            showToast("was able to connect");
+            showToast("Was able to connect");
 
             Gson gson = new Gson();
 
@@ -664,6 +664,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 addNewAccountCredentials(name, email, password, 993, 587, MailFunctions.getImapHostFromEmail(email),
                         MailFunctions.getSmtpHostFromEmail(email), rootCreateNewEmailPopupDialog, true, headerView);
+                showToast("Downloading Messages");
                 mEmailViewModel.applyDownload();
                 userGlobal = email;
                 dialog.dismiss();
@@ -690,23 +691,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_information:
-                try {
-                    SimpleDateFormat rawDate = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
-                    SimpleDateFormat date = new SimpleDateFormat("dd.MM.yy");
-                    Date middleDate = rawDate.parse("Thu, 12 Aug 2021 19:21:13 +0000 (UTC)");
-                    String newDate = date.format(middleDate);
-                } catch (Throwable throwable) {
-                    Log.e(TAG, "Error formating date", throwable );
-                }
-
                 createInformation(false,null);
                 return true;
             case R.id.action_refresh:
+                showToast("Refreshing");
                 mEmailViewModel.applyDownload();
                 return true;
             case R.id.action_deletefolder:
-                showToast("clicked delete all");
-                mEmailViewModel.getAll(false);
+                showToast("Deleting all folders");
                 for (int delete = 0; delete < mEmailViewModel.getAll(false).size(); delete++){
                     mEmailViewModel.deleteMessage(mEmailViewModel.getAll(false).get(delete));
                 }

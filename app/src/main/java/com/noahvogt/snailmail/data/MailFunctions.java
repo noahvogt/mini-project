@@ -59,16 +59,26 @@ public class MailFunctions {
         String topLevelHost = email.substring(email.lastIndexOf("@") + 1);
         if (topLevelHost.endsWith("edubs.ch")) {
             return "teamwork.edubs.ch";
-
         } else if (topLevelHost.endsWith("yahoo.com")){
             return "imap.mail.yahoo.com";
-
         } else if (topLevelHost.endsWith("gmx.ch")){
             return "imap.gmx.net";
         } else if (topLevelHost.endsWith("gmx.de")){
             return "imap.gmx.net";
         } else if (topLevelHost.equals("noahvogt.com")) {
             return "mail.noahvogt.com";
+        }else if (topLevelHost.endsWith("outlook.com")) {
+            return "outlook.office365.com";
+        }else if (topLevelHost.endsWith("icloud.com")){
+            return "imap.mail.me.com";
+        }else if (topLevelHost.endsWith("outlook.ch")) {
+            return "outlook.office365.com";
+        }else if (topLevelHost.endsWith("hotmail.com")) {
+            return "outlook.office365.com";
+        }else if (topLevelHost.endsWith("hotmail.ch")) {
+            return "outlook.office365.com";
+        }else if (topLevelHost.endsWith("web.de")) {
+            return "imap.web.de ";
         } else {
                 return "imap." + topLevelHost;
         }
@@ -87,6 +97,18 @@ public class MailFunctions {
             return "mail.gmx.net";
         } else if (topLevelHost.endsWith("edubs.ch")) {
             return "smtp.edubs.ch";
+        }else if (topLevelHost.endsWith("outlook.com")) {
+            return "smtp-mail.outlook.com";
+        }else if (topLevelHost.endsWith("outlook.ch")) {
+            return "smtp-mail.outlook.com";
+        }else if (topLevelHost.endsWith("hotmail.com")) {
+            return "smtp-mail.outlook.com";
+        }else if (topLevelHost.endsWith("hotmail.ch")) {
+            return "smtp-mail.outlook.com";
+        }else if (topLevelHost.endsWith("icloud.com")){
+            return "smtp.mail.me.com";
+        }else if (topLevelHost.endsWith("web.de")){
+            return "smtp.web.de";
         } else {
             return "smtp." + topLevelHost;
         }

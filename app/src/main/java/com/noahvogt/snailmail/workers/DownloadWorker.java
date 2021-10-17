@@ -85,9 +85,6 @@ public class DownloadWorker extends Worker {
                 List folders =  MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(mImapHost,
                         mUser, mPassword, mImapPort));
 
-
-                //mEmailViewModel.getAll(true);
-
                 for (int i = 0; i < folders.size(); i++) {
                     String folderName;
                     String folderNow = folders.get(i).toString();
@@ -114,13 +111,10 @@ public class DownloadWorker extends Worker {
                         folderName = folders.get(i).toString();
                     }
 
-                    //mEmailViewModel.deleteFolder(folders.get(i).toString());
                     /* fetch and print draft messages */
                     String fetchedMails = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(mImapHost,
                             mUser, mPassword, mImapPort),
                             folders.get(i).toString(), folderName);
-                    //System.out.println("Folder: " + folders.get(i).toString()+ "\n Foldersize: " + folders.size());
-                    //System.out.println("Fetched Mails from Folder " + folders.get(i).toString() + ": \n"+ fetchedMails + "\n MAANCBJC");
 
                     /* parse messages in arraylist of Message class and loop through it */
                     Type messageType = new TypeToken<ArrayList<Message>>() {
@@ -129,23 +123,15 @@ public class DownloadWorker extends Worker {
                     for (int k = 0; k < messages.size(); k++) {
                         Message message = messages.get(k);
                         message.putUser(currentUser);
-                        /*
-                        System.out.println("oldDate: " + message.getDate());
+
                         SimpleDateFormat rawDate = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
                         SimpleDateFormat date = new SimpleDateFormat("dd.MM.yy");
                         Date middleDate = rawDate.parse(message.getDate());
                         String newDate = date.format(middleDate);
-                        System.out.println("middle Date: " + middleDate);
-                        System.out.println("New Date: " + newDate);
 
-                         */
-
+                        message.putDate(newDate);
                         mEmailViewModel.insert(message);
-                        //TODO: make it work
-                        /*dosent wrok idk why*/
-                        //mEmailViewModel.updateDate(message.getId(), newDate);
-                        //System.out.println("Folder: " + folders.get(i).toString() + "\n IMPORTANT FOLDERS");
-                        //System.out.println("Size of this Folder: " + messages.size());
+
                     }
 
                 }

@@ -237,10 +237,16 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
                 /* check for valid input */
                 if (MailFunctions.validateMessageBody(messageBodyObject) && MailFunctions.validateSubject(subjectObject) &&
                 MailFunctions.validateEmail(receivingAddressObject) && MailFunctions.validateEmail(sendingAddressObject)) {
-                    MailFunctions.sendStarttlsMail(smtpHost, sendingAddress, receivingAddress, password, messageBody,
-                            subject, ccStr, bccStr, smtpPort);
-                    Toast.makeText(getActivity(), "sending ... ", Toast.LENGTH_SHORT).show();
-                    dismiss();
+                    try {
+
+
+                        MailFunctions.sendStarttlsMail(smtpHost, sendingAddress, receivingAddress, password, messageBody,
+                                subject, ccStr, bccStr, smtpPort);
+                        Toast.makeText(getActivity(), "Sending ... ", Toast.LENGTH_SHORT).show();
+                        dismiss();
+                    }catch (com.chaquo.python.PyException pyException){
+                        Toast.makeText(getActivity(), "Couldn't send message", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(getActivity(), "Please check your input", Toast.LENGTH_SHORT).show();
                 }

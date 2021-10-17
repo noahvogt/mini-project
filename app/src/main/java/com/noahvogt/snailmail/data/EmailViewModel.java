@@ -56,7 +56,9 @@ public class EmailViewModel extends AndroidViewModel {
     }
 
     public void setListAll(List<Message> messageListAll, String fragment){
-        System.out.println("setListAll: size messageListAll: " + messageListAll.size());
+        System.out.println("setListAll: size messageListAll input: " + messageListAll.size());
+        System.out.println("setListAll: fragment: " + fragment);
+        System.out.println("setListAll: variable inbox: " + inbox);
         if (sent == null && fragment.equals("Sent")){
             for (int i = 0; i < messageListAll.size(); i++) {
                 this.all.add(messageListAll.get(i));
@@ -89,8 +91,7 @@ public class EmailViewModel extends AndroidViewModel {
             }
             spam = fragment;
         }
-        System.out.println("SetListAll: List of All: " + all);
-        System.out.println("setListAll: size all: " + all.size());
+        System.out.println("setListAll: size all output: " + all.size());
     }
 
     public List<Message> getAll(boolean status){
