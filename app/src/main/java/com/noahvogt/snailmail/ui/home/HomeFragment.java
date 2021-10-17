@@ -28,6 +28,8 @@ import com.noahvogt.snailmail.data.EmailViewModel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import static com.noahvogt.snailmail.MainActivity.isDownloading;
+
 public class HomeFragment extends Fragment implements CustomAdapter.SelectedMessage{
 
     private HomeViewModel homeViewModel;
@@ -55,7 +57,7 @@ public class HomeFragment extends Fragment implements CustomAdapter.SelectedMess
             adapter.getList(messages);
             /*gives list of messages to EmailViewModel */
             System.out.println("HomeFragment List: "+messages);
-            MainActivity.mEmailViewModel.setListAll(messages, "Inbox");
+            MainActivity.mEmailViewModel.setListAll(messages, "Inbox", isDownloading);
             //mEmailViewModel.getAllMessages();
         });
 

@@ -24,6 +24,8 @@ import com.noahvogt.snailmail.workers.DownloadWorker;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.noahvogt.snailmail.MainActivity.userGlobal;
+
 public class EmailViewModel extends AndroidViewModel {
 
     private EmailRepository mEmailRepository;
@@ -64,10 +66,17 @@ public class EmailViewModel extends AndroidViewModel {
         mWorkManager.enqueue(downloadRequest);
     }
 
-    public void setListAll(List<Message> messageListAll, String fragment){
+    public void setListAll(List<Message> messageListAll, String fragment, Boolean  isDownloading){
+        /*if Messages being downloaded*/
+        if (isDownloading){return;}
+        if (userGlobal == null){return;}
         System.out.println("setListAll: size messageListAll input: " + messageListAll.size());
         System.out.println("setListAll: fragment: " + fragment);
         System.out.println("setListAll: variable inbox: " + inbox);
+        System.out.println("setListAll: variable sent: " + sent);
+        System.out.println("setListAll: variable drafts: " + drafts);
+        System.out.println("setListAll: variable archive: " + archive);
+        System.out.println("setListAll: variable spam: " + spam);
         if (sent == null && fragment.equals("Sent")){
             for (int i = 0; i < messageListAll.size(); i++) {
                 this.all.add(messageListAll.get(i));
@@ -112,6 +121,11 @@ public class EmailViewModel extends AndroidViewModel {
             List<Message> emptyAll;
             emptyAll = all;
             all.clear();
+            sent = null;
+            spam = null;
+            archive = null;
+            inbox = null;
+            drafts = null;
             System.out.println("Size cleared list:" + all.size());
             return emptyAll;
         }

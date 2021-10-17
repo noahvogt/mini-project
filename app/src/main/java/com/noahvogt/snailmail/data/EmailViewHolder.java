@@ -48,8 +48,7 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
         subjectItemView = itemView.findViewById(R.id.subject);
         dateItemView = itemView.findViewById(R.id.date);
         messageItemView = itemView.findViewById(R.id.message);
-        System.out.println("Called EmailViewHolder");
-        
+
         itemView.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -65,9 +64,6 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(String from, String subject, String date, String message) {
-        System.out.println("length of from " + from.length());
-        System.out.println("length of message " + message.length());
-
 
         if (subject.length() > 30){
             subject = subject.substring(0,26) + "...";
@@ -100,21 +96,6 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
                 .inflate(R.layout.fragment_home, parent, false);
         return new EmailViewHolder(view, selectedMessage, messageList);
     }
-
-    public static boolean isDate(String date){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yy", Locale.getDefault());
-        //dateFormat.setLenient(false);
-        try {
-            dateFormat.parse(date);
-        } catch (ParseException e){
-            return false;
-        }
-
-        return true;
-    }
-
-
-
     }
 
 

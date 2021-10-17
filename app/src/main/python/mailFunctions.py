@@ -51,11 +51,11 @@ def checkConnection(host, username, password, port):
         return True
     except Exception as e:
 
-        print("host: " + host)
-        print("username: " + username)
-        print("password: " + password)
-        print("port: " + str(port))
-        print(str(e))
+        #print("host: " + host)
+        #print("username: " + username)
+        #print("password: " + password)
+        #print("port: " + str(port))
+        #print(str(e))
 
         return False
 
@@ -99,13 +99,13 @@ def verifyNoBytes(messages, output_list):
             #print(item)
             #print(messages["{}".format(item)])
             if type(messages["{}".format(item)]) is not str:
-                print("ERROREXIT: .format failed")
-                print(messages["{}".format(item)])
-                print(type(messages["{}".format(item)]))
+                #print("ERROREXIT: .format failed")
+                #print(messages["{}".format(item)])
+                #print(type(messages["{}".format(item)]))
 
                 exit()
             if type(item) is not str:
-                print("ERROREXIT")
+                #print("ERROREXIT")
                 exit()
 
 
@@ -182,10 +182,10 @@ def fetchMails(connection, inbox, folderLocal):
             output_dict['date'] = stringCompiling(raw_date)
             output_dict['content'] = primitive_body
             output_dict['folder'] = folderLocal
-            print('FolderServer: ' + inbox)
-            print('FolderLocal: ' + folderLocal)
-            print('From: ' + stringCompiling(raw_from))
-            print('Outputdictionary: ' + str(output_dict))
+            #print('FolderServer: ' + inbox)
+            #print('FolderLocal: ' + folderLocal)
+            #print('From: ' + stringCompiling(raw_from))
+            #print('Outputdictionary: ' + str(output_dict))
 
             if seentype == '(SEEN)':
                 output_dict['seen'] = "True"

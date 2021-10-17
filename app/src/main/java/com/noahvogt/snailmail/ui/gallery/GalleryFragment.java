@@ -27,6 +27,8 @@ import com.noahvogt.snailmail.data.EmailViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
+import static com.noahvogt.snailmail.MainActivity.isDownloading;
+
 public class GalleryFragment extends Fragment implements CustomAdapter.SelectedMessage{
 
     EmailViewModel mEmailViewModel;
@@ -65,7 +67,8 @@ public class GalleryFragment extends Fragment implements CustomAdapter.SelectedM
             /*get List of Message to show them onClick */
             adapter.getList(messages);
             /*gives list of messages to EmailViewModel */
-            MainActivity.mEmailViewModel.setListAll(messages, "Sent");
+            MainActivity.mEmailViewModel.setListAll(messages, "Sent", isDownloading);
+            System.out.println("Gallery started");
         });
 
         return root;

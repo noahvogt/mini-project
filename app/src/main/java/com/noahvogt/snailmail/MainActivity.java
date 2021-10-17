@@ -66,14 +66,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AppBarConfiguration mAppBarConfiguration;
 
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
-    public static final String emailData = "Email";
-    public static final String passwordData = "Password";
-    public static final String nameData = "Name";
+
     public static EmailViewModel mEmailViewModel;
     public static RecyclerView recyclerView;
-    private Boolean clicked = false;
 
     public static String userGlobal;
+    public static boolean isDownloading = false;
 
     private AlertDialog dialog;
     private EditText newemail_name, newemail_email, newemail_password; /* may not be private */
@@ -83,23 +81,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /* leave descriptor empty */
     public MainActivity() {}
 
-
-    public String getVisibleFragment(){
-        FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
-        List<Fragment> fragments = fragmentManager.getFragments();
-        if(fragments != null){
-            showToast("not null");
-            for(Fragment fragment : fragments){
-                showToast(fragment.toString());
-                if(fragment.isVisible())
-                    showToast("found visible fragment");
-                    return "is gallery";
-            }
-        } else {
-            showToast("null");}
-            return null;
-
-    }
 
 
     @Override
@@ -536,7 +517,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static MailServerCredentials newMailServerCredentials;
     public static SharedPreferences.Editor credentialsEditor;
 
-    public void addNewAccountCredentials(String name, String email, String password, int imapPort,
+    public boolean addNewAccountCredentials(String name, String email, String password, int imapPort,
                                          int smtpPort, String imapHost, String smtpHost, DialogInterface dialogContext,
                                          boolean wantConnectionFailedDialog, View headerView) {
         credentialsEditor = mailServerCredentials.edit();
@@ -579,15 +560,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 showToast("Success: added new email account");
                 updateNavHeaderText(headerView);
                 dialogContext.dismiss();
+                return true;
             } else {
                 showToast("Error: cannot add the same email twice");
+                return false;
             }
         } else {
-            if (wantConnectionFailedDialog)
+            if (wantConnectionFailedDialog) {
                 askForChangeMailServerSettingsDialog(name, email, password, headerView);
-            else
+            } else {
                 showToast("Error: failed to get connection");
+                return false;
+            }
         }
+        return false;
     }
 
     /* use 'initialMail' variable so that the program knows which email entry is has to change */
@@ -662,11 +648,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     return;
                 }
 
-                addNewAccountCredentials(name, email, password, 993, 587, MailFunctions.getImapHostFromEmail(email),
+                boolean connection = addNewAccountCredentials(name, email, password, 993, 587, MailFunctions.getImapHostFromEmail(email),
                         MailFunctions.getSmtpHostFromEmail(email), rootCreateNewEmailPopupDialog, true, headerView);
-                showToast("Downloading Messages");
-                mEmailViewModel.applyDownload();
-                userGlobal = email;
+                if (connection) {
+                    showToast("Downloading Messages");
+                    mEmailViewModel.applyDownload();
+                    userGlobal = email;
+                }
                 dialog.dismiss();
         }});
 

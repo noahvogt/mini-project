@@ -23,6 +23,8 @@ import com.noahvogt.snailmail.data.CustomAdapter;
 import com.noahvogt.snailmail.ui.show.MessageShowFragment;
 import com.noahvogt.snailmail.data.EmailViewModel;
 
+import static com.noahvogt.snailmail.MainActivity.isDownloading;
+
 public class ArchiveFragment extends Fragment implements CustomAdapter.SelectedMessage{
 
     private ArchiveViewModel archiveViewModel;
@@ -50,7 +52,7 @@ public class ArchiveFragment extends Fragment implements CustomAdapter.SelectedM
             /*get List of Message to show them onClick */
             adapter.getList(messages);
             /*gives list of messages to EmailViewModel */
-            MainActivity.mEmailViewModel.setListAll(messages, "Archive");
+            MainActivity.mEmailViewModel.setListAll(messages, "Archive", isDownloading);
         });
 
 

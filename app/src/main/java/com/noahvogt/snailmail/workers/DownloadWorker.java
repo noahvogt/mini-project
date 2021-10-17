@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.noahvogt.snailmail.MainActivity.isDownloading;
 import static com.noahvogt.snailmail.MainActivity.mEmailViewModel;
 
 public class DownloadWorker extends Worker {
@@ -46,6 +47,7 @@ public class DownloadWorker extends Worker {
     @Override
     public Result doWork() {
             try {
+                isDownloading = true;
                 String mUser = null;
                 String mPassword = null;
                 String mImapHost = null;
@@ -135,7 +137,7 @@ public class DownloadWorker extends Worker {
                     }
 
                 }
-
+                isDownloading = false;
                 return Result.success();
             } catch (Throwable throwable){
                 Log.e(TAG, "Error, downloading Messages", throwable);
