@@ -190,10 +190,6 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
         dotButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(getActivity(), v);
-                popupMenu.setOnMenuItemClickListener(MessageCreateFragment.this::onMenuItemClick);
-                popupMenu.inflate(R.menu.create_message_options_menu);
-                popupMenu.show();
             }
         });
 

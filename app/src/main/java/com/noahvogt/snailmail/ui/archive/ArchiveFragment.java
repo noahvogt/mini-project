@@ -60,12 +60,6 @@ public class ArchiveFragment extends Fragment implements CustomAdapter.SelectedM
                 new ViewModelProvider(this).get(ArchiveViewModel.class);
         View root = inflater.inflate(R.layout.fragment_archive, container, false);
         final TextView textView = root.findViewById(R.id.text_archive);
-        archiveViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
         return root;
 
 

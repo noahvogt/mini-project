@@ -61,11 +61,6 @@ public class  DraftFragment extends Fragment implements CustomAdapter.SelectedMe
                 new ViewModelProvider(this).get(DraftViewModel.class);
         View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
         final TextView textView = root.findViewById(R.id.text_slideshow);
-        draftViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-            }
-        });
         return root;
     }
 

@@ -62,12 +62,6 @@ public class SpamFragment extends Fragment implements CustomAdapter.SelectedMess
                 new ViewModelProvider(this).get(SpamViewModel.class);
         View root = inflater.inflate(R.layout.fragment_spam, container, false);
         final TextView textView = root.findViewById(R.id.text_spam);
-        spamViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
         return root;
 
 
