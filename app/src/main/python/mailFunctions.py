@@ -135,7 +135,6 @@ def fetchMails(connection, inbox, folderLocal):
 
             msg = email.message_from_bytes(data[0][1])
 
-            #print(num)
 
             raw_string = email.header.decode_header(msg['Subject'])[0]
             #print("raw_string: " + str(raw_string))
@@ -182,6 +181,8 @@ def fetchMails(connection, inbox, folderLocal):
             output_dict['date'] = stringCompiling(raw_date)
             output_dict['content'] = primitive_body
             output_dict['folder'] = folderLocal
+            # note: cannot use int here because it is later converted to JSON
+            output_dict['msgid'] = str(int(num))
             #print('FolderServer: ' + inbox)
             #print('FolderLocal: ' + folderLocal)
             #print('From: ' + stringCompiling(raw_from))
