@@ -50,7 +50,7 @@ public class MessageShowFragment extends DialogFragment implements PopupMenu.OnM
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.messageCreateTheme);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.editorTheme);
     }
 
     @Nullable

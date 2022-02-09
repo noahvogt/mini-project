@@ -21,7 +21,7 @@ import com.noahvogt.snailmail.MainActivity;
 import com.noahvogt.snailmail.R;
 import com.noahvogt.snailmail.DataBase.Message;
 import com.noahvogt.snailmail.data.CustomAdapter;
-import com.noahvogt.snailmail.MessageCreateFragment;
+import com.noahvogt.snailmail.ui.editor.EditorFragment;
 
 import static com.noahvogt.snailmail.MainActivity.isDownloading;
 
@@ -67,11 +67,11 @@ public class  DraftFragment extends Fragment implements CustomAdapter.SelectedMe
 
     @Override
     public void selectedMessage(Message messages, EmailViewModel emailViewModel) {
-        MessageCreateFragment messageCreateFragment = new MessageCreateFragment();
+        EditorFragment editorFragment = new EditorFragment();
 
         //TODO: make this Fragment editable
         AppCompatActivity activity = (AppCompatActivity) getContext();
-        DialogFragment dialog = messageCreateFragment.getMessage(messages, emailViewModel, messageCreateFragment);
+        DialogFragment dialog = editorFragment.getMessage(messages, emailViewModel, editorFragment);
         dialog.show(activity.getSupportFragmentManager(), "tag");
     }
 }

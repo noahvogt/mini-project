@@ -1,4 +1,4 @@
-package com.noahvogt.snailmail;
+package com.noahvogt.snailmail.ui.editor;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,18 +21,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.noahvogt.snailmail.DataBase.Message;
+import com.noahvogt.snailmail.MainActivity;
+import com.noahvogt.snailmail.NewDraftMessageActivity;
+import com.noahvogt.snailmail.R;
 import com.noahvogt.snailmail.data.EmailViewModel;
-import com.noahvogt.snailmail.data.MailFunctions;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class MessageCreateFragment extends DialogFragment implements PopupMenu.OnMenuItemClickListener {
+public class EditorFragment extends DialogFragment implements PopupMenu.OnMenuItemClickListener {
 
     public static final String EXTRA_TO = "com.example.android.namelistsql.NAME";
     public static final String EXTRA_FROM = "com.example.android.namelistsql.FROM";
@@ -58,14 +56,15 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
     public Activity activity = new Activity();
     public static Intent replyIntent = new Intent();
 
-    public static MessageCreateFragment newInstance() {
-        return new MessageCreateFragment();
+    public static com.noahvogt.snailmail.ui.editor.EditorFragment newInstance() {
+        return new com.noahvogt.snailmail.ui.editor.EditorFragment();
     }
 
-    public MessageCreateFragment getMessage(Message message, EmailViewModel emailViewModel, MessageCreateFragment messageCreateFragment){
+    public com.noahvogt.snailmail.ui.editor.EditorFragment getMessage(Message message, EmailViewModel emailViewModel, 
+                                                                      com.noahvogt.snailmail.ui.editor.EditorFragment editorFragment) {
         this.mEmailViewModel = emailViewModel;
         this.mMessage = message;
-        return messageCreateFragment;
+        return editorFragment;
     }
 
     private AlertDialog dialog;
@@ -78,7 +77,7 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.messageCreateTheme);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.editorTheme);
     }
 
     @Nullable
@@ -93,15 +92,15 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
         ImageButton dotButton = view.findViewById(R.id.create_message_dots_button);
         ImageButton attachButton = view.findViewById(R.id.create_message_attach_button);
 
-         sendingAddressObject = (EditText) view.findViewById(R.id.create_message_sending_address_text);
-         receivingAddressObject = (EditText) view.findViewById(R.id.create_message_receiving_address_text);
-         ccObject = (EditText) view.findViewById(R.id.create_message_cc_text);
-         bccObject = (EditText) view.findViewById(R.id.create_message_bcc_text);
-         subjectObject = (EditText) view.findViewById(R.id.create_message_subject_text);
-         messageBodyObject = (EditText) view.findViewById(R.id.create_message_body_text);
+        sendingAddressObject = (EditText) view.findViewById(R.id.create_message_sending_address_text);
+        receivingAddressObject = (EditText) view.findViewById(R.id.create_message_receiving_address_text);
+        ccObject = (EditText) view.findViewById(R.id.create_message_cc_text);
+        bccObject = (EditText) view.findViewById(R.id.create_message_bcc_text);
+        subjectObject = (EditText) view.findViewById(R.id.create_message_subject_text);
+        messageBodyObject = (EditText) view.findViewById(R.id.create_message_body_text);
 
         SharedPreferences mailServerCredentials = getContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE);
-        
+
         /* set logged in email address as sending address */
         String currentMailUser = mailServerCredentials.getString("currentUser", "");
         sendingAddressObject.setText(currentMailUser);
@@ -128,8 +127,7 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
                 /* give alert dialog box to user in case input fields are not empty */
                 if (subject.isEmpty() && messageBody.isEmpty()) {
                     dismiss();
-                }
-                else {
+                } else {
                     /* setup dialog for saving draft message */
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                     alertDialogBuilder.setTitle("Warning");
@@ -196,51 +194,11 @@ public class MessageCreateFragment extends DialogFragment implements PopupMenu.O
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /* init vars, MAYBE NEEDED FOR LATER */
-                String sendingAddress = sendingAddressObject.getText().toString();
-                String receivingAddress = receivingAddressObject.getText().toString();
-                String subject = subjectObject.getText().toString();
-                String messageBody = messageBodyObject.getText().toString();
-                String ccStr = ccObject.getText().toString();
-                String bccStr = bccObject.getText().toString();
-
-                Gson gson = new Gson();
-
-                /* get string vars, MAYBE NOT HERE */
-                String jsonData = mailServerCredentials.getString("data", "");
-                Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>(){}.getType();
-                ArrayList<MailServerCredentials> allUsersCredentials = gson.fromJson(jsonData, credentialsType);
-                
-                String smtpHost = null, password = null; int smtpPort = 587;
-
-                for (int i = 0; i < allUsersCredentials.size(); i++) {
-                    if (allUsersCredentials.get(i).getUsername().equals(currentMailUser)) {
-                        smtpHost = allUsersCredentials.get(i).getSmtpHost();
-                        smtpPort = allUsersCredentials.get(i).getSmtpPort();
-                        password = allUsersCredentials.get(i).getPassword();
-                        break;
-                    }
-                }
-                
-                /* check for valid input */
-                if (MailFunctions.validateMessageBody(messageBodyObject) && MailFunctions.validateSubject(subjectObject) &&
-                MailFunctions.validateEmail(receivingAddressObject) && MailFunctions.validateEmail(sendingAddressObject)) {
-                    try {
-
-
-                        MailFunctions.sendStarttlsMail(smtpHost, sendingAddress, receivingAddress, password, messageBody,
-                                subject, ccStr, bccStr, smtpPort);
-                        Toast.makeText(getActivity(), "Sending ... ", Toast.LENGTH_SHORT).show();
-                        dismiss();
-                    }catch (com.chaquo.python.PyException pyException){
-                        Toast.makeText(getActivity(), "Could not send message", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(getActivity(), "Please check your input", Toast.LENGTH_SHORT).show();
-                }
+                ButtonHandler buttonHandler = new ButtonHandler();
+                buttonHandler.handleSendButton(getActivity(), mailServerCredentials, getDialog(), currentMailUser, sendingAddressObject,
+                                               receivingAddressObject, subjectObject, messageBodyObject, ccObject, bccObject);
             }
         });
-
 
         return view;
     }

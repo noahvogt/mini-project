@@ -48,6 +48,7 @@ import com.noahvogt.snailmail.data.EmailViewModel;
 import com.noahvogt.snailmail.data.MailFunctions;
 import com.noahvogt.snailmail.workers.DownloadWorker;
 import com.noahvogt.snailmail.ui.show.MessageShowFragment;
+import com.noahvogt.snailmail.ui.editor.EditorFragment;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -329,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         message_create_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment dialogFragment = MessageCreateFragment.newInstance();
+                DialogFragment dialogFragment = EditorFragment.newInstance();
                 dialogFragment.show(getSupportFragmentManager(), "tag");
             }
         });
@@ -342,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         /* gets the data from the Email writer and adds it to the Database */
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(requestCode, resultCode, MessageCreateFragment.replyIntent);
+            super.onActivityResult(requestCode, resultCode, EditorFragment.replyIntent);
 
             /* Creates class for the Date when Email is written */
             Date dNow = new Date();
@@ -350,13 +351,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     new SimpleDateFormat("dd.MM.yy");
 
                 Message word = new Message(userGlobal,
-                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_TO),
-                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_CC),
-                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_BCC),
-                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_FROM),
+                        EditorFragment.replyIntent.getStringExtra(EditorFragment.EXTRA_TO),
+                        EditorFragment.replyIntent.getStringExtra(EditorFragment.EXTRA_CC),
+                        EditorFragment.replyIntent.getStringExtra(EditorFragment.EXTRA_BCC),
+                        EditorFragment.replyIntent.getStringExtra(EditorFragment.EXTRA_FROM),
                         ft.format(dNow),
-                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_SUBJECT),
-                        MessageCreateFragment.replyIntent.getStringExtra(MessageCreateFragment.EXTRA_MESSAGE),
+                        EditorFragment.replyIntent.getStringExtra(EditorFragment.EXTRA_SUBJECT),
+                        EditorFragment.replyIntent.getStringExtra(EditorFragment.EXTRA_MESSAGE),
                         "Draft",false);
                 mEmailViewModel.insert(word);
         }

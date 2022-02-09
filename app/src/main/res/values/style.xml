@@ -14,7 +14,7 @@
         <item name="color">@color/error_red</item>
     </style>
 
-    <style name="messageCreateTheme" parent="Theme.MaterialComponents.Light.DialogWhenLarge">
+    <style name="editorTheme" parent="Theme.MaterialComponents.Light.DialogWhenLarge">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowAnimationStyle">@style/Theme.AppCompat.Dialog</item>
     </style>
