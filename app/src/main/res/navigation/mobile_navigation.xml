@@ -7,35 +7,35 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.noahvogt.snailmail.ui.home.HomeFragment"
+        android:name="com.noahvogt.snailmail.ui.mailboxes.inboxFolder.InboxFragment"
         android:label="@string/drawer_inbox"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/mailbox_inbox_fragment" />
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="com.noahvogt.snailmail.ui.gallery.GalleryFragment"
+        android:name="com.noahvogt.snailmail.ui.mailboxes.sentFolder.SentFragment"
         android:label="@string/drawer_sent"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/mailbox_sent_fragment" />
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="com.noahvogt.snailmail.ui.slideshow.DraftFragment"
+        android:name="com.noahvogt.snailmail.ui.mailboxes.draftFolder.DraftFragment"
         android:label="@string/drawer_drafts"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/mailbox_draft_fragment" />
 
     <fragment
         android:id="@+id/nav_archive"
-        android:name="com.noahvogt.snailmail.ui.archive.ArchiveFragment"
+        android:name="com.noahvogt.snailmail.ui.mailboxes.archiveFolder.ArchiveFragment"
         android:label="@string/drawer_archive"
-        tools:layout="@layout/fragment_archive" />
+        tools:layout="@layout/mailbox_archive_fragment" />
 
     <fragment
         android:id="@+id/nav_spam"
-        android:name="com.noahvogt.snailmail.ui.spam.SpamFragment"
+        android:name="com.noahvogt.snailmail.ui.mailboxes.spamFolder.SpamFragment"
         android:label="@string/drawer_spam"
-        tools:layout="@layout/fragment_spam" />
+        tools:layout="@layout/mailbox_spam_fragment" />
 
     <fragment
         android:id="@+id/nav_show"
-        android:name="com.noahvogt.snailmail.ui.show.MessageShowFragment"/>
+        android:name="com.noahvogt.snailmail.ui.reader.ReaderFragment"/>
 </navigation>

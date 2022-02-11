@@ -13,12 +13,11 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
-import com.noahvogt.snailmail.DataBase.EmailRepository;
-import com.noahvogt.snailmail.DataBase.Message;
+import com.noahvogt.snailmail.database.EmailRepository;
+import com.noahvogt.snailmail.database.Message;
 import com.noahvogt.snailmail.workers.DownloadWorker;
 
 import java.util.ArrayList;

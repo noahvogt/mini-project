@@ -11,9 +11,8 @@ import androidx.work.WorkerParameters;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.noahvogt.snailmail.DataBase.Message;
-import com.noahvogt.snailmail.MailServerCredentials;
-import com.noahvogt.snailmail.MainActivity;
+import com.noahvogt.snailmail.database.Message;
+import com.noahvogt.snailmail.data.MailServerCredentials;
 import com.noahvogt.snailmail.data.BooleanTypeAdapter;
 import com.noahvogt.snailmail.data.MailFunctions;
 

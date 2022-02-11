@@ -9,9 +9,6 @@
 
 package com.noahvogt.snailmail.data;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,17 +16,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.noahvogt.snailmail.DataBase.Message;
-import com.noahvogt.snailmail.MainActivity;
+import com.noahvogt.snailmail.database.Message;
 import com.noahvogt.snailmail.R;
 
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
 /* adds the content to the View of RecyclerView*/
 public class EmailViewHolder extends RecyclerView.ViewHolder {
@@ -81,13 +73,10 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
         messageItemView.setText(message);
     }
 
-    public static EmailViewHolder create(ViewGroup parent,
-                                         CustomAdapter.SelectedMessage selectedMessage,
-                                         List<Message> messageList) {
-         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_home, parent, false);
+    public static EmailViewHolder create(ViewGroup parent, CustomAdapter.SelectedMessage selectedMessage, List<Message> messageList) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mailbox_inbox_fragment, parent, false);
         return new EmailViewHolder(view, selectedMessage, messageList);
     }
-    }
+}
 
 

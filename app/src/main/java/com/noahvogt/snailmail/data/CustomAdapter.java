@@ -19,7 +19,7 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import com.noahvogt.snailmail.DataBase.Message;
+import com.noahvogt.snailmail.database.Message;
 
 
 import java.util.List;
