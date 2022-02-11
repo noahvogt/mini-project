@@ -65,8 +65,6 @@ public class ReaderFragment extends DialogFragment implements PopupMenu.OnMenuIt
             }
         });
 
-
-
         ImageButton closeButton = view.findViewById(R.id.show_message_close_button);
         ImageButton dotButton = view.findViewById(R.id.show_message_dots_button);
         ImageButton attachButton = view.findViewById(R.id.show_message_attach_button);
@@ -87,7 +85,6 @@ public class ReaderFragment extends DialogFragment implements PopupMenu.OnMenuIt
         showDate.setText(mCurrent.getDate());
 
 
-        // TODO: add cc + bcc functionality
         showBccButton.setOnClickListener(v -> createNewPopup(true));
 
         showCCButton.setOnClickListener(v -> createNewPopup(false));
@@ -95,7 +92,6 @@ public class ReaderFragment extends DialogFragment implements PopupMenu.OnMenuIt
         closeButton.setOnClickListener(v -> dismiss());
 
         attachButton.setOnClickListener(v -> {
-            // TODO: add file attachment functionality
         });
 
         dotButton.setOnClickListener(v -> {
@@ -104,10 +100,8 @@ public class ReaderFragment extends DialogFragment implements PopupMenu.OnMenuIt
             popupMenu.inflate(R.menu.create_message_options_menu);
             popupMenu.show();
         });
-
         return view;
     }
-
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {

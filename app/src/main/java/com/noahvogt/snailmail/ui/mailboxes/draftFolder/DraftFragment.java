@@ -30,8 +30,6 @@ public class  DraftFragment extends Fragment implements CustomAdapter.SelectedMe
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-
         recyclerView = MainActivity.recyclerView.findViewById(R.id.recyclerView);
 
         final CustomAdapter adapter = new CustomAdapter(new CustomAdapter.EmailDiff(), this);
@@ -58,12 +56,10 @@ public class  DraftFragment extends Fragment implements CustomAdapter.SelectedMe
         return root;
     }
 
-
     @Override
     public void selectedMessage(Message messages, EmailViewModel emailViewModel) {
         EditorFragment editorFragment = new EditorFragment();
 
-        //TODO: make this Fragment editable
         AppCompatActivity activity = (AppCompatActivity) getContext();
         DialogFragment dialog = editorFragment.getMessage(messages, emailViewModel, editorFragment);
         dialog.show(activity.getSupportFragmentManager(), "tag");

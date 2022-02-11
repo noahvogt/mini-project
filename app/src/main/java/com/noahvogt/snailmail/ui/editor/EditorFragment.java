@@ -101,15 +101,6 @@ public class EditorFragment extends DialogFragment implements PopupMenu.OnMenuIt
         return view;
     }
 
-    /* TODO: add useful functionality to the menu + consider not using Resource ID's in switch statement
-
-        IDEAS:
-        - clear all user input
-        - change / check email signature
-        - some email header hacking / options / customization
-        - mail server probing
-        - sending address spoofer ??
-    */
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {

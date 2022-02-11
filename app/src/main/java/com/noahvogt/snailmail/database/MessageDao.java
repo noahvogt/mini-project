@@ -21,7 +21,6 @@ import java.util.List;
 @Dao
 public interface MessageDao {
 
-    // TODO: updating messages, search funktion, read in cc and bcc as list
     // allowing the insert of the same word multiple times by passing a
     // conflict resolution strategy
     @Insert(onConflict = OnConflictStrategy.IGNORE)

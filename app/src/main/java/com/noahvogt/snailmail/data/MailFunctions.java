@@ -1,12 +1,12 @@
 package com.noahvogt.snailmail.data;
 
-import android.util.Patterns;
 import android.widget.EditText;
 
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class MailFunctions {
 
@@ -121,7 +121,7 @@ public class MailFunctions {
         if (email.isEmpty()) {
             emailAddress.setError("Field can't be empty");
             return false;
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        } else if (!Pattern.matches(".+@.+", email)) {
             emailAddress.setError("Please enter a valid email address");
             return false;
         } else {
@@ -144,13 +144,11 @@ public class MailFunctions {
 
     public static boolean validateSubject(EditText emailSubject) {
         String subject = emailSubject.getText().toString();
-        /* TODO: check email protocol specification for what is allowed for subjects */
         return true;
     }
 
     public static boolean validateMessageBody(EditText emailMessageBody) {
         String messageBody = emailMessageBody.getText().toString();
-        /* TODO: check email protocol specification for what is allowed for message bodies */
         return true;
     }
 

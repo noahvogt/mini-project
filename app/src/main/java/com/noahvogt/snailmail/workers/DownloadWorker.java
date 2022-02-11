@@ -29,7 +29,6 @@ import static com.noahvogt.snailmail.MainActivity.mEmailViewModel;
 
 public class DownloadWorker extends Worker {
 
-    //TODO: upload every data to server
     public DownloadWorker(
             @NonNull Context appContext,
             @NonNull WorkerParameters workerParameters){
