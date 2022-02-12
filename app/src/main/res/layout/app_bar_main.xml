@@ -29,6 +29,7 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_gravity="top"
         android:background="?attr/colorPrimary"
+        app:titleTextColor="@android:color/white"
         app:popupTheme="@style/Theme.MiniProjekt.PopupOverlay" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

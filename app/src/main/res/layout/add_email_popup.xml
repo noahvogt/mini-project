@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/newlisticon"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:background="@drawable/ic_baseline_face_24"
 
         android:contentDescription="@string/face_icon"

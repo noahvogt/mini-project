@@ -56,9 +56,4 @@
             android:text="@string/text_settings"
             android:layout_marginStart="20dp" />
     </com.google.android.material.navigation.NavigationView>
-
-
-
-
-
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -2,6 +2,7 @@
 <resources>
     <!--TODO: change appearance of text when message read -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="actionOverflowButtonStyle">@color/white</item>
         <item name="colorAccent">#3498db</item>
     </style>
     <style name="error_appearance" parent="@android:style/TextAppearance">
@@ -17,5 +18,9 @@
     <style name="editorTheme" parent="Theme.MaterialComponents.Light.DialogWhenLarge">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowAnimationStyle">@style/Theme.AppCompat.Dialog</item>
+    </style>
+    <style name="AppToolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/black</item>
     </style>
 </resources>

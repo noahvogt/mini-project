@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_information"
-        android:title="@string/action_information"/>
+        android:title="@string/action_about"/>
     <item
         android:id="@+id/action_deletefolder"
         android:orderInCategory="100"

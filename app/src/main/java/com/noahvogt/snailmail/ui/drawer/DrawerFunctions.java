@@ -416,11 +416,10 @@ public class DrawerFunctions {
                         break;
                     }
                 }
-            } catch (NullPointerException ignored) {
-            }
+            } catch (NullPointerException ignored) {}
         });
 
-                exit.setOnClickListener(v ->rootAccountManagerDialog.dismiss());
+        exit.setOnClickListener(v ->rootAccountManagerDialog.dismiss());
     }
 
     public void newUserAlphaSoftwareWarningBeforeAddingEmail(boolean button, View view, Context context, LayoutInflater layoutInflater) {
