@@ -95,7 +95,7 @@ public class EditorFragment extends DialogFragment implements PopupMenu.OnMenuIt
         sendButton.setOnClickListener(v -> {
             EditorButtonHandler editorButtonHandler = new EditorButtonHandler();
             editorButtonHandler.handleSendButton(getActivity(), mailServerCredentials, getDialog(), currentMailUser, sendingAddressObject,
-                    receivingAddressObject, subjectObject, messageBodyObject, ccObject, bccObject);
+                    receivingAddressObject, subjectObject, messageBodyObject, ccObject, bccObject, getContext());
         });
 
         return view;

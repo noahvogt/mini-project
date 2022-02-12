@@ -10,6 +10,7 @@ import static com.noahvogt.snailmail.ui.editor.EditorFragment.replyIntent;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ import com.google.gson.reflect.TypeToken;
 import com.noahvogt.snailmail.MainActivity;
 import com.noahvogt.snailmail.data.MailServerCredentials;
 import com.noahvogt.snailmail.data.MailFunctions;
+import com.noahvogt.snailmail.mail.SendMail;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -38,7 +40,7 @@ public class EditorButtonHandler {
 
     public void handleSendButton(Activity activity, SharedPreferences credentialPreferences, Dialog dialog, String currentMailUser,
                                  EditText sendingAddressObject, EditText receivingAddressObject, EditText subjectObject, EditText messageBodyObject,
-                                 EditText ccObject, EditText bccObject) {
+                                 EditText ccObject, EditText bccObject, Context context) {
         getCredentialsJsonData(credentialPreferences);
 
         if (jsonData.isEmpty()) {
@@ -50,7 +52,8 @@ public class EditorButtonHandler {
             if (isValidMessage(messageBodyObject, subjectObject, receivingAddressObject, sendingAddressObject)) {
                 try {
                     Toast.makeText(activity, "Sending ... ", Toast.LENGTH_SHORT).show();
-                    sendMessage(dialog);
+                    sendMessageViaNewThread(context);
+                    dialog.dismiss();
                 } catch (com.chaquo.python.PyException pyException) {
                     Toast.makeText(activity, "Could not send message", Toast.LENGTH_SHORT).show();
                 }
@@ -118,7 +121,7 @@ public class EditorButtonHandler {
                 MailFunctions.validateEmail(receivingAddressObject) && MailFunctions.validateEmail(sendingAddressObject);
     }
 
-    public void sendMessage(Dialog dialog) {
+    public void sendMessage(Dialog dialog, Context context) {
         MailFunctions.sendStarttlsMail(smtpHost, sendingAddress, receivingAddress, password, messageBody,
                 subject, ccStr, bccStr, smtpPort);
         dialog.dismiss();
@@ -156,16 +159,25 @@ public class EditorButtonHandler {
                     Intent intent = new Intent(activity, NewDraftMessageActivity.class);
                     activity.startActivityForResult(intent, MainActivity.NEW_WORD_ACTIVITY_REQUEST_CODE);
 
-                    /* close the whole fragment */
                     dialog.dismiss();
                 })
                 .setNegativeButton("No", (closeDialog, id) -> {
-                    /* if this button is clicked, close the hole fragment */
                     dialog.dismiss();
                 });
 
-        /* create + show alert dialog */
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    public void sendMessageViaNewThread(Context context) {
+        Thread thread = new Thread(() -> {
+            try {
+                SendMail.sendMessage(sendingAddress, receivingAddress, smtpHost, smtpPort, sendingAddress, password, subject, messageBody, context, ccStr, bccStr);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        thread.start();
     }
 }
