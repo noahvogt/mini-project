@@ -38,14 +38,17 @@ public class SendMail {
             message.setSubject(subject);
             message.setText(messageBody);
         } catch (MessagingException e) {
+            e.printStackTrace();
             System.out.println("Error while parsing message");
         }
     }
 
     public static void addRecipientsOfCertainTypeSuccess(Message.RecipientType recipientType, String recipients) throws MessagingException {
-        String[] recipientsArray = recipients.split(",");
-        for (String recipient: recipientsArray)
-            message.addRecipient(recipientType, new InternetAddress(recipient));
+        if (!recipients.isEmpty()) {
+            String[] recipientsArray = recipients.split(",");
+            for (String recipient : recipientsArray)
+                message.addRecipient(recipientType, new InternetAddress(recipient));
+        }
     }
 
     public static void setupProperties(String smtpHostname, int smtpPort) {

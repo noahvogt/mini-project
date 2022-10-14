@@ -29,7 +29,7 @@
                 android:layout_marginStart="0dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
-                android:tint="@android:color/white"
+                app:tint="@android:color/white"
                 android:src="@drawable/ic_baseline_close_24" />
 
             <ImageButton
@@ -41,7 +41,7 @@
                 android:layout_marginLeft="320dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
-                android:tint="@android:color/white"
+                app:tint="@android:color/white"
                 android:src="@drawable/ic_round_pending_24" />
 
             <ImageButton
@@ -56,7 +56,7 @@
                 android:layout_toRightOf="@id/show_message_dots_button"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
-                android:tint="@android:color/white"
+                app:tint="@android:color/white"
                 android:src="@drawable/ic_baseline_attachment_24" />
 
 

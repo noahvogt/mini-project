@@ -61,7 +61,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
                 android:src="@drawable/ic_baseline_attachment_24"
-                android:tint="@android:color/white" />
+                app:tint="@android:color/white" />
 
             <ImageButton
                 android:id="@+id/create_message_dots_button"
@@ -79,7 +79,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
                 android:src="@drawable/ic_round_pending_24"
-                android:tint="@android:color/white" />
+                app:tint="@android:color/white" />
 
             <ImageButton
                 android:id="@+id/create_message_send_button"
@@ -94,7 +94,7 @@
                 android:padding="8dp"
                 android:src="@drawable/ic_baseline_arrow_forward_ios_24"
                 android:textColor="@android:color/white"
-                android:tint="@color/white" />
+                app:tint="@color/white" />
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

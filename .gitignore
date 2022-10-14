@@ -21,3 +21,4 @@ app/release/
 .settings/
 app/.classpath
 app/schemas/
+app/bin/
