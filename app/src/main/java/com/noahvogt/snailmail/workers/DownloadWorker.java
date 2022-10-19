@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.noahvogt.snailmail.database.Message;
+import com.noahvogt.snailmail.mail.GetMailBoxes;
 import com.noahvogt.snailmail.data.MailServerCredentials;
 import com.noahvogt.snailmail.data.BooleanTypeAdapter;
 import com.noahvogt.snailmail.data.MailFunctions;
@@ -80,13 +81,11 @@ public class DownloadWorker extends Worker {
 
 
                 /* download all messages from mail server */
-                List folders =  MailFunctions.listMailboxes(MailFunctions.getIMAPConnection(mImapHost,
-                        mUser, mPassword, mImapPort));
+                ArrayList<String> folders = GetMailBoxes.getMailBoxesAsArrayList(mImapHost, mImapPort, mUser, mPassword);
 
-                for (int i = 0; i < folders.size(); i++) {
+                for (String folder : folders) {
                     String folderName;
-                    String folderNow = folders.get(i).toString();
-
+                    String folderNow = folder;
 
                     if (folderNow.equals("Inbox") || folderNow.equals("INBOX") || folderNow.equals("inbox")){
                         folderName = "Inbox";
@@ -106,13 +105,13 @@ public class DownloadWorker extends Worker {
                         folderName = "Spam";
                     }
                     else {
-                        folderName = folders.get(i).toString();
+                        folderName = folder;
                     }
 
                     /* fetch and print draft messages */
                     String fetchedMails = MailFunctions.fetchMailsFromBox(MailFunctions.getIMAPConnection(mImapHost,
                             mUser, mPassword, mImapPort),
-                            folders.get(i).toString(), folderName);
+                            folder, folderName);
 
                     /* parse messages in arraylist of Message class and loop through it */
                     Type messageType = new TypeToken<ArrayList<Message>>() {
@@ -129,7 +128,6 @@ public class DownloadWorker extends Worker {
 
                         message.putDate(newDate);
                         mEmailViewModel.insert(message);
-
                     }
 
                 }
