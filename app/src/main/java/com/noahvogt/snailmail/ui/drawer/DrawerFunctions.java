@@ -23,6 +23,9 @@ import com.google.gson.reflect.TypeToken;
 import com.noahvogt.snailmail.R;
 import com.noahvogt.snailmail.data.MailFunctions;
 import com.noahvogt.snailmail.data.MailServerCredentials;
+import com.noahvogt.snailmail.mail.imap.ConnectionBackgroundChecker;
+import com.noahvogt.snailmail.mail.imap.ConnectionChecker;
+import com.noahvogt.snailmail.workers.ConnectRunnable;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -84,7 +87,7 @@ public class DrawerFunctions {
 
         /* connect to mail server */
         Toast.makeText(context, "Probe Connection", Toast.LENGTH_SHORT).show();
-        if (MailFunctions.canConnect(imapHost, email, password) == Boolean.TRUE) {
+        if (ConnectionBackgroundChecker.canConnect(imapHost, imapPort, email, password)) {
             Toast.makeText(context, "Was able to connect", Toast.LENGTH_LONG).show();
 
             Gson gson = new Gson();
@@ -192,11 +195,18 @@ public class DrawerFunctions {
     public void changeAccountCredentials(String name, String email, String password, int imapPort, int smtpPort, String imapHost,
                                          String smtpHost, DialogInterface dialogContext, View headerView, String initialEmail,
                                          SharedPreferences mailServerCredentials, Context context) {
+        /* ugly fix, please further investigate */
+        if (mailServerCredentials == null) {
+            SharedPreferences whenNullPointerCredentials = context.getSharedPreferences("Credentials",
+                    Context.MODE_PRIVATE);
+            mailServerCredentials = whenNullPointerCredentials;
+        }
+
         SharedPreferences.Editor credentialsEditor = mailServerCredentials.edit();
 
         /* connect to mail server */
         Toast.makeText(context, "Probe Connection ...", Toast.LENGTH_SHORT).show();
-        if (MailFunctions.canConnect(imapHost, email, password) == Boolean.TRUE) {
+        if (ConnectionBackgroundChecker.canConnect(imapHost, imapPort, email, password)) {
             Toast.makeText(context, "Was able to connect", Toast.LENGTH_SHORT).show();
 
             Gson gson = new Gson();
