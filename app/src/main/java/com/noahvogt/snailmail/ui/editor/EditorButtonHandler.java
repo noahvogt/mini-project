@@ -23,7 +23,7 @@ import com.google.gson.reflect.TypeToken;
 import com.noahvogt.snailmail.MainActivity;
 import com.noahvogt.snailmail.data.MailServerCredentials;
 import com.noahvogt.snailmail.data.MailFunctions;
-import com.noahvogt.snailmail.mail.SendMail;
+import com.noahvogt.snailmail.mail.smtp.SendMail;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

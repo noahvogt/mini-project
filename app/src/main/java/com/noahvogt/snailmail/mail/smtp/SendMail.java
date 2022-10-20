@@ -1,4 +1,4 @@
-package com.noahvogt.snailmail.mail;
+package com.noahvogt.snailmail.mail.smtp;
 
 import android.content.Context;
 
