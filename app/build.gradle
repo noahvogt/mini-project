@@ -1,6 +1,5 @@
 plugins {
     id 'com.android.application'
-    id 'com.chaquo.python'
 }
 
 android {
@@ -20,13 +19,6 @@ android {
 
         ndk {
             abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
-        }
-        python {
-            pip {
-                //install "email"
-                //install "imaplib"
-            }
-            buildPython "/usr/bin/python3.8"
         }
         packagingOptions {
             exclude 'META-INF/NOTICE.md'

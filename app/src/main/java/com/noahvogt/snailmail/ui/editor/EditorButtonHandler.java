@@ -24,6 +24,7 @@ import com.noahvogt.snailmail.MainActivity;
 import com.noahvogt.snailmail.data.MailServerCredentials;
 import com.noahvogt.snailmail.data.MailFunctions;
 import com.noahvogt.snailmail.mail.smtp.SendMail;
+import com.noahvogt.snailmail.workers.SendMailRunnable;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -54,7 +55,8 @@ public class EditorButtonHandler {
                     Toast.makeText(activity, "Sending ... ", Toast.LENGTH_SHORT).show();
                     sendMessageViaNewThread(context);
                     dialog.dismiss();
-                } catch (com.chaquo.python.PyException pyException) {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     Toast.makeText(activity, "Could not send message", Toast.LENGTH_SHORT).show();
                 }
             } else {
@@ -122,8 +124,17 @@ public class EditorButtonHandler {
     }
 
     public void sendMessage(Dialog dialog, Context context) {
-        MailFunctions.sendStarttlsMail(smtpHost, sendingAddress, receivingAddress, password, messageBody,
-                subject, ccStr, bccStr, smtpPort);
+        // MailFunctions.sendStarttlsMail(smtpHost, sendingAddress, receivingAddress, password, messageBody,
+        //         subject, ccStr, bccStr, smtpPort);
+        SendMailRunnable sendMailRunnable = new SendMailRunnable(sendingAddress, receivingAddress, smtpHost, sendingAddress, password, subject, messageBody, ccStr, bccStr, smtpPort, context);
+        Thread checkConnectionThread = new Thread(sendMailRunnable);
+
+        checkConnectionThread.start();
+        try {
+            checkConnectionThread.join();
+        } catch (InterruptedException e) {
+            System.out.println("ERROR WITH SENDING MAIL.");
+        }
         dialog.dismiss();
     }
 

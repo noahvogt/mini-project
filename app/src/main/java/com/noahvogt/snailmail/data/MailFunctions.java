@@ -1,45 +1,11 @@
 package com.noahvogt.snailmail.data;
 
-import android.widget.EditText;
-
-import com.chaquo.python.PyObject;
-import com.chaquo.python.Python;
-
-import java.util.List;
 import java.util.regex.Pattern;
+
+import android.widget.EditText;
 
 public class MailFunctions {
 
-    public static boolean canConnect(String host, String email, String password) {
-        Python python = Python.getInstance();
-        PyObject pythonMailFunctions = python.getModule("mailFunctions");
-        return pythonMailFunctions.callAttr("checkConnection", host, email, password, 993).toBoolean();
-    }
-
-    public static void sendStarttlsMail(String host, String sendingMail, String receivingMail, String password, String message,
-                                        String subject, String cc, String bcc, int port) {
-        Python python = Python.getInstance();
-        PyObject pythonMailFunctions = python.getModule("mailFunctions");
-        pythonMailFunctions.callAttr("sendStarttls", host, sendingMail, receivingMail, password,
-                message, subject, port, cc, bcc);
-    }
-
-    public static PyObject getIMAPConnection(String host, String email, String password, int port) {
-        Python python = Python.getInstance();
-        PyObject pythonMailFunctions = python.getModule("mailFunctions");
-        return pythonMailFunctions.callAttr("connect", host, email, password, port);
-    }
-
-    public static List listMailboxes(PyObject IMAPConnection) {
-        Python python = Python.getInstance();
-        PyObject pythonMailFunctions = python.getModule("mailFunctions");
-        return pythonMailFunctions.callAttr("listMailboxes", IMAPConnection).asList();
-    }
-    public static String fetchMailsFromBox(PyObject IMAPConnection, String FolderServer, String FolderLocal) {
-        Python python = Python.getInstance();
-        PyObject pythonMailFunctions = python.getModule("mailFunctions");
-        return pythonMailFunctions.callAttr("fetchMails", IMAPConnection, FolderServer, FolderLocal).toString();
-    }
     public static boolean validateName(EditText emailName) {
         String name = emailName.getText().toString().trim();
 
@@ -59,28 +25,28 @@ public class MailFunctions {
         String topLevelHost = email.substring(email.lastIndexOf("@") + 1);
         if (topLevelHost.endsWith("edubs.ch")) {
             return "teamwork.edubs.ch";
-        } else if (topLevelHost.endsWith("yahoo.com")){
+        } else if (topLevelHost.endsWith("yahoo.com")) {
             return "imap.mail.yahoo.com";
-        } else if (topLevelHost.endsWith("gmx.ch")){
+        } else if (topLevelHost.endsWith("gmx.ch")) {
             return "imap.gmx.net";
-        } else if (topLevelHost.endsWith("gmx.de")){
+        } else if (topLevelHost.endsWith("gmx.de")) {
             return "imap.gmx.net";
         } else if (topLevelHost.equals("noahvogt.com")) {
             return "mail.noahvogt.com";
-        }else if (topLevelHost.endsWith("outlook.com")) {
+        } else if (topLevelHost.endsWith("outlook.com")) {
             return "outlook.office365.com";
-        }else if (topLevelHost.endsWith("icloud.com")){
+        } else if (topLevelHost.endsWith("icloud.com")) {
             return "imap.mail.me.com";
-        }else if (topLevelHost.endsWith("outlook.ch")) {
+        } else if (topLevelHost.endsWith("outlook.ch")) {
             return "outlook.office365.com";
-        }else if (topLevelHost.endsWith("hotmail.com")) {
+        } else if (topLevelHost.endsWith("hotmail.com")) {
             return "outlook.office365.com";
-        }else if (topLevelHost.endsWith("hotmail.ch")) {
+        } else if (topLevelHost.endsWith("hotmail.ch")) {
             return "outlook.office365.com";
-        }else if (topLevelHost.endsWith("web.de")) {
+        } else if (topLevelHost.endsWith("web.de")) {
             return "imap.web.de ";
         } else {
-                return "imap." + topLevelHost;
+            return "imap." + topLevelHost;
         }
     }
 
@@ -89,31 +55,30 @@ public class MailFunctions {
         if (topLevelHost.equals("noahvogt.com")) {
             return "mail.noahvogt.com";
 
-        } else if (topLevelHost.endsWith("yahoo.com")){
+        } else if (topLevelHost.endsWith("yahoo.com")) {
             return "smtp.mail.yahoo.com";
-        }else if (topLevelHost.endsWith("gmx.ch")){
-            return  "mail.gmx.net";
-        }else if (topLevelHost.endsWith("gmx.de")) {
+        } else if (topLevelHost.endsWith("gmx.ch")) {
+            return "mail.gmx.net";
+        } else if (topLevelHost.endsWith("gmx.de")) {
             return "mail.gmx.net";
         } else if (topLevelHost.endsWith("edubs.ch")) {
             return "smtp.edubs.ch";
-        }else if (topLevelHost.endsWith("outlook.com")) {
+        } else if (topLevelHost.endsWith("outlook.com")) {
             return "smtp-mail.outlook.com";
-        }else if (topLevelHost.endsWith("outlook.ch")) {
+        } else if (topLevelHost.endsWith("outlook.ch")) {
             return "smtp-mail.outlook.com";
-        }else if (topLevelHost.endsWith("hotmail.com")) {
+        } else if (topLevelHost.endsWith("hotmail.com")) {
             return "smtp-mail.outlook.com";
-        }else if (topLevelHost.endsWith("hotmail.ch")) {
+        } else if (topLevelHost.endsWith("hotmail.ch")) {
             return "smtp-mail.outlook.com";
-        }else if (topLevelHost.endsWith("icloud.com")){
+        } else if (topLevelHost.endsWith("icloud.com")) {
             return "smtp.mail.me.com";
-        }else if (topLevelHost.endsWith("web.de")){
+        } else if (topLevelHost.endsWith("web.de")) {
             return "smtp.web.de";
         } else {
             return "smtp." + topLevelHost;
         }
     }
-
 
     public static boolean validateEmail(EditText emailAddress) {
         String email = emailAddress.getText().toString().trim();
@@ -151,7 +116,6 @@ public class MailFunctions {
         String messageBody = emailMessageBody.getText().toString();
         return true;
     }
-
 
     public static boolean checkForSameEmail(EditText firstAddress, EditText secondAddress) {
         String firstEmail = firstAddress.getText().toString();

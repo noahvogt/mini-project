@@ -18,15 +18,17 @@ public class SendMail {
     static Session session;
     static Properties properties;
 
-    public static void sendMessage(String fromAddress, String toAddresses, String smtpHostname, int smtpPort, String username, String password,
-                                   String subject, String messageBody, Context context, String cc, String bcc) {
+    public static void sendMessage(String fromAddress, String toAddresses, String smtpHostname,
+            int smtpPort, String username, String password, String subject, String messageBody,
+            Context context, String cc, String bcc) {
         setupProperties(smtpHostname, smtpPort);
         getSessionInstance(username, password);
         composeMessage(fromAddress, subject, messageBody, toAddresses, cc, bcc);
         transportMessage();
     }
 
-    public static void composeMessage(String fromAddress, String subject, String messageBody, String to, String cc, String bcc) {
+    public static void composeMessage(String fromAddress, String subject, String messageBody,
+            String to, String cc, String bcc) {
         message = new MimeMessage(session);
         try {
             message.setFrom(new InternetAddress(fromAddress));
@@ -43,7 +45,8 @@ public class SendMail {
         }
     }
 
-    public static void addRecipientsOfCertainTypeSuccess(Message.RecipientType recipientType, String recipients) throws MessagingException {
+    public static void addRecipientsOfCertainTypeSuccess(Message.RecipientType recipientType,
+            String recipients) throws MessagingException {
         if (!recipients.isEmpty()) {
             String[] recipientsArray = recipients.split(",");
             for (String recipient : recipientsArray)
