@@ -4,6 +4,7 @@ import static com.noahvogt.snailmail.MainActivity.isDownloading;
 import static com.noahvogt.snailmail.MainActivity.mEmailViewModel;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -114,9 +115,20 @@ public class DownloadWorker extends Worker {
                 }
 
                 /* fetch and print draft messages */
-                String fetchedMails = MailFunctions.fetchMailsFromBox(
-                        MailFunctions.getIMAPConnection(mImapHost, mUser, mPassword, mImapPort),
-                        folder.getFullName(), folderName);
+                //String fetchedMails = MailFunctions.fetchMailsFromBox(
+                        // MailFunctions.getIMAPConnection(mImapHost, mUser, mPassword, mImapPort),
+                        // folder.getFullName(), folderName);
+
+                FetchMailsFromBoxRunnable fetchMailsFromBoxRunnable = new FetchMailsFromBoxRunnable(mImapHost, mImapPort, mUser, mPassword, folder);
+                Thread fetchMailsTread = new Thread(fetchMailsFromBoxRunnable);
+                String fetchedMails;
+                fetchMailsTread.start();
+                try {
+                    fetchMailsTread.join();
+                    fetchedMails = fetchMailsFromBoxRunnable.getMailsJSONString();
+                } catch (InterruptedException e) {
+                    throw e;
+                }
 
                 /* parse messages in arraylist of Message class and loop through it */
                 Type messageType = new TypeToken<ArrayList<Message>>() {
@@ -125,13 +137,22 @@ public class DownloadWorker extends Worker {
                 for (int k = 0; k < messages.size(); k++) {
                     Message message = messages.get(k);
                     message.putUser(currentUser);
+                    System.out.println(message.getDate());
 
-                    SimpleDateFormat rawDate = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
-                    SimpleDateFormat date = new SimpleDateFormat("dd.MM.yy");
-                    Date middleDate = rawDate.parse(message.getDate());
-                    String newDate = date.format(middleDate);
+                    // SimpleDateFormat rawDate = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
+                    // SimpleDateFormat date = new SimpleDateFormat("dd.MM.yy");
+                    // Date middleDate;
+                    // String newDate = "";
+                    // try {
+                    //     middleDate = rawDate.parse(message.getDate());
+                    //     newDate = date.format(middleDate);
+                    // } catch (ParseException e) {
+                    //     e.printStackTrace();
+                    //     middleDate = rawDate.parse("01.01.2000");
+                    //     newDate = date.format(middleDate);
+                    // }
 
-                    message.putDate(newDate);
+                    message.putDate("01.01.2000");
                     mEmailViewModel.insert(message);
                 }
 

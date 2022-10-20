@@ -28,7 +28,7 @@ public class IMAPStoreConnector {
     }
 
     private static void getSessionInstance() {
-        session = Session.getDefaultInstance(properties);
+        session = Session.getInstance(properties);
     }
 
     private static Store getStoreConnection(String imapHostname, String username, String password)
