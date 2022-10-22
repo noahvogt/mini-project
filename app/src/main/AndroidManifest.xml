@@ -9,13 +9,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MiniProjekt">
+        android:theme="@style/Theme.snailmail">
         <activity
             android:name=".ui.editor.NewDraftMessageActivity"
             android:exported="true" />
         <activity
             android:name="com.noahvogt.snailmail.MainActivity"
-            android:theme="@style/Theme.MiniProjekt.NoActionBar"
+            android:theme="@style/Theme.snailmail.NoActionBar"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,4 +1,4 @@
-package com.noahvogt.miniprojekt;
+package com.noahvogt.snailmail;
 
 import org.junit.Test;
 

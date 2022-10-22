@@ -4,18 +4,15 @@ import static com.noahvogt.snailmail.MainActivity.isDownloading;
 import static com.noahvogt.snailmail.MainActivity.mEmailViewModel;
 
 import java.lang.reflect.Type;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.noahvogt.snailmail.data.BooleanTypeAdapter;
-import com.noahvogt.snailmail.data.MailFunctions;
 import com.noahvogt.snailmail.data.MailServerCredentials;
 import com.noahvogt.snailmail.database.Message;
+import com.noahvogt.snailmail.mail.imap.FetchMailsFromBox;
 import com.noahvogt.snailmail.mail.imap.IMAPStoreConnector;
 import com.noahvogt.snailmail.mail.imap.MailboxLister;
 
@@ -28,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 import jakarta.mail.Folder;
+import jakarta.mail.MessagingException;
 
 public class DownloadWorker extends Worker {
 
@@ -115,19 +113,13 @@ public class DownloadWorker extends Worker {
                 }
 
                 /* fetch and print draft messages */
-                //String fetchedMails = MailFunctions.fetchMailsFromBox(
-                        // MailFunctions.getIMAPConnection(mImapHost, mUser, mPassword, mImapPort),
-                        // folder.getFullName(), folderName);
-
-                FetchMailsFromBoxRunnable fetchMailsFromBoxRunnable = new FetchMailsFromBoxRunnable(mImapHost, mImapPort, mUser, mPassword, folder);
-                Thread fetchMailsTread = new Thread(fetchMailsFromBoxRunnable);
-                String fetchedMails;
-                fetchMailsTread.start();
+                String fetchedMails = "";
                 try {
-                    fetchMailsTread.join();
-                    fetchedMails = fetchMailsFromBoxRunnable.getMailsJSONString();
-                } catch (InterruptedException e) {
-                    throw e;
+                    ArrayList<Message> messageArraylist = FetchMailsFromBox.get(IMAPStoreConnector
+                            .getConncetion(mImapHost, mImapPort, mUser, mPassword), folder, mUser);
+                    fetchedMails = gson.toJson(messageArraylist);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
                 }
 
                 /* parse messages in arraylist of Message class and loop through it */
@@ -139,17 +131,18 @@ public class DownloadWorker extends Worker {
                     message.putUser(currentUser);
                     System.out.println(message.getDate());
 
-                    // SimpleDateFormat rawDate = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
+                    // SimpleDateFormat rawDate = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss
+                    // Z");
                     // SimpleDateFormat date = new SimpleDateFormat("dd.MM.yy");
                     // Date middleDate;
                     // String newDate = "";
                     // try {
-                    //     middleDate = rawDate.parse(message.getDate());
-                    //     newDate = date.format(middleDate);
+                    // middleDate = rawDate.parse(message.getDate());
+                    // newDate = date.format(middleDate);
                     // } catch (ParseException e) {
-                    //     e.printStackTrace();
-                    //     middleDate = rawDate.parse("01.01.2000");
-                    //     newDate = date.format(middleDate);
+                    // e.printStackTrace();
+                    // middleDate = rawDate.parse("01.01.2000");
+                    // newDate = date.format(middleDate);
                     // }
 
                     message.putDate("01.01.2000");

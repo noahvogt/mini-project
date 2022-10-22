@@ -17,7 +17,8 @@ public class FetchMailsFromBoxRunnable implements Runnable {
     private int imapPort;
     private Folder folder;
 
-    public FetchMailsFromBoxRunnable(String imapHost, int imapPort, String username, String password, Folder folder) {
+    public FetchMailsFromBoxRunnable(String imapHost, int imapPort, String username,
+            String password, Folder folder) {
         this.imapHost = imapHost;
         this.imapPort = imapPort;
         this.username = username;
@@ -29,12 +30,14 @@ public class FetchMailsFromBoxRunnable implements Runnable {
     public void run() {
         try {
             Gson gson = new Gson();
-			connectedStore = IMAPStoreConnector.getConncetion(imapHost, imapPort, username, password);
-            ArrayList<Message> messageArraylist = FetchMailsFromBox.get(connectedStore, folder, username);
+            connectedStore = IMAPStoreConnector.getConncetion(imapHost, imapPort, username,
+                    password);
+            ArrayList<Message> messageArraylist = FetchMailsFromBox.get(connectedStore, folder,
+                    username);
             mailJSONString = gson.toJson(messageArraylist);
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		}
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
         return;
     }
 

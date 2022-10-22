@@ -10,17 +10,40 @@ public class MailServerCredentials {
     private final String mName;
     private final String mSignature;
 
-    public String getImapHost () {return this.mImapHost;}
-    public String getSmtpHost () {return this.mSmtpHost;}
-    public String getUsername () {return this.mUsername;}
-    public String getPassword () {return this.mPassword;}
-    public int getImapPort () {return this.mImapPort;}
-    public int getSmtpPort () {return  this.mSmtpPort;}
-    public String getName () {return this.mName;}
-    public String getSignature () {return this.mSignature;}
+    public String getImapHost() {
+        return this.mImapHost;
+    }
 
-    public MailServerCredentials(String name, String username, String password, String imapHost, String smtpHost, int imapPort,
-                                 int smtpPort, String signature) {
+    public String getSmtpHost() {
+        return this.mSmtpHost;
+    }
+
+    public String getUsername() {
+        return this.mUsername;
+    }
+
+    public String getPassword() {
+        return this.mPassword;
+    }
+
+    public int getImapPort() {
+        return this.mImapPort;
+    }
+
+    public int getSmtpPort() {
+        return this.mSmtpPort;
+    }
+
+    public String getName() {
+        return this.mName;
+    }
+
+    public String getSignature() {
+        return this.mSignature;
+    }
+
+    public MailServerCredentials(String name, String username, String password, String imapHost,
+            String smtpHost, int imapPort, int smtpPort, String signature) {
         this.mName = name;
         this.mUsername = username;
         this.mPassword = password;

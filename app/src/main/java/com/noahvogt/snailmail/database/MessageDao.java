@@ -35,28 +35,24 @@ public interface MessageDao {
     @Query("UPDATE message_table SET date = :date WHERE id = :id")
     void updateDate(int id, String date);
 
-    /* get Draft messages*/
+    /* get Draft messages */
     @Query("SELECT * FROM message_table WHERE user = :user AND folder LIKE 'Draft' ORDER BY date DESC")
     LiveData<List<Message>> getLiveDraftMessages(String user);
 
-    /* get Inbox messages*/
+    /* get Inbox messages */
     @Query("SELECT * FROM message_table WHERE user = :user AND folder LIKE 'Inbox' ORDER BY date DESC")
     LiveData<List<Message>> getLiveInboxMessages(String user);
 
-
-    /* get Sent messages*/
+    /* get Sent messages */
     @Query("SELECT * FROM message_table WHERE user = :user AND folder LIKE 'Sent' ORDER BY date DESC")
     LiveData<List<Message>> getLiveSentMessages(String user);
 
-    /* get Archive messages*/
+    /* get Archive messages */
     @Query("SELECT * FROM message_table WHERE user = :user AND folder LIKE 'Archive' ORDER BY date DESC")
     LiveData<List<Message>> getLiveArchiveMessages(String user);
 
-    /* get Spam messages*/
+    /* get Spam messages */
     @Query("SELECT * FROM message_table WHERE user = :user AND folder LIKE 'Spam' ORDER BY date DESC")
     LiveData<List<Message>> getLiveSpamMessages(String user);
-
-
-
 
 }

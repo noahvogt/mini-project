@@ -9,7 +9,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.MiniProjekt.AppBarOverlay">
+        android:theme="@style/Theme.snailmail.AppBarOverlay">
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -30,6 +30,6 @@
         android:layout_gravity="top"
         android:background="?attr/colorPrimary"
         app:titleTextColor="@android:color/white"
-        app:popupTheme="@style/Theme.MiniProjekt.PopupOverlay" />
+        app:popupTheme="@style/Theme.snailmail.PopupOverlay" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

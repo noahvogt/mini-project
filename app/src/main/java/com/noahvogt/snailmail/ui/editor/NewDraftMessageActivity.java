@@ -9,20 +9,18 @@
 
 package com.noahvogt.snailmail.ui.editor;
 
+import com.noahvogt.snailmail.R;
 
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.noahvogt.snailmail.R;
 
 public class NewDraftMessageActivity extends AppCompatActivity {
 
-   @Override
-    public void onCreate(Bundle savedInstanceState){
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mailbox_inbox_fragment);
 
-       NewDraftMessageActivity.this.finish();
-        }
+        NewDraftMessageActivity.this.finish();
     }
+}

@@ -1,5 +1,12 @@
 package com.noahvogt.snailmail.ui.editor;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import com.noahvogt.snailmail.R;
+import com.noahvogt.snailmail.data.EmailViewModel;
+import com.noahvogt.snailmail.database.Message;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,17 +19,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-
-import com.noahvogt.snailmail.database.Message;
-import com.noahvogt.snailmail.R;
-import com.noahvogt.snailmail.data.EmailViewModel;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class EditorFragment extends DialogFragment implements PopupMenu.OnMenuItemClickListener {
 
@@ -34,7 +33,8 @@ public class EditorFragment extends DialogFragment implements PopupMenu.OnMenuIt
     public static final String EXTRA_BCC = "com.example.android.namelistsql.BCC";
     public static final String EXTRA_DATE = "com.example.android.namelistsql.DATE";
 
-    public EditText sendingAddressObject, receivingAddressObject, subjectObject, messageBodyObject, ccObject, bccObject;
+    public EditText sendingAddressObject, receivingAddressObject, subjectObject, messageBodyObject,
+            ccObject, bccObject;
     public ImageButton sendButton, closeButton, dotButton, attachButton;
     public SharedPreferences mailServerCredentials;
     public String currentMailUser;
@@ -48,16 +48,17 @@ public class EditorFragment extends DialogFragment implements PopupMenu.OnMenuIt
         return new com.noahvogt.snailmail.ui.editor.EditorFragment();
     }
 
-    public com.noahvogt.snailmail.ui.editor.EditorFragment getMessage(Message message, EmailViewModel emailViewModel,
-                                                                      com.noahvogt.snailmail.ui.editor.EditorFragment editorFragment) {
+    public com.noahvogt.snailmail.ui.editor.EditorFragment getMessage(Message message,
+            EmailViewModel emailViewModel,
+            com.noahvogt.snailmail.ui.editor.EditorFragment editorFragment) {
         this.mEmailViewModel = emailViewModel;
         this.mMessage = message;
         return editorFragment;
     }
 
     private static final int NUMBER_OF_THREADS = 4;
-    static final ExecutorService databaseWriteExecutor =
-            Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+    static final ExecutorService databaseWriteExecutor = Executors
+            .newFixedThreadPool(NUMBER_OF_THREADS);
 
     /* set theming style */
     @Override
@@ -68,7 +69,8 @@ public class EditorFragment extends DialogFragment implements PopupMenu.OnMenuIt
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.editor_fragment, container, false);
 
         getPreferences(requireContext());
@@ -82,8 +84,9 @@ public class EditorFragment extends DialogFragment implements PopupMenu.OnMenuIt
 
         closeButton.setOnClickListener(v -> {
             EditorButtonHandler editorButtonHandler = new EditorButtonHandler();
-            editorButtonHandler.handleCloseButton(getActivity(), mailServerCredentials, getDialog(), currentMailUser, sendingAddressObject,
-                    receivingAddressObject, subjectObject, messageBodyObject, ccObject, bccObject);
+            editorButtonHandler.handleCloseButton(getActivity(), mailServerCredentials, getDialog(),
+                    currentMailUser, sendingAddressObject, receivingAddressObject, subjectObject,
+                    messageBodyObject, ccObject, bccObject);
         });
 
         attachButton.setOnClickListener(v -> {
@@ -94,8 +97,9 @@ public class EditorFragment extends DialogFragment implements PopupMenu.OnMenuIt
 
         sendButton.setOnClickListener(v -> {
             EditorButtonHandler editorButtonHandler = new EditorButtonHandler();
-            editorButtonHandler.handleSendButton(getActivity(), mailServerCredentials, getDialog(), currentMailUser, sendingAddressObject,
-                    receivingAddressObject, subjectObject, messageBodyObject, ccObject, bccObject, getContext());
+            editorButtonHandler.handleSendButton(getActivity(), mailServerCredentials, getDialog(),
+                    currentMailUser, sendingAddressObject, receivingAddressObject, subjectObject,
+                    messageBodyObject, ccObject, bccObject, getContext());
         });
 
         return view;
@@ -104,20 +108,22 @@ public class EditorFragment extends DialogFragment implements PopupMenu.OnMenuIt
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.create_message_delete:
-                Toast.makeText(getActivity(), "Nothing will happen", Toast.LENGTH_LONG).show();
-                return true;
-            case R.id.create_message_spam:
-                Toast.makeText(getActivity(), "Nothing wil happen", Toast.LENGTH_LONG).show();
-                return true;
-            default: /* this case should never occur */
-                return false;
+        case R.id.create_message_delete:
+            Toast.makeText(getActivity(), "Nothing will happen", Toast.LENGTH_LONG).show();
+            return true;
+        case R.id.create_message_spam:
+            Toast.makeText(getActivity(), "Nothing wil happen", Toast.LENGTH_LONG).show();
+            return true;
+        default: /* this case should never occur */
+            return false;
         }
     }
 
     public void initUserInputObjects(View view) {
-        sendingAddressObject = (EditText) view.findViewById(R.id.create_message_sending_address_text);
-        receivingAddressObject = (EditText) view.findViewById(R.id.create_message_receiving_address_text);
+        sendingAddressObject = (EditText) view
+                .findViewById(R.id.create_message_sending_address_text);
+        receivingAddressObject = (EditText) view
+                .findViewById(R.id.create_message_receiving_address_text);
         ccObject = (EditText) view.findViewById(R.id.create_message_cc_text);
         bccObject = (EditText) view.findViewById(R.id.create_message_bcc_text);
         subjectObject = (EditText) view.findViewById(R.id.create_message_subject_text);
@@ -134,6 +140,7 @@ public class EditorFragment extends DialogFragment implements PopupMenu.OnMenuIt
     public void setFromAddressToLoggedInUser() {
         sendingAddressObject.setText(currentMailUser);
     }
+
     public void getCurrentUser() {
         currentMailUser = mailServerCredentials.getString("currentUser", "");
     }
@@ -142,7 +149,7 @@ public class EditorFragment extends DialogFragment implements PopupMenu.OnMenuIt
         mailServerCredentials = context.getSharedPreferences("Credentials", Context.MODE_PRIVATE);
     }
 
-    public void applyMessageObjectToUI () {
+    public void applyMessageObjectToUI() {
         if (mMessage != null) {
             sendingAddressObject.setText(mMessage.getFrom());
             receivingAddressObject.setText(mMessage.getTo());

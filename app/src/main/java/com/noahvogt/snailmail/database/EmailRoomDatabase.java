@@ -21,39 +21,40 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Message.class}, version = 1, exportSchema = true)
-public abstract class EmailRoomDatabase extends RoomDatabase{
+@Database(entities = { Message.class }, version = 1, exportSchema = true)
+public abstract class EmailRoomDatabase extends RoomDatabase {
 
     public abstract MessageDao messageDao();
 
     /* the INSTANCE can be used by different threads at the same time */
     private static volatile EmailRoomDatabase INSTANCE;
 
-    /* tells room the schema is changed from the version that is installed in device
-     * is not used */
+    /*
+     * tells room the schema is changed from the version that is installed in device
+     * is not used
+     */
     static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE word_table "
-                    + "ADD COLUMN last_update INTEGER ");
+            database.execSQL("ALTER TABLE word_table " + "ADD COLUMN last_update INTEGER ");
         }
     };
 
     /* creating n threads */
     private static final int NUMBER_OF_THREADS = 6;
-    static final ExecutorService databaseWriteExecutor =
-            Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+    static final ExecutorService databaseWriteExecutor = Executors
+            .newFixedThreadPool(NUMBER_OF_THREADS);
 
     static EmailRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             /* synchronize all threads of EmailRoomDatabase */
             synchronized (EmailRoomDatabase.class) {
                 if (INSTANCE == null) {
-                    /* passes the interface in the Room and deletes old data/schema from device*/
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            EmailRoomDatabase.class, "message_database")
-                            .addCallback(sRoomDatabaseCallback)
-                            .fallbackToDestructiveMigration()
+                    /* passes the interface in the Room and deletes old data/schema from device */
+                    INSTANCE = Room
+                            .databaseBuilder(context.getApplicationContext(),
+                                    EmailRoomDatabase.class, "message_database")
+                            .addCallback(sRoomDatabaseCallback).fallbackToDestructiveMigration()
                             .build();
                 }
             }
@@ -78,5 +79,3 @@ public abstract class EmailRoomDatabase extends RoomDatabase{
     };
 
 }
-
-

@@ -2,9 +2,10 @@ package com.noahvogt.snailmail.data;
 
 import java.lang.reflect.Type;
 import com.google.gson.*;
+
 public class BooleanTypeAdapter implements JsonDeserializer<Boolean> {
-    public Boolean deserialize(JsonElement json, Type typeOfT,
-                               JsonDeserializationContext context) throws JsonParseException {
+    public Boolean deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+            throws JsonParseException {
         if (((JsonPrimitive) json).isBoolean()) {
             return json.getAsBoolean();
         }
@@ -20,7 +21,6 @@ public class BooleanTypeAdapter implements JsonDeserializer<Boolean> {
         }
 
         int code = json.getAsInt();
-        return code == 0 ? false :
-                code == 1 ? true : null;
+        return code == 0 ? false : code == 1 ? true : null;
     }
 }

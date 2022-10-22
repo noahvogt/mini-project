@@ -1,10 +1,9 @@
 package com.noahvogt.snailmail.ui.settings;
 
-import android.os.Bundle;
-
-import androidx.preference.PreferenceFragmentCompat;
-
 import com.noahvogt.snailmail.R;
+
+import android.os.Bundle;
+import androidx.preference.PreferenceFragmentCompat;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 

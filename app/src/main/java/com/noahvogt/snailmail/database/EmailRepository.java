@@ -28,8 +28,7 @@ public class EmailRepository {
 
     private List<Message> mAllMessages;
 
-
-    /*get all messages sorted by date out of Database*/
+    /* get all messages sorted by date out of Database */
     public EmailRepository(Application application) {
         EmailRoomDatabase db = EmailRoomDatabase.getDatabase(application);
         messageDao = db.messageDao();
@@ -40,13 +39,14 @@ public class EmailRepository {
         mSpamLiveMessage = messageDao.getLiveSpamMessages(userGlobal);
     }
 
-
     /* returns all messages of with tag Draft */
     public LiveData<List<Message>> getDraftMessages() {
         return mDraftLiveMessage;
     }
 
-    public LiveData<List<Message>> getSpamMessage(){return mSpamLiveMessage;}
+    public LiveData<List<Message>> getSpamMessage() {
+        return mSpamLiveMessage;
+    }
 
     public LiveData<List<Message>> getInboxMessages() {
         return mInboxLiveMessage;
@@ -60,11 +60,10 @@ public class EmailRepository {
         return mArchiveLiveMessage;
     }
 
-    /*problems with main Thread */
-    public List<Message> getAllMessages(){
-        return mAllMessages;}
-
-
+    /* problems with main Thread */
+    public List<Message> getAllMessages() {
+        return mAllMessages;
+    }
 
     public void insert(Message message) {
         EmailRoomDatabase.databaseWriteExecutor.execute(() -> {
@@ -72,19 +71,19 @@ public class EmailRepository {
         });
     }
 
-    public void deleteMessage(final Message message){
+    public void deleteMessage(final Message message) {
         EmailRoomDatabase.databaseWriteExecutor.execute(() -> {
             messageDao.delete(message);
         });
     }
 
-    public void updateFolder(final int id, String folder){
+    public void updateFolder(final int id, String folder) {
         EmailRoomDatabase.databaseWriteExecutor.execute(() -> {
-            messageDao.updateFolder(id ,folder);
+            messageDao.updateFolder(id, folder);
         });
     }
 
-    public void updateDate(final int id, final String date){
+    public void updateDate(final int id, final String date) {
         EmailRoomDatabase.databaseWriteExecutor.execute(() -> {
             messageDao.updateDate(id, date);
         });

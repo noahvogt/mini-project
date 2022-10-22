@@ -10,9 +10,9 @@ public class SendMailRunnable implements Runnable {
     private int smtpPort;
     private Context context;
 
-    public SendMailRunnable(String fromAddress, String toAddresses,
-            String smtpHostname, String username, String password, String subject,
-            String messageBody, String cc, String bcc, int smtpPort, Context context) {
+    public SendMailRunnable(String fromAddress, String toAddresses, String smtpHostname,
+            String username, String password, String subject, String messageBody, String cc,
+            String bcc, int smtpPort, Context context) {
         this.fromAddress = fromAddress;
         this.toAddresses = toAddresses;
         this.smtpHostname = smtpHostname;
@@ -28,6 +28,7 @@ public class SendMailRunnable implements Runnable {
 
     @Override
     public void run() {
-        SendMail.sendMessage(fromAddress, toAddresses, smtpHostname, smtpPort, username, password, subject, messageBody, context, cc, bcc);
+        SendMail.sendMessage(fromAddress, toAddresses, smtpHostname, smtpPort, username, password,
+                subject, messageBody, context, cc, bcc);
     }
 }

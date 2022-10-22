@@ -30,7 +30,7 @@ public class EmailViewModel extends AndroidViewModel {
     private EmailRepository mEmailRepository;
     private WorkManager mWorkManager;
 
-    public List<Message> all =  new ArrayList<>();
+    public List<Message> all = new ArrayList<>();
     private LiveData<List<Message>> mDraftMessage;
     private LiveData<List<Message>> mInboxMessage;
     private LiveData<List<Message>> mSentMessage;
@@ -55,46 +55,49 @@ public class EmailViewModel extends AndroidViewModel {
         mSpamMessage = mEmailRepository.getSpamMessage();
     }
 
-    /*requests Worker and applies password, email to it */
-    public void applyDownload(){
-        OneTimeWorkRequest downloadRequest =
-                new OneTimeWorkRequest.Builder(DownloadWorker.class)
-                        .build();
+    /* requests Worker and applies password, email to it */
+    public void applyDownload() {
+        OneTimeWorkRequest downloadRequest = new OneTimeWorkRequest.Builder(DownloadWorker.class)
+                .build();
 
         mWorkManager.enqueue(downloadRequest);
     }
 
-    public void setListAll(List<Message> messageListAll, String fragment, Boolean  isDownloading){
-        /*if Messages being downloaded*/
-        if (isDownloading){return;}
-        if (userGlobal == null){return;}
-        if (sent == null && fragment.equals("Sent")){
+    public void setListAll(List<Message> messageListAll, String fragment, Boolean isDownloading) {
+        /* if Messages being downloaded */
+        if (isDownloading) {
+            return;
+        }
+        if (userGlobal == null) {
+            return;
+        }
+        if (sent == null && fragment.equals("Sent")) {
             for (int i = 0; i < messageListAll.size(); i++) {
                 this.all.add(messageListAll.get(i));
             }
             sent = fragment;
         }
 
-        if (drafts == null && fragment.equals("Drafts")){
+        if (drafts == null && fragment.equals("Drafts")) {
             for (int i = 0; i < messageListAll.size(); i++) {
                 this.all.add(messageListAll.get(i));
             }
             drafts = fragment;
         }
 
-        if (archive == null && fragment.equals("Archive")){
+        if (archive == null && fragment.equals("Archive")) {
             for (int i = 0; i < messageListAll.size(); i++) {
                 this.all.add(messageListAll.get(i));
             }
             archive = fragment;
         }
-        if (inbox == null && fragment.equals("Inbox")){
+        if (inbox == null && fragment.equals("Inbox")) {
             for (int i = 0; i < messageListAll.size(); i++) {
                 this.all.add(messageListAll.get(i));
             }
             inbox = fragment;
         }
-        if (spam == null && fragment.equals("Spam")){
+        if (spam == null && fragment.equals("Spam")) {
             for (int i = 0; i < messageListAll.size(); i++) {
                 this.all.add(messageListAll.get(i));
             }
@@ -102,10 +105,10 @@ public class EmailViewModel extends AndroidViewModel {
         }
     }
 
-    public List<Message> getAll(boolean status){
+    public List<Message> getAll(boolean status) {
         for (int i = 0; i < all.size(); i++) {
         }
-        if (status){
+        if (status) {
             List<Message> emptyAll;
             emptyAll = all;
             all.clear();
@@ -120,27 +123,45 @@ public class EmailViewModel extends AndroidViewModel {
         return all;
     }
 
-    public LiveData<List<Message>> getDraftMessage(){ return mDraftMessage; }
+    public LiveData<List<Message>> getDraftMessage() {
+        return mDraftMessage;
+    }
 
-    public LiveData<List<Message>> getSpamMessage(){return mSpamMessage;}
+    public LiveData<List<Message>> getSpamMessage() {
+        return mSpamMessage;
+    }
 
-    public LiveData<List<Message>> getInboxMessage(){ return mInboxMessage;}
+    public LiveData<List<Message>> getInboxMessage() {
+        return mInboxMessage;
+    }
 
-    public LiveData<List<Message>> getSentMessage(){ return mSentMessage;}
+    public LiveData<List<Message>> getSentMessage() {
+        return mSentMessage;
+    }
 
-    public LiveData<List<Message>> getArchiveMessage(){ return mArchiveMessage;}
+    public LiveData<List<Message>> getArchiveMessage() {
+        return mArchiveMessage;
+    }
 
-    public List<Message> getAllMessages(){
+    public List<Message> getAllMessages() {
         mAllMessages = mEmailRepository.getAllMessages();
-        return mAllMessages;}
+        return mAllMessages;
+    }
 
-    public void insert(Message message){mEmailRepository.insert(message);}
+    public void insert(Message message) {
+        mEmailRepository.insert(message);
+    }
 
-    public void deleteMessage(Message message){mEmailRepository.deleteMessage(message);}
+    public void deleteMessage(Message message) {
+        mEmailRepository.deleteMessage(message);
+    }
 
-    public void updateFolder(int id, String folder){mEmailRepository.updateFolder(id, folder);}
+    public void updateFolder(int id, String folder) {
+        mEmailRepository.updateFolder(id, folder);
+    }
 
-    public void updateDate(int id, String date){ mEmailRepository.updateDate(id, date); }
-
+    public void updateDate(int id, String date) {
+        mEmailRepository.updateDate(id, date);
+    }
 
 }

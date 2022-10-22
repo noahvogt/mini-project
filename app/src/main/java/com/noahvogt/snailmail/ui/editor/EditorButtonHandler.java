@@ -8,6 +8,17 @@ import static com.noahvogt.snailmail.ui.editor.EditorFragment.EXTRA_SUBJECT;
 import static com.noahvogt.snailmail.ui.editor.EditorFragment.EXTRA_TO;
 import static com.noahvogt.snailmail.ui.editor.EditorFragment.replyIntent;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.noahvogt.snailmail.MainActivity;
+import com.noahvogt.snailmail.data.MailFunctions;
+import com.noahvogt.snailmail.data.MailServerCredentials;
+import com.noahvogt.snailmail.mail.smtp.SendMail;
+import com.noahvogt.snailmail.workers.SendMailRunnable;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -15,19 +26,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AlertDialog;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.noahvogt.snailmail.MainActivity;
-import com.noahvogt.snailmail.data.MailServerCredentials;
-import com.noahvogt.snailmail.data.MailFunctions;
-import com.noahvogt.snailmail.mail.smtp.SendMail;
-import com.noahvogt.snailmail.workers.SendMailRunnable;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 public class EditorButtonHandler {
 
@@ -39,18 +38,22 @@ public class EditorButtonHandler {
     public static final int RESULT_CANCELED = 0;
     public static final int RESULT_OK = -1;
 
-    public void handleSendButton(Activity activity, SharedPreferences credentialPreferences, Dialog dialog, String currentMailUser,
-                                 EditText sendingAddressObject, EditText receivingAddressObject, EditText subjectObject, EditText messageBodyObject,
-                                 EditText ccObject, EditText bccObject, Context context) {
+    public void handleSendButton(Activity activity, SharedPreferences credentialPreferences,
+            Dialog dialog, String currentMailUser, EditText sendingAddressObject,
+            EditText receivingAddressObject, EditText subjectObject, EditText messageBodyObject,
+            EditText ccObject, EditText bccObject, Context context) {
         getCredentialsJsonData(credentialPreferences);
 
         if (jsonData.isEmpty()) {
-            Toast.makeText(activity, "Please setup an account before sending", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "Please setup an account before sending", Toast.LENGTH_SHORT)
+                    .show();
         } else {
             getCredentials(currentMailUser);
-            getUserInput(sendingAddressObject, receivingAddressObject, subjectObject, messageBodyObject, ccObject, bccObject);
+            getUserInput(sendingAddressObject, receivingAddressObject, subjectObject,
+                    messageBodyObject, ccObject, bccObject);
 
-            if (isValidMessage(messageBodyObject, subjectObject, receivingAddressObject, sendingAddressObject)) {
+            if (isValidMessage(messageBodyObject, subjectObject, receivingAddressObject,
+                    sendingAddressObject)) {
                 try {
                     Toast.makeText(activity, "Sending ... ", Toast.LENGTH_SHORT).show();
                     sendMessageViaNewThread(context);
@@ -65,39 +68,44 @@ public class EditorButtonHandler {
         }
     }
 
-    public void handleCloseButton(Activity activity, SharedPreferences credentialPreferences, Dialog dialog, String currentMailUser,
-                                  EditText sendingAddressObject, EditText receivingAddressObject, EditText subjectObject, EditText messageBodyObject,
-                                  EditText ccObject, EditText bccObject) {
+    public void handleCloseButton(Activity activity, SharedPreferences credentialPreferences,
+            Dialog dialog, String currentMailUser, EditText sendingAddressObject,
+            EditText receivingAddressObject, EditText subjectObject, EditText messageBodyObject,
+            EditText ccObject, EditText bccObject) {
         getCredentialsJsonData(credentialPreferences);
 
         if (jsonData.isEmpty())
             dialog.dismiss();
         else {
-            getUserInput(sendingAddressObject, receivingAddressObject, subjectObject, messageBodyObject, ccObject, bccObject);
+            getUserInput(sendingAddressObject, receivingAddressObject, subjectObject,
+                    messageBodyObject, ccObject, bccObject);
 
             /* give alert dialog box to user in case input fields are not empty */
             if (subject.isEmpty() && messageBody.isEmpty()) {
                 dialog.dismiss();
             } else {
-                askForSavingDraftMessageDialog(activity, dialog, sendingAddressObject, receivingAddressObject, subjectObject, messageBodyObject, ccObject, bccObject);
+                askForSavingDraftMessageDialog(activity, dialog, sendingAddressObject,
+                        receivingAddressObject, subjectObject, messageBodyObject, ccObject,
+                        bccObject);
             }
         }
     }
 
-        public void getCredentialsJsonData (SharedPreferences credentials){
-            jsonData = credentials.getString("data", "");
-        }
+    public void getCredentialsJsonData(SharedPreferences credentials) {
+        jsonData = credentials.getString("data", "");
+    }
 
     public void getCredentialsArraylist(String jsonData) {
         Gson gson = new Gson();
-        Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>(){}.getType();
+        Type credentialsType = new TypeToken<ArrayList<MailServerCredentials>>() {
+        }.getType();
         credentialsArrayList = gson.fromJson(jsonData, credentialsType);
     }
 
     public void getCredentials(String currentMailUser) {
         getCredentialsArraylist(jsonData);
 
-        for (int i = 0; i < credentialsArrayList.size(); i++){
+        for (int i = 0; i < credentialsArrayList.size(); i++) {
             if (credentialsArrayList.get(i).getUsername().equals(currentMailUser)) {
                 smtpHost = credentialsArrayList.get(i).getSmtpHost();
                 smtpPort = credentialsArrayList.get(i).getSmtpPort();
@@ -107,8 +115,9 @@ public class EditorButtonHandler {
         }
     }
 
-    public void getUserInput(EditText sendingAddressObject, EditText receivingAddressObject, EditText subjectObject,
-                             EditText messageBodyObject, EditText ccObject, EditText bccObject) {
+    public void getUserInput(EditText sendingAddressObject, EditText receivingAddressObject,
+            EditText subjectObject, EditText messageBodyObject, EditText ccObject,
+            EditText bccObject) {
         sendingAddress = sendingAddressObject.getText().toString();
         receivingAddress = receivingAddressObject.getText().toString();
         subject = subjectObject.getText().toString();
@@ -117,16 +126,21 @@ public class EditorButtonHandler {
         bccStr = bccObject.getText().toString();
     }
 
-    public boolean isValidMessage(EditText messageBodyObject, EditText subjectObject, EditText receivingAddressObject,
-                                  EditText sendingAddressObject) {
-        return  MailFunctions.validateMessageBody(messageBodyObject) && MailFunctions.validateSubject(subjectObject) &&
-                MailFunctions.validateEmail(receivingAddressObject) && MailFunctions.validateEmail(sendingAddressObject);
+    public boolean isValidMessage(EditText messageBodyObject, EditText subjectObject,
+            EditText receivingAddressObject, EditText sendingAddressObject) {
+        return MailFunctions.validateMessageBody(messageBodyObject)
+                && MailFunctions.validateSubject(subjectObject)
+                && MailFunctions.validateEmail(receivingAddressObject)
+                && MailFunctions.validateEmail(sendingAddressObject);
     }
 
     public void sendMessage(Dialog dialog, Context context) {
-        // MailFunctions.sendStarttlsMail(smtpHost, sendingAddress, receivingAddress, password, messageBody,
-        //         subject, ccStr, bccStr, smtpPort);
-        SendMailRunnable sendMailRunnable = new SendMailRunnable(sendingAddress, receivingAddress, smtpHost, sendingAddress, password, subject, messageBody, ccStr, bccStr, smtpPort, context);
+        // MailFunctions.sendStarttlsMail(smtpHost, sendingAddress, receivingAddress,
+        // password, messageBody,
+        // subject, ccStr, bccStr, smtpPort);
+        SendMailRunnable sendMailRunnable = new SendMailRunnable(sendingAddress, receivingAddress,
+                smtpHost, sendingAddress, password, subject, messageBody, ccStr, bccStr, smtpPort,
+                context);
         Thread checkConnectionThread = new Thread(sendMailRunnable);
 
         checkConnectionThread.start();
@@ -138,13 +152,12 @@ public class EditorButtonHandler {
         dialog.dismiss();
     }
 
-    public void askForSavingDraftMessageDialog(Activity activity, Dialog dialog, EditText sendingAddressObject, EditText receivingAddressObject, EditText subjectObject,
-                                       EditText messageBodyObject, EditText ccObject, EditText bccObject) {
+    public void askForSavingDraftMessageDialog(Activity activity, Dialog dialog,
+            EditText sendingAddressObject, EditText receivingAddressObject, EditText subjectObject,
+            EditText messageBodyObject, EditText ccObject, EditText bccObject) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
         alertDialogBuilder.setTitle("Warning");
-        alertDialogBuilder
-                .setMessage("Do you want to save your Draft?")
-                .setCancelable(false)
+        alertDialogBuilder.setMessage("Do you want to save your Draft?").setCancelable(false)
                 .setPositiveButton("Yes", (CloseDialog, id) -> {
 
                     activity.setResult(RESULT_CANCELED, replyIntent);
@@ -155,7 +168,6 @@ public class EditorButtonHandler {
                     String message = messageBodyObject.getText().toString();
                     String cc = ccObject.getText().toString();
                     String bcc = bccObject.getText().toString();
-
 
                     replyIntent.putExtra(EXTRA_FROM, from);
                     replyIntent.putExtra(EXTRA_TO, to);
@@ -168,11 +180,11 @@ public class EditorButtonHandler {
                     activity.finish();
 
                     Intent intent = new Intent(activity, NewDraftMessageActivity.class);
-                    activity.startActivityForResult(intent, MainActivity.NEW_WORD_ACTIVITY_REQUEST_CODE);
+                    activity.startActivityForResult(intent,
+                            MainActivity.NEW_WORD_ACTIVITY_REQUEST_CODE);
 
                     dialog.dismiss();
-                })
-                .setNegativeButton("No", (closeDialog, id) -> {
+                }).setNegativeButton("No", (closeDialog, id) -> {
                     dialog.dismiss();
                 });
 
@@ -183,7 +195,8 @@ public class EditorButtonHandler {
     public void sendMessageViaNewThread(Context context) {
         Thread thread = new Thread(() -> {
             try {
-                SendMail.sendMessage(sendingAddress, receivingAddress, smtpHost, smtpPort, sendingAddress, password, subject, messageBody, context, ccStr, bccStr);
+                SendMail.sendMessage(sendingAddress, receivingAddress, smtpHost, smtpPort,
+                        sendingAddress, password, subject, messageBody, context, ccStr, bccStr);
             } catch (Exception e) {
                 e.printStackTrace();
             }

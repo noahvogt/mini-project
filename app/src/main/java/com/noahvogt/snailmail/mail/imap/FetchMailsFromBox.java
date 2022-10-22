@@ -22,7 +22,13 @@ public class FetchMailsFromBox {
         for (jakarta.mail.Message message : messages) {
             messageNumber++;
             System.out.println(messageNumber);
-            Message newMessage = new Message(username, convertAddressArraytoJSON(message.getRecipients(RecipientType.TO)), convertAddressArraytoJSON(message.getRecipients(RecipientType.CC)), convertAddressArraytoJSON(message.getRecipients(RecipientType.BCC)), convertAddressArraytoJSON(message.getFrom()), message.getSentDate().toString(), message.getSubject(), message.getContentType(), folder.getFullName(), message.isSet(Flags.Flag.SEEN));
+            Message newMessage = new Message(username,
+                    convertAddressArraytoJSON(message.getRecipients(RecipientType.TO)),
+                    convertAddressArraytoJSON(message.getRecipients(RecipientType.CC)),
+                    convertAddressArraytoJSON(message.getRecipients(RecipientType.BCC)),
+                    convertAddressArraytoJSON(message.getFrom()), message.getSentDate().toString(),
+                    message.getSubject(), message.getContentType(), folder.getFullName(),
+                    message.isSet(Flags.Flag.SEEN));
             messageArraylist.add(newMessage);
         }
 
